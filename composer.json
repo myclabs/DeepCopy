@@ -1,6 +1,9 @@
 {
     "name": "myclabs/deep-copy",
     "type": "library",
+    "description": "Create deep copies (clones) of your objects",
+    "keywords": ["clone", "copy", "duplicate", "object", "object graph"],
+    "homepage": "https://github.com/myclabs/DeepCopy",
     "license": "MIT",
 	"autoload": {
 		"psr-0": {
