@@ -56,6 +56,13 @@ Now you're in for a big mess :(
 ![With DeepCopy](doc/deep-copy.png)
 
 
+## How it works
+
+DeepCopy traverses recursively all your object's properties and clones them.
+
+To avoid cloning the same object twice (and thus, keep you object graph), it keeps a hash-map of all instances.
+
+
 ## Contributing
 
 DeepCopy is distributed under the MIT license.
