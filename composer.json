@@ -1,0 +1,14 @@
+{
+    "name": "myclabs/deep-copy",
+    "type": "library",
+    "license": "MIT",
+	"autoload": {
+		"psr-0": {
+            "DeepCopy": "src/",
+            "DeepCopyTest": "tests/"
+		}
+	},
+	"require": {
+		"php": ">=5.4.0"
+	}
+}
