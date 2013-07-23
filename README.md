@@ -63,6 +63,29 @@ DeepCopy traverses recursively all your object's properties and clones them.
 To avoid cloning the same object twice (and thus, keep you object graph), it keeps a hash-map of all instances.
 
 
+## Going further
+
+You can add filters to customize the copy process.
+
+The generic method to add a filter is `$deepCopy->addFilter($filter);` with `$filter` implementing `DeepCopy\Filter\Filter`.
+But we provide some generic filters.
+
+### `SetNull`
+
+Let's say for example that you are copying a database record (or a Doctrine entity), so you want the copy not to have any ID:
+
+```php
+$myObject = MyClass::load(123);
+echo $myObject->id; // 123
+
+$deepCopy = new DeepCopy();
+$deepCopy->setNull('MyClass', 'id');
+$myCopy = $deepCopy->copy($myObject);
+
+echo $myCopy->id; // null
+```
+
+
 ## Contributing
 
 DeepCopy is distributed under the MIT license.

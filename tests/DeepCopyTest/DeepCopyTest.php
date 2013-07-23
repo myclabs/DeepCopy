@@ -63,6 +63,32 @@ class DeepCopyTest extends AbstractTestClass
 
         $this->assertSame($new->property1->property, $o->property2);
     }
+
+    /**
+     * @test
+     */
+    public function filtersShouldBeApplied()
+    {
+        $o = new A();
+        $o->property1 = 'foo';
+
+        $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
+        $filter->expects($this->once())
+            ->method('applies')
+            ->will($this->returnValue(true));
+        $filter->expects($this->once())
+            ->method('apply')
+            ->will($this->returnCallback(function($object) {
+                        $object->property1 = null;
+                    }));
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter($filter);
+        /** @var A $new */
+        $new = $deepCopy->copy($o);
+
+        $this->assertNull($new->property1);
+    }
 }
 
 class A

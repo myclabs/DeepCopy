@@ -2,6 +2,8 @@
 
 namespace DeepCopy;
 
+use DeepCopy\Filter\Filter;
+use DeepCopy\Filter\SetNull;
 use ReflectionClass;
 
 /**
@@ -9,13 +11,37 @@ use ReflectionClass;
  */
 class DeepCopy
 {
+    /**
+     * @var array
+     */
     private $hashMap = array();
 
+    /**
+     * Filters to apply.
+     * @var Filter[]
+     */
+    private $filters = array();
+
+    /**
+     * Perform a deep copy of the object.
+     * @param object $object
+     * @return object
+     */
     public function copy($object)
     {
         $this->hashMap = array();
 
         return $this->recursiveCopy($object);
+    }
+
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
+    }
+
+    public function setNull($class, $property)
+    {
+        $this->addFilter(new SetNull($class, $property));
     }
 
     private function recursiveCopy($object)
@@ -29,6 +55,13 @@ class DeepCopy
         $newObject = clone $object;
 
         $this->hashMap[$objectHash] = $newObject;
+
+        // Apply the filters
+        foreach ($this->filters as $filter) {
+            if ($filter->applies($newObject)) {
+                $filter->apply($newObject);
+            }
+        }
 
         // Clone properties
         $class = new ReflectionClass($object);

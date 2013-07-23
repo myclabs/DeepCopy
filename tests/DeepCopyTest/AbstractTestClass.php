@@ -5,7 +5,7 @@ namespace DeepCopyTest;
 /**
  * Abstract test class
  */
-class AbstractTestClass extends \PHPUnit_Framework_TestCase
+abstract class AbstractTestClass extends \PHPUnit_Framework_TestCase
 {
     protected function assertDeepCopyOf($expected, $actual)
     {
