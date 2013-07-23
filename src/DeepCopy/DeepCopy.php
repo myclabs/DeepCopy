@@ -74,7 +74,7 @@ class DeepCopy
         $this->hashMap[$objectHash] = $newObject;
 
         // Clone properties
-        $class = new ReflectionClass($object);
+        $class = new ReflectionClass($newObject);
         foreach ($class->getProperties() as $property) {
             // Ignore static properties
             if ($property->isStatic()) {
@@ -102,10 +102,10 @@ class DeepCopy
             }
 
             $property->setAccessible(true);
-            $propertyValue = $property->getValue($object);
+            $propertyValue = $property->getValue($newObject);
 
             // Copy the property
-            $property->setValue($object, $this->recursiveCopy($propertyValue));
+            $property->setValue($newObject, $this->recursiveCopy($propertyValue));
         }
 
         return $newObject;
