@@ -1,7 +1,8 @@
 <?php
 
-namespace DeepCopyTest;
+namespace DeepCopyTest\Filter;
 
+use DeepCopy\DeepCopy;
 use DeepCopy\Filter\KeepFilter;
 
 /**
@@ -11,13 +12,31 @@ class KeepFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testApply()
     {
-        $filter = new KeepFilter('stdClass', 'foo');
         $object = new \stdClass();
         $keepObject = new \stdClass();
         $object->foo = $keepObject;
 
-        $filter->apply($object, 'foo');
+        $filter = new KeepFilter();
+        $filter->apply($object, 'foo', null);
 
         $this->assertSame($keepObject, $object->foo);
     }
+
+    public function testIntegration()
+    {
+        $o = new KeepFilterTestFixture();
+        $o->property1 = new \stdClass();
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(get_class($o), 'property1', new KeepFilter());
+        /** @var KeepFilterTestFixture $new */
+        $new = $deepCopy->copy($o);
+
+        $this->assertSame($o->property1, $new->property1);
+    }
+}
+
+class KeepFilterTestFixture
+{
+    public $property1;
 }

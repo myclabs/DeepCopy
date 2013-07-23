@@ -12,7 +12,7 @@ class SetNullFilter implements Filter
     /**
      * {@inheritdoc}
      */
-    public function apply($object, $property)
+    public function apply($object, $property, $objectCopier)
     {
         $reflectionProperty = new ReflectionProperty($object, $property);
 

@@ -13,7 +13,7 @@ class CollectionFilter implements Filter
     /**
      * {@inheritdoc}
      */
-    public function apply($object, $property)
+    public function apply($object, $property, $objectCopier)
     {
         $reflectionProperty = new ReflectionProperty($object, $property);
 
@@ -21,9 +21,8 @@ class CollectionFilter implements Filter
         $oldCollection = $reflectionProperty->getValue($object);
 
         $newCollection = $oldCollection->map(
-            function ($item) {
-                // TODO copy with DeepCopy
-                return clone $item;
+            function ($item) use ($objectCopier) {
+                return $objectCopier($item);
             }
         );
 

@@ -57,8 +57,9 @@ class DeepCopy
             // Apply the filters
             foreach ($this->filterMatchers as $filterMatcher) {
                 if ($filterMatcher->matches($newObject, $property->getName())) {
-                    $filterMatcher->getFilter()->apply($newObject, $property->getName());
-                    continue;
+                    $filter = $filterMatcher->getFilter();
+                    $filter->apply($newObject, $property->getName(), array($this, 'recursiveCopy'));
+                    continue 2;
                 }
             }
 
