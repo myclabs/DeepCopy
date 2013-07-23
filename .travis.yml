@@ -7,7 +7,7 @@ php:
 
 before_script:
   - wget http://getcomposer.org/composer.phar
-  - php composer.phar install --dev --no-interaction --prefer-source
+  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress
 
 script:
   - mkdir -p build/logs
