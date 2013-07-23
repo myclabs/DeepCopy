@@ -8,15 +8,9 @@ namespace DeepCopy\Filter;
 interface Filter
 {
     /**
-     * Returns true if the filter applies to the object.
-     * @param object $object
-     * @return boolean
-     */
-    public function applies($object);
-
-    /**
      * Apply the filter to the object.
      * @param object $object
+     * @param string $property
      */
-    public function apply($object);
+    public function apply($object, $property);
 }

@@ -3,7 +3,7 @@
 namespace DeepCopy;
 
 use DeepCopy\Filter\Filter;
-use DeepCopy\Filter\SetNull;
+use DeepCopy\Filter\SetNullFilter;
 use ReflectionClass;
 
 /**
@@ -18,9 +18,9 @@ class DeepCopy
 
     /**
      * Filters to apply.
-     * @var Filter[]
+     * @var FilterMatcher[]
      */
-    private $filters = array();
+    private $filterMatchers = array();
 
     /**
      * Perform a deep copy of the object.
@@ -34,14 +34,9 @@ class DeepCopy
         return $this->recursiveCopy($object);
     }
 
-    public function addFilter(Filter $filter)
+    public function addFilter($class, $property, Filter $filter)
     {
-        $this->filters[] = $filter;
-    }
-
-    public function setNull($class, $property)
-    {
-        $this->addFilter(new SetNull($class, $property));
+        $this->filterMatchers[] = new FilterMatcher($class, $property, $filter);
     }
 
     private function recursiveCopy($object)
@@ -56,18 +51,20 @@ class DeepCopy
 
         $this->hashMap[$objectHash] = $newObject;
 
-        // Apply the filters
-        foreach ($this->filters as $filter) {
-            if ($filter->applies($newObject)) {
-                $filter->apply($newObject);
-            }
-        }
-
         // Clone properties
         $class = new ReflectionClass($object);
         foreach ($class->getProperties() as $property) {
+            // Apply the filters
+            foreach ($this->filterMatchers as $filterMatcher) {
+                if ($filterMatcher->matches($newObject, $property->getName())) {
+                    $filterMatcher->getFilter()->apply($newObject, $property->getName());
+                    continue;
+                }
+            }
+
             $property->setAccessible(true);
             $propertyValue = $property->getValue($object);
+
             if (is_object($propertyValue)) {
                 $property->setValue($object, $this->recursiveCopy($propertyValue));
             } elseif (is_array($propertyValue)) {

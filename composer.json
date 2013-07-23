@@ -10,5 +10,8 @@
             "DeepCopy": "src/",
             "DeepCopyTest": "tests/"
 		}
-	}
+	},
+    "require-dev": {
+        "doctrine/collections": "1.*"
+    }
 }

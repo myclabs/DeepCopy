@@ -67,10 +67,11 @@ To avoid cloning the same object twice (and thus, keep you object graph), it kee
 
 You can add filters to customize the copy process.
 
-The generic method to add a filter is `$deepCopy->addFilter($filter);` with `$filter` implementing `DeepCopy\Filter\Filter`.
-But we provide some generic filters.
+The method to add a filter is `$deepCopy->addFilter($className, $propertyName, $filter);` with `$filter` implementing `DeepCopy\Filter\Filter`.
 
-### `SetNull`
+We provide some generic filters.
+
+#### `SetNullFilter`
 
 Let's say for example that you are copying a database record (or a Doctrine entity), so you want the copy not to have any ID:
 
@@ -79,10 +80,22 @@ $myObject = MyClass::load(123);
 echo $myObject->id; // 123
 
 $deepCopy = new DeepCopy();
-$deepCopy->setNull('MyClass', 'id');
+$deepCopy->addFilter('MyClass', 'id', new SetNullFilter());
 $myCopy = $deepCopy->copy($myObject);
 
 echo $myCopy->id; // null
+```
+
+#### `KeepFilter`
+
+If you want a property to remain untouched (for example, an association to an object):
+
+```php
+$deepCopy = new DeepCopy();
+$deepCopy->addFilter('MyClass', 'category', new KeepFilter());
+$myCopy = $deepCopy->copy($myObject);
+
+// $myCopy->category has not been touched
 ```
 
 
