@@ -41,6 +41,23 @@ class DeepCopy
 
     private function recursiveCopy($object)
     {
+        // Resource
+        if (is_resource($object)) {
+            return $object;
+        }
+        // Array
+        if (is_array($object)) {
+            $newArray = [];
+            foreach ($object as $i => $item) {
+                $newArray[$i] = $this->recursiveCopy($item);
+            }
+            return $newArray;
+        }
+        // Scalar
+        if (!is_object($object)) {
+            return $object;
+        }
+
         $objectHash = spl_object_hash($object);
 
         if (isset($this->hashMap[$objectHash])) {
@@ -68,15 +85,7 @@ class DeepCopy
             $property->setAccessible(true);
             $propertyValue = $property->getValue($object);
 
-            if (is_object($propertyValue)) {
-                $property->setValue($object, $this->recursiveCopy($propertyValue));
-            } elseif (is_array($propertyValue)) {
-                $newPropertyValue = [];
-                foreach ($propertyValue as $i => $item) {
-                    $newPropertyValue[$i] = $this->recursiveCopy($item);
-                }
-                $property->setValue($object, $newPropertyValue);
-            }
+            $property->setValue($object, $this->recursiveCopy($propertyValue));
         }
 
         return $newObject;
