@@ -14,13 +14,13 @@ class DeepCopy
     /**
      * @var array
      */
-    private $hashMap = array();
+    private $hashMap = [];
 
     /**
      * Filters to apply.
      * @var FilterMatcher[]
      */
-    private $filterMatchers = array();
+    private $filterMatchers = [];
 
     /**
      * Perform a deep copy of the object.
@@ -29,7 +29,7 @@ class DeepCopy
      */
     public function copy($object)
     {
-        $this->hashMap = array();
+        $this->hashMap = [];
 
         return $this->recursiveCopy($object);
     }
@@ -58,7 +58,9 @@ class DeepCopy
             foreach ($this->filterMatchers as $filterMatcher) {
                 if ($filterMatcher->matches($newObject, $property->getName())) {
                     $filter = $filterMatcher->getFilter();
-                    $filter->apply($newObject, $property->getName(), array($this, 'recursiveCopy'));
+                    $filter->apply($newObject, $property->getName(), function($object) {
+                            $this->recursiveCopy($object);
+                        });
                     continue 2;
                 }
             }
@@ -69,7 +71,7 @@ class DeepCopy
             if (is_object($propertyValue)) {
                 $property->setValue($object, $this->recursiveCopy($propertyValue));
             } elseif (is_array($propertyValue)) {
-                $newPropertyValue = array();
+                $newPropertyValue = [];
                 foreach ($propertyValue as $i => $item) {
                     $newPropertyValue[$i] = $this->recursiveCopy($item);
                 }

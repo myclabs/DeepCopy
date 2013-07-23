@@ -98,6 +98,16 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->category has not been touched
 ```
 
+#### Doctrine `CollectionFilter`
+
+If you use Doctrine and want to copy an entity, you will need to use the `CollectionFilter`:
+
+```php
+$deepCopy = new DeepCopy();
+$deepCopy->addFilter('MyClass', 'children', new CollectionFilter());
+$myCopy = $deepCopy->copy($myObject);
+```
+
 
 ## Contributing
 

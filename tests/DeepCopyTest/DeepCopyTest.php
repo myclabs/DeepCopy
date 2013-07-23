@@ -41,7 +41,7 @@ class DeepCopyTest extends AbstractTestClass
     public function testPropertyArrayCopy()
     {
         $o = new A();
-        $o->property1 = array(new B());
+        $o->property1 = [new B()];
 
         $deepCopy = new DeepCopy();
 

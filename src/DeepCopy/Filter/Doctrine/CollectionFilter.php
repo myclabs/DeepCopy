@@ -26,6 +26,6 @@ class CollectionFilter implements Filter
             }
         );
 
-        $reflectionProperty->setValue($newCollection);
+        $reflectionProperty->setValue($object, $newCollection);
     }
 }
