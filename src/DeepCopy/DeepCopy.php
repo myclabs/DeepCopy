@@ -76,12 +76,18 @@ class DeepCopy
         // Clone properties
         $class = new ReflectionClass($object);
         foreach ($class->getProperties() as $property) {
+            // Ignore static properties
+            if ($property->isStatic()) {
+                continue;
+            }
+
             // Apply the filters
             foreach ($this->filters as $item) {
                 /** @var Matcher $matcher */
                 $matcher = $item['matcher'];
                 /** @var Filter $filter */
                 $filter = $item['filter'];
+
                 if ($matcher->matches($newObject, $property->getName())) {
                     $filter->apply(
                         $newObject,
@@ -90,6 +96,7 @@ class DeepCopy
                             $this->recursiveCopy($object);
                         }
                     );
+                    // If a filter matches, we stop processing this property
                     continue 2;
                 }
             }
@@ -97,6 +104,7 @@ class DeepCopy
             $property->setAccessible(true);
             $propertyValue = $property->getValue($object);
 
+            // Copy the property
             $property->setValue($object, $this->recursiveCopy($propertyValue));
         }
 
