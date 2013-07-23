@@ -93,7 +93,7 @@ class DeepCopy
                         $newObject,
                         $property->getName(),
                         function ($object) {
-                            $this->recursiveCopy($object);
+                            return $this->recursiveCopy($object);
                         }
                     );
                     // If a filter matches, we stop processing this property
