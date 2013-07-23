@@ -67,9 +67,42 @@ To avoid cloning the same object twice (and thus, keep you object graph), it kee
 
 You can add filters to customize the copy process.
 
-The method to add a filter is `$deepCopy->addFilter($className, $propertyName, $filter);` with `$filter` implementing `DeepCopy\Filter\Filter`.
+The method to add a filter is `$deepCopy->addFilter($filter, $matcher)`,
+with `$filter` implementing `DeepCopy\Filter\Filter`
+and `$matcher` implementing `DeepCopy\Matcher\Matcher`.
 
-We provide some generic filters.
+We provide some generic filters and matchers.
+
+### Matchers
+
+#### Property name
+
+The `PropertyNameMatcher` will match a property by its name:
+
+```php
+$matcher = new PropertyNameMatcher('id');
+// will apply a filter to any property of any objects named "id"
+```
+
+#### Specific property
+
+The `PropertyMatcher` will match a specific property of a specific class:
+
+```php
+$matcher = new PropertyMatcher('MyClass', 'id');
+// will apply a filter to the property "id" of any objects of the class "MyClass"
+```
+
+#### Property type
+
+The `PropertyTypeMatcher` will match a property by its type (instance of a class):
+
+```php
+$matcher = new PropertyTypeMatcher('Doctrine\Common\Collections\Collection');
+// will apply a filter to any property that is an instance of Doctrine\Common\Collections\Collection
+```
+
+### Filters
 
 #### `SetNullFilter`
 
@@ -80,7 +113,7 @@ $myObject = MyClass::load(123);
 echo $myObject->id; // 123
 
 $deepCopy = new DeepCopy();
-$deepCopy->addFilter('MyClass', 'id', new SetNullFilter());
+$deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
 $myCopy = $deepCopy->copy($myObject);
 
 echo $myCopy->id; // null
@@ -92,7 +125,7 @@ If you want a property to remain untouched (for example, an association to an ob
 
 ```php
 $deepCopy = new DeepCopy();
-$deepCopy->addFilter('MyClass', 'category', new KeepFilter());
+$deepCopy->addFilter(new KeepFilter(), new PropertyMatcher('MyClass', 'category'));
 $myCopy = $deepCopy->copy($myObject);
 
 // $myCopy->category has not been touched
@@ -104,7 +137,7 @@ If you use Doctrine and want to copy an entity, you will need to use the `Collec
 
 ```php
 $deepCopy = new DeepCopy();
-$deepCopy->addFilter('MyClass', 'children', new CollectionFilter());
+$deepCopy->addFilter(new CollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
 $myCopy = $deepCopy->copy($myObject);
 ```
 

@@ -1,13 +1,11 @@
 <?php
 
-namespace DeepCopy;
-
-use DeepCopy\Filter\Filter;
+namespace DeepCopy\Matcher;
 
 /**
- * Property matcher
+ * Match a specific property of a specific class
  */
-class FilterMatcher
+class PropertyMatcher implements Matcher
 {
     /**
      * @var string
@@ -20,37 +18,20 @@ class FilterMatcher
     private $property;
 
     /**
-     * @var Filter
-     */
-    private $filter;
-
-    /**
      * @param string $class    Class name
      * @param string $property Property name
-     * @param Filter $filter
      */
-    public function __construct($class, $property, Filter $filter)
+    public function __construct($class, $property)
     {
         $this->class = $class;
         $this->property = $property;
-        $this->filter = $filter;
     }
 
     /**
-     * @param object $object
-     * @param string $property
-     * @return boolean
+     * {@inheritdoc}
      */
     public function matches($object, $property)
     {
         return ($object instanceof $this->class) && ($property == $this->property);
-    }
-
-    /**
-     * @return Filter
-     */
-    public function getFilter()
-    {
-        return $this->filter;
     }
 }

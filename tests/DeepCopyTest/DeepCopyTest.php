@@ -3,6 +3,7 @@
 namespace DeepCopyTest;
 
 use DeepCopy\DeepCopy;
+use DeepCopy\Matcher\PropertyMatcher;
 
 /**
  * DeepCopyTest
@@ -80,7 +81,7 @@ class DeepCopyTest extends AbstractTestClass
                     }));
 
         $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(get_class($o), 'property1', $filter);
+        $deepCopy->addFilter($filter, new PropertyMatcher(get_class($o), 'property1'));
         /** @var A $new */
         $new = $deepCopy->copy($o);
 
@@ -103,7 +104,7 @@ class DeepCopyTest extends AbstractTestClass
                     }));
 
         $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(get_class($o), 'property1', $filter);
+        $deepCopy->addFilter($filter, new PropertyMatcher(get_class($o), 'property1'));
         /** @var A $new */
         $new = $deepCopy->copy($o);
 

@@ -4,6 +4,8 @@ namespace DeepCopy;
 
 use DeepCopy\Filter\Filter;
 use DeepCopy\Filter\SetNullFilter;
+use DeepCopy\Matcher\Matcher;
+use DeepCopy\Matcher\PropertyMatcher;
 use ReflectionClass;
 
 /**
@@ -18,9 +20,9 @@ class DeepCopy
 
     /**
      * Filters to apply.
-     * @var FilterMatcher[]
+     * @var array
      */
-    private $filterMatchers = [];
+    private $filters = [];
 
     /**
      * Perform a deep copy of the object.
@@ -34,9 +36,12 @@ class DeepCopy
         return $this->recursiveCopy($object);
     }
 
-    public function addFilter($class, $property, Filter $filter)
+    public function addFilter(Filter $filter, Matcher $matcher)
     {
-        $this->filterMatchers[] = new FilterMatcher($class, $property, $filter);
+        $this->filters[] = [
+            'matcher' => $matcher,
+            'filter'  => $filter,
+        ];
     }
 
     private function recursiveCopy($object)
@@ -72,12 +77,19 @@ class DeepCopy
         $class = new ReflectionClass($object);
         foreach ($class->getProperties() as $property) {
             // Apply the filters
-            foreach ($this->filterMatchers as $filterMatcher) {
-                if ($filterMatcher->matches($newObject, $property->getName())) {
-                    $filter = $filterMatcher->getFilter();
-                    $filter->apply($newObject, $property->getName(), function($object) {
+            foreach ($this->filters as $item) {
+                /** @var Matcher $matcher */
+                $matcher = $item['matcher'];
+                /** @var Filter $filter */
+                $filter = $item['filter'];
+                if ($matcher->matches($newObject, $property->getName())) {
+                    $filter->apply(
+                        $newObject,
+                        $property->getName(),
+                        function ($object) {
                             $this->recursiveCopy($object);
-                        });
+                        }
+                    );
                     continue 2;
                 }
             }
