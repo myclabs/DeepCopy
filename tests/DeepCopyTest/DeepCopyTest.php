@@ -62,7 +62,7 @@ class DeepCopyTest extends AbstractTestClass
 
         $this->assertDeepCopyOf($o, $new);
 
-        $this->assertSame($new->property1->property, $o->property2);
+        $this->assertSame($new->property1->property, $new->property2);
     }
 
     /**
