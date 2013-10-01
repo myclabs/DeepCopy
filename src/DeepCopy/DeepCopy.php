@@ -7,6 +7,7 @@ use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\Matcher;
 use DeepCopy\Matcher\PropertyMatcher;
 use ReflectionClass;
+use ReflectionProperty;
 
 /**
  * DeepCopy
@@ -44,25 +45,45 @@ class DeepCopy
         ];
     }
 
-    private function recursiveCopy($object)
+    private function recursiveCopy($var)
     {
         // Resource
-        if (is_resource($object)) {
-            return $object;
+        if (is_resource($var)) {
+            return $var;
         }
         // Array
-        if (is_array($object)) {
-            $newArray = [];
-            foreach ($object as $i => $item) {
-                $newArray[$i] = $this->recursiveCopy($item);
-            }
-            return $newArray;
+        if (is_array($var)) {
+            return $this->copyArray($var);
         }
         // Scalar
-        if (!is_object($object)) {
-            return $object;
+        if (! is_object($var)) {
+            return $var;
         }
+        // Object
+        return $this->copyObject($var);
+    }
 
+    /**
+     * Copy an array
+     * @param array $array
+     * @return array
+     */
+    private function copyArray(array $array)
+    {
+        $copier = function($item) {
+            return $this->recursiveCopy($item);
+        };
+
+        return array_map($copier, $array);
+    }
+
+    /**
+     * Copy an object
+     * @param object $object
+     * @return object
+     */
+    private function copyObject($object)
+    {
         $objectHash = spl_object_hash($object);
 
         if (isset($this->hashMap[$objectHash])) {
@@ -76,38 +97,43 @@ class DeepCopy
         // Clone properties
         $class = new ReflectionClass($newObject);
         foreach ($class->getProperties() as $property) {
-            // Ignore static properties
-            if ($property->isStatic()) {
-                continue;
-            }
-
-            // Apply the filters
-            foreach ($this->filters as $item) {
-                /** @var Matcher $matcher */
-                $matcher = $item['matcher'];
-                /** @var Filter $filter */
-                $filter = $item['filter'];
-
-                if ($matcher->matches($newObject, $property->getName())) {
-                    $filter->apply(
-                        $newObject,
-                        $property->getName(),
-                        function ($object) {
-                            return $this->recursiveCopy($object);
-                        }
-                    );
-                    // If a filter matches, we stop processing this property
-                    continue 2;
-                }
-            }
-
-            $property->setAccessible(true);
-            $propertyValue = $property->getValue($newObject);
-
-            // Copy the property
-            $property->setValue($newObject, $this->recursiveCopy($propertyValue));
+            $this->copyObjectProperty($newObject, $property);
         }
 
         return $newObject;
+    }
+
+    private function copyObjectProperty($object, ReflectionProperty $property)
+    {
+        // Ignore static properties
+        if ($property->isStatic()) {
+            return;
+        }
+
+        // Apply the filters
+        foreach ($this->filters as $item) {
+            /** @var Matcher $matcher */
+            $matcher = $item['matcher'];
+            /** @var Filter $filter */
+            $filter = $item['filter'];
+
+            if ($matcher->matches($object, $property->getName())) {
+                $filter->apply(
+                    $object,
+                    $property->getName(),
+                    function ($object) {
+                        return $this->recursiveCopy($object);
+                    }
+                );
+                // If a filter matches, we stop processing this property
+                return;
+            }
+        }
+
+        $property->setAccessible(true);
+        $propertyValue = $property->getValue($object);
+
+        // Copy the property
+        $property->setValue($object, $this->recursiveCopy($propertyValue));
     }
 }
