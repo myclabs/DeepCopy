@@ -8,7 +8,7 @@ use ReflectionProperty;
 /**
  * Set a null value for a property
  */
-class CollectionFilter implements Filter
+class DoctrineCollectionFilter implements Filter
 {
     /**
      * {@inheritdoc}

@@ -3,7 +3,7 @@
 namespace DeepCopyTest\Filter\Doctrine;
 
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\Doctrine\CollectionFilter;
+use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,7 +20,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
         $oldCollection->add(new \stdClass());
         $object->foo = $oldCollection;
 
-        $filter = new CollectionFilter();
+        $filter = new DoctrineCollectionFilter();
         $filter->apply($object, 'foo', function($item) {
                 return null;
             });
@@ -39,7 +39,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
         $o->property1 = $oldCollection;
 
         $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new CollectionFilter(), new PropertyMatcher(get_class($o), 'property1'));
+        $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyMatcher(get_class($o), 'property1'));
         /** @var CollectionFilterTestFixture $new */
         $new = $deepCopy->copy($o);
 

@@ -11,9 +11,9 @@ Install with Composer:
 
 ```json
 {
-	"require": {
-		"myclabs/deep-copy": "*"
-	}
+    "require": {
+        "myclabs/deep-copy": "*"
+    }
 }
 ```
 
@@ -131,13 +131,13 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->category has not been touched
 ```
 
-#### Doctrine `CollectionFilter`
+#### `DoctrineCollectionFilter`
 
-If you use Doctrine and want to copy an entity, you will need to use the `CollectionFilter`:
+If you use Doctrine and want to copy an entity, you will need to use the `DoctrineCollectionFilter`:
 
 ```php
 $deepCopy = new DeepCopy();
-$deepCopy->addFilter(new CollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
+$deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
 $myCopy = $deepCopy->copy($myObject);
 ```
 
