@@ -51,18 +51,20 @@ class DeepCopyTest extends AbstractTestClass
 
     public function testCycleCopy()
     {
-        $o = new A();
-        $o->property1 = new B();
-        $o->property2 = new B();
-        $o->property1->property = $o->property2;
+        $a = new A();
+        $b = new B();
+        $c = new B();
+        $a->property1 = $b;
+        $a->property2 = $c;
+        $b->property = $c;
 
         $deepCopy = new DeepCopy();
-        /** @var A $new */
-        $new = $deepCopy->copy($o);
+        /** @var A $a2 */
+        $a2 = $deepCopy->copy($a);
 
-        $this->assertDeepCopyOf($o, $new);
+        $this->assertDeepCopyOf($a, $a2);
 
-        $this->assertSame($new->property1->property, $new->property2);
+        $this->assertSame($a2->property1->property, $a2->property2);
     }
 
     /**
