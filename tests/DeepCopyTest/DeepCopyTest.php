@@ -85,14 +85,9 @@ class DeepCopyTest extends AbstractTestClass
     {
         $a = new \stdClass();
         $a->b = new \stdClass();
-        $a->b->id = 1;
 
         $deepCopy = new DeepCopy();
-        /** @var B $a2 */
         $a2 = $deepCopy->copy($a);
-        $a->b->id = 2;
-
-        $this->assertEquals(1, $a2->b->id);
         $this->assertDeepCopyOf($a, $a2);
     }
 

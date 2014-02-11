@@ -94,14 +94,8 @@ class DeepCopy
 
         $this->hashMap[$objectHash] = $newObject;
 
-        // clone all public properties, including runtime
-        foreach (get_object_vars($newObject) as $property => $value) {
-            $this->copyObjectProperty($newObject, new ReflectionProperty($newObject, $property));
-        }
-
-        // Clone protected and private class properties
-        $class = new ReflectionClass($newObject);
-        foreach ($class->getProperties(ReflectionProperty::IS_PROTECTED + ReflectionProperty::IS_PRIVATE) as $property) {
+        $class = new \ReflectionObject($newObject);
+        foreach ($class->getProperties() as $property) {
             $this->copyObjectProperty($newObject, $property);
         }
 
