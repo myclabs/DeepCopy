@@ -93,6 +93,7 @@ class DeepCopyTest extends AbstractTestClass
         $a->b->id = 2;
 
         $this->assertEquals(1, $a2->b->id);
+        $this->assertDeepCopyOf($a, $a2);
     }
 
     /**
