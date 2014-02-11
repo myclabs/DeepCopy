@@ -96,7 +96,7 @@ class DeepCopy
 
         // clone all public properties, including runtime
         foreach (get_object_vars($newObject) as $property => $value) {
-            $this->copyObjectProperty($newObject, $property);
+            $this->copyObjectProperty($newObject, new ReflectionProperty($newObject, $property));
         }
 
         // Clone protected and private class properties
