@@ -3,10 +3,7 @@
 namespace DeepCopy;
 
 use DeepCopy\Filter\Filter;
-use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\Matcher;
-use DeepCopy\Matcher\PropertyMatcher;
-use ReflectionClass;
 use ReflectionProperty;
 
 /**
