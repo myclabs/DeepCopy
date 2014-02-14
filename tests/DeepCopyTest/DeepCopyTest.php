@@ -81,6 +81,16 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertSame($a2, $a2->property->property);
     }
 
+    public function testDynamicProperties()
+    {
+        $a = new \stdClass();
+        $a->b = new \stdClass();
+
+        $deepCopy = new DeepCopy();
+        $a2 = $deepCopy->copy($a);
+        $this->assertDeepCopyOf($a, $a2);
+    }
+
     /**
      * @test
      */

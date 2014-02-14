@@ -94,8 +94,7 @@ class DeepCopy
 
         $this->hashMap[$objectHash] = $newObject;
 
-        // Clone properties
-        $class = new ReflectionClass($newObject);
+        $class = new \ReflectionObject($newObject);
         foreach ($class->getProperties() as $property) {
             $this->copyObjectProperty($newObject, $property);
         }
