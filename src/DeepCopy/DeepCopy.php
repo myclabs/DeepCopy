@@ -90,12 +90,17 @@ class DeepCopy
             return $this->hashMap[$objectHash];
         }
 
-        $newObject = clone $object;
+        $reflectedObject = new \ReflectionObject($object);
 
+        if (!$reflectedObject->isCloneable()) {
+            $this->hashMap[$objectHash] = $object;
+            return $object;            
+        }
+
+        $newObject = clone $object;
         $this->hashMap[$objectHash] = $newObject;
 
-        $class = new \ReflectionObject($newObject);
-        foreach ($class->getProperties() as $property) {
+        foreach ($reflectedObject->getProperties() as $property) {
             $this->copyObjectProperty($newObject, $property);
         }
 
