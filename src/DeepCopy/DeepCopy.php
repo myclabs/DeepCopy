@@ -25,6 +25,19 @@ class DeepCopy
      */
     private $filters = [];
 
+    private $skipUncloneable = false;
+
+    /**
+     * Cloning uncloneable properties won't throw exception.
+     * @param $skipUncloneable
+     * @return $this
+     */
+    public function skipUncloneable($skipUncloneable = true)
+    {
+        $this->skipUncloneable = $skipUncloneable;
+        return $this;
+    }
+
     /**
      * Perform a deep copy of the object.
      * @param object $object
@@ -92,9 +105,9 @@ class DeepCopy
 
         $reflectedObject = new \ReflectionObject($object);
 
-        if (!$reflectedObject->isCloneable()) {
+        if (!$reflectedObject->isCloneable() and $this->skipUncloneable) {
             $this->hashMap[$objectHash] = $object;
-            return $object;            
+            return $object;
         }
 
         $newObject = clone $object;
