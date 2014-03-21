@@ -95,6 +95,14 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertDeepCopyOf($a, $a2);
     }
 
+    public function testNonClonableItems()
+    {
+        $a = new \ReflectionClass('DeepCopyTest\A');
+        $deepCopy = new DeepCopy();
+        $a2 = $deepCopy->skipUncloneable()->copy($a);
+        $this->assertSame($a, $a2);
+    }
+
     /**
      * @test
      */
@@ -139,7 +147,7 @@ class DeepCopyTest extends AbstractTestClass
         $new = $deepCopy->copy($o);
 
         $this->assertSame($o->property1, $new->property1);
-    }
+    }    
 }
 
 class A
