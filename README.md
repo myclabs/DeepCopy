@@ -141,6 +141,19 @@ $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Do
 $myCopy = $deepCopy->copy($myObject);
 ```
 
+#### `DoctrineEmptyCollection`
+
+If you use Doctrine and want to copy an entity who contains `Collection` and you want reset her, you will need to use `DoctrineEmptyCollectionFilter`
+
+```php
+// Assuming property children is a collection who contains many elements
+$deepCopy = new DeepCopy();
+$deepCopy->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('MyClass', 'children'));
+$myCopy = $deepCopy->copy($myObject);
+
+// $myCopy->children will return an empty collection
+```
+
 
 ## Contributing
 
