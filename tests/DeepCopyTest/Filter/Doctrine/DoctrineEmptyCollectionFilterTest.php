@@ -3,7 +3,7 @@
 namespace DeepCopyTest\Filter\Doctrine;
 
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\Doctrine\DoctrineEmptyCollection;
+use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Test Doctrine Collection filter
  */
-class DoctrineEmptyCollectionTest extends \PHPUnit_Framework_TestCase
+class DoctrineEmptyCollectionFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testApply()
     {
@@ -22,7 +22,7 @@ class DoctrineEmptyCollectionTest extends \PHPUnit_Framework_TestCase
 
         $object->foo = $collection;
 
-        $filter = new DoctrineEmptyCollection();
+        $filter = new DoctrineEmptyCollectionFilter();
         $filter->apply($object, 'foo', function($item){ return null; });
 
         $this->assertTrue($object->foo instanceof Collection);
@@ -40,7 +40,7 @@ class DoctrineEmptyCollectionTest extends \PHPUnit_Framework_TestCase
 
         //Copy
         $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new DoctrineEmptyCollection(), new PropertyMatcher(get_class($doctrineEmptyCollectionFixture), 'foo'));
+        $deepCopy->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher(get_class($doctrineEmptyCollectionFixture), 'foo'));
         $copied = $deepCopy->copy($doctrineEmptyCollectionFixture);
 
         //Check result
