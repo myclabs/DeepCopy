@@ -27,7 +27,7 @@ class DoctrineEmptyCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($object->foo instanceof Collection);
         $this->assertNotSame($collection, $object->foo);
-        $this->assertCount(0, $object->foo);
+        $this->assertTrue($object->foo->isEmpty());
     }
 
     public function testIntegration()
@@ -46,6 +46,6 @@ class DoctrineEmptyCollectionTest extends \PHPUnit_Framework_TestCase
         //Check result
         $this->assertTrue($copied->foo instanceof Collection);
         $this->assertNotSame($originalCollection, $copied->foo);
-        $this->assertCount(0, $copied->foo);
+        $this->assertTrue($copied->foo->isEmpty());
     }
 }
