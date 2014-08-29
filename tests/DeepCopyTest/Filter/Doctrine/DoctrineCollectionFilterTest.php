@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Test Doctrine Collection filter
  */
-class CollectionFilterTest extends \PHPUnit_Framework_TestCase
+class DoctrineCollectionFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testApply()
     {
@@ -32,7 +32,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testIntegration()
     {
-        $o = new CollectionFilterTestFixture();
+        $o = new DoctrineCollectionFilterTestFixture();
         $oldCollection = new ArrayCollection();
         $oldCollectionItem = new \stdClass();
         $oldCollection->add($oldCollectionItem);
@@ -40,7 +40,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
 
         $deepCopy = new DeepCopy();
         $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyMatcher(get_class($o), 'property1'));
-        /** @var CollectionFilterTestFixture $new */
+        /** @var DoctrineCollectionFilterTestFixture $new */
         $new = $deepCopy->copy($o);
 
         $this->assertTrue($new->property1 instanceof Collection);
@@ -51,7 +51,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class CollectionFilterTestFixture
+class DoctrineCollectionFilterTestFixture
 {
     public $property1;
 }
