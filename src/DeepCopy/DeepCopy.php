@@ -2,6 +2,7 @@
 
 namespace DeepCopy;
 
+use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
 use ReflectionProperty;
@@ -102,9 +103,16 @@ class DeepCopy
 
         $reflectedObject = new \ReflectionObject($object);
 
-        if (!$reflectedObject->isCloneable() and $this->skipUncloneable) {
+        if (false === $isCloneable = $reflectedObject->isCloneable() and $this->skipUncloneable) {
             $this->hashMap[$objectHash] = $object;
             return $object;
+        }
+
+        if(false === $isCloneable){
+            throw new CloneException(sprintf(
+                'Class "%s" is not cloneable.',
+                $object->getName()
+            ));
         }
 
         $newObject = clone $object;
