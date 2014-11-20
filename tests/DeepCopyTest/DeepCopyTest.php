@@ -104,6 +104,17 @@ class DeepCopyTest extends AbstractTestClass
     }
 
     /**
+     * @expectedException DeepCopy\Exception\CloneException
+     * @expectedExceptionMessage Class "DeepCopyTest\C" is not cloneable.
+     */
+    public function testCloneException()
+    {
+        $o = new \ReflectionClass('DeepCopyTest\C');
+        $deepCopy = new DeepCopy();
+        $deepCopy->copy($o);
+    }
+
+    /**
      * @test
      */
     public function filtersShouldBeApplied()
@@ -159,4 +170,9 @@ class A
 class B
 {
     public $property;
+}
+
+class C
+{
+    private function __clone(){}
 }
