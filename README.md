@@ -131,6 +131,24 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->category has not been touched
 ```
 
+### `DataFilter`
+
+If you want modify data of property like value of an array you can use the `DataFilter`.
+
+```php
+$deepCopy = new DeepCopy();
+$callback = function($data) { 
+    $data['options']['option1'] = false; return $data;
+};
+$deepCopy->addFilter(new DataFilter($callback), new PropertyMatcher('MyClass', 'myProperty'));
+$myCopy = $deepCopy->copy($myObject);
+
+// $myCopy->myProperty will return data modified by your callback
+```
+
+**NOTE** : The "callback" parameter of the DataFilter constructor accepts any PHP callable.
+
+
 #### `DoctrineCollectionFilter`
 
 If you use Doctrine and want to copy an entity, you will need to use the `DoctrineCollectionFilter`:
@@ -152,7 +170,6 @@ $myCopy = $deepCopy->copy($myObject);
 
 // $myCopy->myProperty will return an empty collection
 ```
-
 
 ## Contributing
 
