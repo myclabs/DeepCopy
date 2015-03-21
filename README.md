@@ -128,22 +128,22 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->category has not been touched
 ```
 
-### `DataFilter`
+### `ReplaceFilter`
 
-If you want modify data of property like value of an array you can use the `DataFilter`.
+If you want to replace the value of a property:
 
 ```php
 $deepCopy = new DeepCopy();
-$callback = function($data) { 
-    $data['options']['option1'] = false; return $data;
+$callback = function ($currentValue) {
+    return $currentValue . ' (copy)'
 };
-$deepCopy->addFilter(new DataFilter($callback), new PropertyMatcher('MyClass', 'myProperty'));
+$deepCopy->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
 $myCopy = $deepCopy->copy($myObject);
 
-// $myCopy->myProperty will return data modified by your callback
+// $myCopy->title will contain the data returned by the callback, e.g. 'The title (copy)'
 ```
 
-**NOTE** : The "callback" parameter of the DataFilter constructor accepts any PHP callable.
+The `$callback` parameter of the `ReplaceFilter` constructor accepts any PHP callable.
 
 
 #### `DoctrineCollectionFilter`
