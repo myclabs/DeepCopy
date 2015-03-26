@@ -17,6 +17,8 @@ composer require myclabs/deep-copy
 Use simply:
 
 ```php
+use DeepCopy\DeepCopy;
+
 $deepCopy = new DeepCopy();
 $myCopy = $deepCopy->copy($myObject);
 ```
@@ -77,6 +79,8 @@ We provide some generic filters and matchers.
 The `PropertyNameMatcher` will match a property by its name:
 
 ```php
+use DeepCopy\Matcher\PropertyNameMatcher;
+
 $matcher = new PropertyNameMatcher('id');
 // will apply a filter to any property of any objects named "id"
 ```
@@ -86,6 +90,8 @@ $matcher = new PropertyNameMatcher('id');
 The `PropertyMatcher` will match a specific property of a specific class:
 
 ```php
+use DeepCopy\Matcher\PropertyMatcher;
+
 $matcher = new PropertyMatcher('MyClass', 'id');
 // will apply a filter to the property "id" of any objects of the class "MyClass"
 ```
@@ -95,6 +101,8 @@ $matcher = new PropertyMatcher('MyClass', 'id');
 The `PropertyTypeMatcher` will match a property by its type (instance of a class):
 
 ```php
+use DeepCopy\Matcher\PropertyTypeMatcher;
+
 $matcher = new PropertyTypeMatcher('Doctrine\Common\Collections\Collection');
 // will apply a filter to any property that is an instance of Doctrine\Common\Collections\Collection
 ```
@@ -106,6 +114,10 @@ $matcher = new PropertyTypeMatcher('Doctrine\Common\Collections\Collection');
 Let's say for example that you are copying a database record (or a Doctrine entity), so you want the copy not to have any ID:
 
 ```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\SetNullFilter;
+use DeepCopy\Matcher\PropertyNameMatcher;
+
 $myObject = MyClass::load(123);
 echo $myObject->id; // 123
 
@@ -121,6 +133,10 @@ echo $myCopy->id; // null
 If you want a property to remain untouched (for example, an association to an object):
 
 ```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\KeepFilter;
+use DeepCopy\Matcher\PropertyMatcher;
+
 $deepCopy = new DeepCopy();
 $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher('MyClass', 'category'));
 $myCopy = $deepCopy->copy($myObject);
@@ -133,6 +149,10 @@ $myCopy = $deepCopy->copy($myObject);
 If you want to replace the value of a property:
 
 ```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\ReplaceFilter;
+use DeepCopy\Matcher\PropertyMatcher;
+
 $deepCopy = new DeepCopy();
 $callback = function ($currentValue) {
     return $currentValue . ' (copy)'
@@ -151,6 +171,10 @@ The `$callback` parameter of the `ReplaceFilter` constructor accepts any PHP cal
 If you use Doctrine and want to copy an entity, you will need to use the `DoctrineCollectionFilter`:
 
 ```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
+use DeepCopy\Matcher\PropertyTypeMatcher;
+
 $deepCopy = new DeepCopy();
 $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
 $myCopy = $deepCopy->copy($myObject);
@@ -161,6 +185,10 @@ $myCopy = $deepCopy->copy($myObject);
 If you use Doctrine and want to copy an entity who contains a `Collection` that you want to be reset, you can use the `DoctrineEmptyCollectionFilter`
 
 ```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
+use DeepCopy\Matcher\PropertyMatcher;
+
 $deepCopy = new DeepCopy();
 $deepCopy->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('MyClass', 'myProperty'));
 $myCopy = $deepCopy->copy($myObject);
