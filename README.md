@@ -172,7 +172,7 @@ If you use Doctrine and want to copy an entity, you will need to use the `Doctri
 
 ```php
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\DoctrineCollectionFilter;
+use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 
 $deepCopy = new DeepCopy();
@@ -186,7 +186,7 @@ If you use Doctrine and want to copy an entity who contains a `Collection` that 
 
 ```php
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\DoctrineEmptyCollectionFilter;
+use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $deepCopy = new DeepCopy();
