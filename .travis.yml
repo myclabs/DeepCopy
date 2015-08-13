@@ -10,12 +10,14 @@ matrix:
   allow_failures:
     - php: hhvm
 
+install:
+  - composer install
+  - composer require satooshi/php-coveralls:dev-master --dev --no-progress
+
 before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php composer.phar require satooshi/php-coveralls:dev-master --dev --no-progress
+  - mkdir -p build/logs
 
 script:
-  - mkdir -p build/logs
   - phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
