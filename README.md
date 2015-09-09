@@ -144,7 +144,7 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->category has not been touched
 ```
 
-### `ReplaceFilter`
+#### `ReplaceFilter`
 
 If you want to replace the value of a property:
 
