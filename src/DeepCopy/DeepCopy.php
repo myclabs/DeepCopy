@@ -56,7 +56,7 @@ class DeepCopy
         ];
     }
 
-    private function recursiveCopy($var)
+    protected function recursiveCopy($var)
     {
         // Resource
         if (is_resource($var)) {
@@ -79,7 +79,7 @@ class DeepCopy
      * @param array $array
      * @return array
      */
-    private function copyArray(array $array)
+    protected function copyArray(array $array)
     {
         $copier = function($item) {
             return $this->recursiveCopy($item);
@@ -93,7 +93,7 @@ class DeepCopy
      * @param object $object
      * @return object
      */
-    private function copyObject($object)
+    protected function copyObject($object)
     {
         $objectHash = spl_object_hash($object);
 
@@ -101,7 +101,7 @@ class DeepCopy
             return $this->hashMap[$objectHash];
         }
 
-        $reflectedObject = new \ReflectionObject($object);
+        $reflectedObject = $this->getReflection($object);
 
         if (false === $isCloneable = $reflectedObject->isCloneable() and $this->skipUncloneable) {
             $this->hashMap[$objectHash] = $object;
@@ -125,7 +125,7 @@ class DeepCopy
         return $newObject;
     }
 
-    private function copyObjectProperty($object, ReflectionProperty $property)
+    protected function copyObjectProperty($object, ReflectionProperty $property)
     {
         // Ignore static properties
         if ($property->isStatic()) {
@@ -157,5 +157,10 @@ class DeepCopy
 
         // Copy the property
         $property->setValue($object, $this->recursiveCopy($propertyValue));
+    }
+    
+    protected function getReflection($object)
+    {
+        return new \ReflectionObject($object);
     }
 }
