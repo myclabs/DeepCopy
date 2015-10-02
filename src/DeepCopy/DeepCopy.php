@@ -6,6 +6,7 @@ use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
 use ReflectionProperty;
+use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * DeepCopy
@@ -118,7 +119,7 @@ class DeepCopy
         $newObject = clone $object;
         $this->hashMap[$objectHash] = $newObject;
 
-        foreach ($reflectedObject->getProperties() as $property) {
+        foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
             $this->copyObjectProperty($newObject, $property);
         }
 

@@ -39,6 +39,17 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertDeepCopyOf($o, $deepCopy->copy($o));
     }
 
+    public function testPrivatePropertyOfParentObjectCopy()
+    {
+        $o = new E();
+        $o->setProperty1(new B);
+        $o->setProperty2(new B);
+
+        $deepCopy = new DeepCopy();
+
+        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+    }
+
     public function testPropertyArrayCopy()
     {
         $o = new A();
@@ -175,4 +186,36 @@ class B
 class C
 {
     private function __clone(){}
+}
+
+class D
+{
+    private $property1;
+
+    public function getProperty1()
+    {
+        return $this->property1;
+    }
+
+    public function setProperty1($property1)
+    {
+        $this->property1 = $property1;
+        return $this;
+    }
+}
+
+class E extends D
+{
+    private $property2;
+
+    public function getProperty2()
+    {
+        return $this->property2;
+    }
+
+    public function setProperty2($property2)
+    {
+        $this->property2 = $property2;
+        return $this;
+    }
 }
