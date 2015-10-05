@@ -2,6 +2,8 @@
 
 namespace DeepCopyTest;
 
+use DeepCopy\Reflection\ReflectionHelper;
+
 /**
  * Abstract test class
  */
@@ -34,7 +36,7 @@ abstract class AbstractTestClass extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(get_class($expected), $actual);
 
         $class = new \ReflectionClass($actual);
-        foreach ($class->getProperties() as $property) {
+        foreach (ReflectionHelper::getProperties($class) as $property) {
             $property->setAccessible(true);
             $this->assertDeepCopyOf($property->getValue($expected), $property->getValue($actual));
         }
