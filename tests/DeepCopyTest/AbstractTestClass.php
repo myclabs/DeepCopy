@@ -35,10 +35,12 @@ abstract class AbstractTestClass extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($expected, $actual);
         $this->assertInstanceOf(get_class($expected), $actual);
 
-        $class = new \ReflectionClass($actual);
-        foreach (ReflectionHelper::getProperties($class) as $property) {
-            $property->setAccessible(true);
-            $this->assertDeepCopyOf($property->getValue($expected), $property->getValue($actual));
+        $expectedProperties = (array) $expected;
+        $actualProperties = (array) $actual;
+
+        $this->assertSame(array_keys($expectedProperties), array_keys($actualProperties));
+        foreach ($expectedProperties as $name => $value) {
+            $this->assertDeepCopyOf($value, $actualProperties[$name]);
         }
     }
 }

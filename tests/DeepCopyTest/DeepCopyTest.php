@@ -115,7 +115,7 @@ class DeepCopyTest extends AbstractTestClass
     }
 
     /**
-     * @expectedException DeepCopy\Exception\CloneException
+     * @expectedException \DeepCopy\Exception\CloneException
      * @expectedExceptionMessage Class "DeepCopyTest\C" is not cloneable.
      */
     public function testCloneException()
