@@ -3,7 +3,10 @@
 namespace DeepCopyTest;
 
 use DeepCopy\DeepCopy;
+use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\PropertyMatcher;
+use DeepCopy\TypeFilter\TypeFilter;
+use DeepCopy\TypeMatcher\TypeMatcher;
 
 /**
  * DeepCopyTest
@@ -157,6 +160,7 @@ class DeepCopyTest extends AbstractTestClass
         $o = new A();
         $o->property1 = new B();
 
+        /* @var Filter|\PHPUnit_Framework_MockObject_MockObject $filter */
         $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
         $filter->expects($this->once())
             ->method('apply')
@@ -169,7 +173,51 @@ class DeepCopyTest extends AbstractTestClass
         $new = $deepCopy->copy($o);
 
         $this->assertSame($o->property1, $new->property1);
-    }    
+    }
+
+    /**
+     * If a filter applies to an object, it should not be copied
+     */
+    public function testTypeFilterShouldBeAppliedOnObject()
+    {
+        $o = new A();
+        $o->property1 = new B();
+
+        /* @var TypeFilter|\PHPUnit_Framework_MockObject_MockObject $filter */
+        $filter = $this->getMockForAbstractClass('DeepCopy\TypeFilter\TypeFilter');
+        $filter->expects($this->once())
+            ->method('apply')
+            ->will($this->returnValue(null));
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addTypeFilter($filter, new TypeMatcher('DeepCopyTest\B'));
+        /** @var A $new */
+        $new = $deepCopy->copy($o);
+
+        $this->assertNull($new->property1);
+    }
+
+    /**
+     * If a filter applies to an array member, it should not be copied
+     */
+    public function testTypeFilterShouldBeAppliedOnArrayMember()
+    {
+        $arr = [new A, new A, new B, new B, new A];
+
+        /* @var TypeFilter|\PHPUnit_Framework_MockObject_MockObject $filter */
+        $filter = $this->getMockForAbstractClass('DeepCopy\TypeFilter\TypeFilter');
+        $filter->expects($this->exactly(2))
+            ->method('apply')
+            ->will($this->returnValue(null));
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addTypeFilter($filter, new TypeMatcher('DeepCopyTest\B'));
+        /** @var A $new */
+        $new = $deepCopy->copy($arr);
+
+        $this->assertNull($new[2]);
+        $this->assertNull($new[3]);
+    }
 }
 
 class A
