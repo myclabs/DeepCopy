@@ -123,7 +123,7 @@ class DeepCopyTest extends AbstractTestClass
      */
     public function testCloneException()
     {
-        $o = new \ReflectionClass('DeepCopyTest\C');
+        $o = new C;
         $deepCopy = new DeepCopy();
         $deepCopy->copy($o);
     }
