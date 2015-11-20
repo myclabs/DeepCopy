@@ -74,6 +74,9 @@ We provide some generic filters and matchers.
 
 ### Matchers
 
+  - `DeepCopy\Matcher` applies on a object attribute. 
+  - `DeepCopy\TypeMatcher` applies on any element found in graph, including array elements.
+
 #### Property name
 
 The `PropertyNameMatcher` will match a property by its name:
@@ -96,18 +99,21 @@ $matcher = new PropertyMatcher('MyClass', 'id');
 // will apply a filter to the property "id" of any objects of the class "MyClass"
 ```
 
-#### Property type
+#### Type
 
-The `PropertyTypeMatcher` will match a property by its type (instance of a class):
+The `TypeMatcher` will match any element by its type (instance of a class or any value that could be parameter of [gettype()](http://php.net/manual/en/function.gettype.php) function):
 
 ```php
-use DeepCopy\Matcher\PropertyTypeMatcher;
+use DeepCopy\TypeMatcher\TypeMatcher;
 
-$matcher = new PropertyTypeMatcher('Doctrine\Common\Collections\Collection');
-// will apply a filter to any property that is an instance of Doctrine\Common\Collections\Collection
+$matcher = new TypeMatcher('Doctrine\Common\Collections\Collection');
+// will apply a filter to any object that is an instance of Doctrine\Common\Collections\Collection
 ```
 
 ### Filters
+
+  - `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`.   
+  - `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`.
 
 #### `SetNullFilter`
 
@@ -146,25 +152,62 @@ $myCopy = $deepCopy->copy($myObject);
 
 #### `ReplaceFilter`
 
-If you want to replace the value of a property:
+  1. If you want to replace the value of a property:
 
-```php
-use DeepCopy\DeepCopy;
-use DeepCopy\Filter\ReplaceFilter;
-use DeepCopy\Matcher\PropertyMatcher;
+  ```php
+  use DeepCopy\DeepCopy;
+  use DeepCopy\Filter\ReplaceFilter;
+  use DeepCopy\Matcher\PropertyMatcher;
+  
+  $deepCopy = new DeepCopy();
+  $callback = function ($currentValue) {
+      return $currentValue . ' (copy)'
+  };
+  $deepCopy->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
+  $myCopy = $deepCopy->copy($myObject);
+  
+  // $myCopy->title will contain the data returned by the callback, e.g. 'The title (copy)'
+  ```
 
-$deepCopy = new DeepCopy();
-$callback = function ($currentValue) {
-    return $currentValue . ' (copy)'
-};
-$deepCopy->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
-$myCopy = $deepCopy->copy($myObject);
+  2. If you want to replace whole element:
 
-// $myCopy->title will contain the data returned by the callback, e.g. 'The title (copy)'
-```
+  ```php
+  use DeepCopy\DeepCopy;
+  use DeepCopy\TypeFilter\ReplaceFilter;
+  use DeepCopy\TypeMatcher\TypeMatcher;
+  
+  $deepCopy = new DeepCopy();
+  $callback = function (MyClass $myClass) {
+      return get_class($myClass);
+  };
+  $deepCopy->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
+  $myCopy = $deepCopy->copy(array(new MyClass, 'some string', new MyClass));
+  
+  // $myCopy will contain ['MyClass', 'some stirng', 'MyClass']
+  ```
+
 
 The `$callback` parameter of the `ReplaceFilter` constructor accepts any PHP callable.
 
+#### `ShallowCopyFilter`
+
+Stop *DeepCopy* from recursively copying element, using standard `clone` instead:  
+
+```php
+use DeepCopy\DeepCopy;
+use DeepCopy\TypeFilter\ShallowCopyFilter;
+use DeepCopy\TypeMatcher\TypeMatcher;
+use Mockery as m;
+
+$this->deepCopy = new DeepCopy();
+$this->deepCopy->addTypeFilter(
+	new ShallowCopyFilter,
+	new TypeMatcher(m\MockInterface::class)
+);
+
+$myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDependency2::class));
+// all mocks will be just cloned, not deep-copied 
+```
 
 #### `DoctrineCollectionFilter`
 
