@@ -5,7 +5,7 @@ namespace DeepCopy\TypeMatcher;
 /**
  * TypeMatcher class
  */
-class TypeMatcher
+class TypeMatcher implements TypeMatcherInterface
 {
     /**
      * @var string
@@ -21,8 +21,7 @@ class TypeMatcher
     }
 
     /**
-     * @param $element
-     * @return boolean
+     * {@inheritdoc}
      */
     public function matches($element)
     {

@@ -6,7 +6,7 @@ use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
 use DeepCopy\TypeFilter\TypeFilter;
-use DeepCopy\TypeMatcher\TypeMatcher;
+use DeepCopy\TypeMatcher\TypeMatcherInterface;
 use ReflectionProperty;
 use DeepCopy\Reflection\ReflectionHelper;
 
@@ -65,7 +65,7 @@ class DeepCopy
         ];
     }
 
-    public function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher)
+    public function addTypeFilter(TypeFilter $filter, TypeMatcherInterface $matcher)
     {
         $this->typeFilters[] = [
             'matcher' => $matcher,
@@ -194,7 +194,7 @@ class DeepCopy
         $matched = $this->first(
             $filterRecords,
             function (array $record) use ($var) {
-                /* @var TypeMatcher $matcher */
+                /* @var TypeMatcherInterface $matcher */
                 $matcher = $record['matcher'];
 
                 return $matcher->matches($var);
