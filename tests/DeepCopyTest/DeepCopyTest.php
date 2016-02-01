@@ -4,7 +4,9 @@ namespace DeepCopyTest;
 
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Filter;
+use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyMatcher;
+use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 
@@ -217,6 +219,24 @@ class DeepCopyTest extends AbstractTestClass
 
         $this->assertNull($new[2]);
         $this->assertNull($new[3]);
+    }
+
+    public function testPrivatePropertyOfParentObjectCopyWithFiltersAndMatchers()
+    {
+        $item = new B;
+        $item->property = 'foo';
+
+        $o = new E;
+        $o->setProperty2($item);
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new SetNullFilter(), new PropertyTypeMatcher('DeepCopyTest\B'));
+
+        $new = $deepCopy->copy($o);
+        $newProperty2 = $new->getProperty2();
+
+        $this->assertInstanceOf('DeepCopyTest\B', $newProperty2);
+        $this->assertSame('foo', $newProperty2->property);
     }
 }
 
