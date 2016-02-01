@@ -162,10 +162,10 @@ class DeepCopy
             /** @var Filter $filter */
             $filter = $item['filter'];
 
-            if ($matcher->matches($object, $property->getName())) {
+            if ($matcher->matches($object, $property)) {
                 $filter->apply(
                     $object,
-                    $property->getName(),
+                    $property,
                     function ($object) {
                         return $this->recursiveCopy($object);
                     }

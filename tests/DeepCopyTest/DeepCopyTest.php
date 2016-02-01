@@ -4,11 +4,12 @@ namespace DeepCopyTest;
 
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Filter;
-use DeepCopy\Filter\SetNullFilter;
+use DeepCopy\Filter\ReplaceFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
+use ReflectionProperty;
 
 /**
  * DeepCopyTest
@@ -141,8 +142,8 @@ class DeepCopyTest extends AbstractTestClass
         $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
         $filter->expects($this->once())
             ->method('apply')
-            ->will($this->returnCallback(function($object, $property) {
-                        $object->$property = null;
+            ->will($this->returnCallback(function($object, ReflectionProperty $reflectionProperty) {
+                        $reflectionProperty->setValue($object, null);
                     }));
 
         $deepCopy = new DeepCopy();
@@ -166,7 +167,7 @@ class DeepCopyTest extends AbstractTestClass
         $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
         $filter->expects($this->once())
             ->method('apply')
-            ->will($this->returnCallback(function($object, $property, $objectCopier) {
+            ->will($this->returnCallback(function($object, ReflectionProperty $reflectionProperty, $objectCopier) {
                     }));
 
         $deepCopy = new DeepCopy();
@@ -223,20 +224,15 @@ class DeepCopyTest extends AbstractTestClass
 
     public function testPrivatePropertyOfParentObjectCopyWithFiltersAndMatchers()
     {
-        $item = new B;
-        $item->property = 'foo';
-
         $o = new E;
-        $o->setProperty2($item);
+        $o->setProperty1(new B);
 
         $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyTypeMatcher('DeepCopyTest\B'));
+        $deepCopy->addFilter(new ReplaceFilter(function() {return 'foo';}), new PropertyTypeMatcher('DeepCopyTest\B'));
 
         $new = $deepCopy->copy($o);
-        $newProperty2 = $new->getProperty2();
 
-        $this->assertInstanceOf('DeepCopyTest\B', $newProperty2);
-        $this->assertSame('foo', $newProperty2->property);
+        $this->assertSame('foo', $new->getProperty1());
     }
 }
 

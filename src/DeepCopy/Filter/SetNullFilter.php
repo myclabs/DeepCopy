@@ -12,10 +12,8 @@ class SetNullFilter implements Filter
     /**
      * {@inheritdoc}
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
     {
-        $reflectionProperty = new ReflectionProperty($object, $property);
-
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($object, null);
     }

@@ -4,6 +4,7 @@ namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\Filter;
 use Doctrine\Common\Collections\ArrayCollection;
+use ReflectionProperty;
 
 class DoctrineEmptyCollectionFilter implements Filter
 {
@@ -14,9 +15,8 @@ class DoctrineEmptyCollectionFilter implements Filter
      * @param string   $property
      * @param callable $objectCopier
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
     {
-        $reflectionProperty = new \ReflectionProperty($object, $property);
         $reflectionProperty->setAccessible(true);
 
         $reflectionProperty->setValue($object, new ArrayCollection());

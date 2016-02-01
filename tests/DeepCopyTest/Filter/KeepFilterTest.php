@@ -5,6 +5,7 @@ namespace DeepCopyTest\Filter;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Matcher\PropertyMatcher;
+use ReflectionProperty;
 
 /**
  * Test Keep filter
@@ -13,14 +14,14 @@ class KeepFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testApply()
     {
-        $object = new \stdClass();
+        $object = new KeepFilterTestFixture();
         $keepObject = new \stdClass();
-        $object->foo = $keepObject;
+        $object->property1 = $keepObject;
 
         $filter = new KeepFilter();
-        $filter->apply($object, 'foo', null);
+        $filter->apply($object, new ReflectionProperty('DeepCopyTest\Filter\KeepFilterTestFixture', 'property1'), null);
 
-        $this->assertSame($keepObject, $object->foo);
+        $this->assertSame($keepObject, $object->property1);
     }
 
     public function testIntegration()

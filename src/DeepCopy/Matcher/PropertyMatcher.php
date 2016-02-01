@@ -2,6 +2,8 @@
 
 namespace DeepCopy\Matcher;
 
+use ReflectionProperty;
+
 /**
  * Match a specific property of a specific class
  */
@@ -30,8 +32,8 @@ class PropertyMatcher implements Matcher
     /**
      * {@inheritdoc}
      */
-    public function matches($object, $property)
+    public function matches($object, ReflectionProperty $reflectionProperty)
     {
-        return ($object instanceof $this->class) && ($property == $this->property);
+        return ($object instanceof $this->class) && ($reflectionProperty->getName() == $this->property);
     }
 }

@@ -28,9 +28,8 @@ class PropertyTypeMatcher implements Matcher
     /**
      * {@inheritdoc}
      */
-    public function matches($object, $property)
+    public function matches($object, ReflectionProperty $reflectionProperty)
     {
-        $reflectionProperty = new ReflectionProperty($object, $property);
         $reflectionProperty->setAccessible(true);
 
         return $reflectionProperty->getValue($object) instanceof $this->propertyType;

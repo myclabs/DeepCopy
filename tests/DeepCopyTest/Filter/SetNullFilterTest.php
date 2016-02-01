@@ -5,6 +5,7 @@ namespace DeepCopyTest\Filter;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyMatcher;
+use ReflectionProperty;
 
 /**
  * Test SetNull filter
@@ -14,13 +15,13 @@ class SetNullFilterTest extends \PHPUnit_Framework_TestCase
     public function testApply()
     {
         $filter = new SetNullFilter();
-        $object = new \stdClass();
-        $object->foo = 'bar';
-        $object->bim = 'bam';
-        $filter->apply($object, 'foo', null);
+        $object = new SetNullFilterTestFixture();
+        $object->property1 = 'bar';
+        $object->property2 = 'bam';
+        $filter->apply($object, new ReflectionProperty('DeepCopyTest\Filter\SetNullFilterTestFixture', 'property1'), null);
 
-        $this->assertNull($object->foo);
-        $this->assertEquals('bam', $object->bim);
+        $this->assertNull($object->property1);
+        $this->assertEquals('bam', $object->property2);
     }
 
     public function testIntegration()
@@ -40,4 +41,5 @@ class SetNullFilterTest extends \PHPUnit_Framework_TestCase
 class SetNullFilterTestFixture
 {
     public $property1;
+    public $property2;
 }

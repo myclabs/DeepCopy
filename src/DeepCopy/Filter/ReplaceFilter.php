@@ -2,6 +2,8 @@
 
 namespace DeepCopy\Filter;
 
+use ReflectionProperty;
+
 /**
  * Replace the value of a property
  */
@@ -23,9 +25,8 @@ class ReplaceFilter implements Filter
     /**
      * {@inheritdoc}
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
     {
-        $reflectionProperty = new \ReflectionProperty($object, $property);
         $reflectionProperty->setAccessible(true);
 
         $value = call_user_func($this->callback, $reflectionProperty->getValue($object));

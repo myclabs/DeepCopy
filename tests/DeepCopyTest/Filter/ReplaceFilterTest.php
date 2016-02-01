@@ -5,6 +5,7 @@ namespace DeepCopyTest\Filter;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\ReplaceFilter;
 use DeepCopy\Matcher\PropertyMatcher;
+use ReflectionProperty;
 
 class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,16 +14,16 @@ class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function testApply(callable $callback, array $expected)
     {
-        $object = new \stdClass();
-        $object->data = ['foo' => 'bar', 'baz' => 'foo'];
+        $object = new ReplaceFilterTestFixture();
+        $object->property1 = ['foo' => 'bar', 'baz' => 'foo'];
 
         $filter = new ReplaceFilter($callback);
 
-        $filter->apply($object, 'data', function () {
+        $filter->apply($object, new ReflectionProperty('DeepCopyTest\Filter\ReplaceFilterTestFixture', 'property1'), function () {
             return null;
         });
 
-        $this->assertEquals($expected, $object->data);
+        $this->assertEquals($expected, $object->property1);
     }
 
     public function handlerProvider()
@@ -42,8 +43,8 @@ class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
     public function testIntegration()
     {
         // Prepare object to copy
-        $object = new \StdClass();
-        $object->data = [
+        $object = new ReplaceFilterTestFixture();
+        $object->property1 = [
             'foo' => 'bar',
             'baz' => ['bar' => 'foo'],
             'bar' => 'foo'
@@ -56,7 +57,7 @@ class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
             unset($data['bar']);
 
             return $data;
-        }), new PropertyMatcher(get_class($object), 'data'));
+        }), new PropertyMatcher(get_class($object), 'property1'));
 
         $copied = $deepCopy->copy($object);
 
@@ -64,14 +65,19 @@ class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([
             'foo' => 'bar',
             'baz' => ['bar' => 'dummy_change']
-        ], $copied->data);
+        ], $copied->property1);
 
         // Check original object is unchanged
         $this->assertEquals(
             ['foo' => 'bar', 'baz' => ['bar' => 'foo'], 'bar' => 'foo'],
-            $object->data
+            $object->property1
         );
     }
+}
+
+class ReplaceFilterTestFixture
+{
+    public $property1;
 }
 
 class Callback
