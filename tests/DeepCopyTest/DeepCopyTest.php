@@ -56,6 +56,21 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertDeepCopyOf($o, $deepCopy->copy($o));
     }
 
+    public function testPrivatePropertyOfParentObjectCopyWithFiltersAndMatchers()
+    {
+        $o = new E();
+        $o->setProperty1(new B);
+        $o->setProperty2(new B);
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new ReplaceFilter(function() {return 'foo';}), new PropertyTypeMatcher('DeepCopyTest\B'));
+
+        $new = $deepCopy->copy($o);
+
+        $this->assertSame('foo', $new->getProperty1());
+        $this->assertSame('foo', $new->getProperty2());
+    }
+
     public function testPropertyArrayCopy()
     {
         $o = new A();
@@ -220,19 +235,6 @@ class DeepCopyTest extends AbstractTestClass
 
         $this->assertNull($new[2]);
         $this->assertNull($new[3]);
-    }
-
-    public function testPrivatePropertyOfParentObjectCopyWithFiltersAndMatchers()
-    {
-        $o = new E;
-        $o->setProperty1(new B);
-
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new ReplaceFilter(function() {return 'foo';}), new PropertyTypeMatcher('DeepCopyTest\B'));
-
-        $new = $deepCopy->copy($o);
-
-        $this->assertSame('foo', $new->getProperty1());
     }
 }
 
