@@ -12,7 +12,7 @@ matrix:
 
 install:
   - composer install
-  - composer require satooshi/php-coveralls:dev-master --dev --no-progress
+  - composer require "satooshi/php-coveralls:~1.0" --no-progress
 
 before_script:
   - mkdir -p build/logs
