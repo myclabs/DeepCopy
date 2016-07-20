@@ -42,7 +42,7 @@ class ReplaceFilterTest extends \PHPUnit_Framework_TestCase
     public function testIntegration()
     {
         // Prepare object to copy
-        $object = new \StdClass();
+        $object = new \stdClass();
         $object->data = [
             'foo' => 'bar',
             'baz' => ['bar' => 'foo'],
