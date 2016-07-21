@@ -141,6 +141,10 @@ class DeepCopy
         $newObject = clone $object;
         $this->hashMap[$objectHash] = $newObject;
 
+        if (!$reflectedObject->isUserDefined()) {
+            return $newObject;
+        }
+
         foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
             $this->copyObjectProperty($newObject, $property);
         }
