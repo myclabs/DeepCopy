@@ -46,7 +46,9 @@ class DeepCopyTest extends AbstractTestClass
     {
         $o = new A();
         $o->date1 = new \DateTime();
-        $o->date2 = new \DateTimeImmutable();
+        if (class_exists('DateTimeImmutable')) {
+            $o->date2 = new \DateTimeImmutable();
+        }
 
         $deepCopy = new DeepCopy();
         $c = $deepCopy->copy($o);
