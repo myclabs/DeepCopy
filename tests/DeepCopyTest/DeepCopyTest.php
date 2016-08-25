@@ -42,6 +42,17 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertDeepCopyOf($o, $deepCopy->copy($o));
     }
 
+    public function testPropertyObjectCopyWithDateTimes()
+    {
+        $o = new A();
+        $o->date1 = new \DateTime();
+        $o->date2 = new \DateTimeImmutable();
+
+        $deepCopy = new DeepCopy();
+
+        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+    }
+
     public function testPrivatePropertyOfParentObjectCopy()
     {
         $o = new E();
