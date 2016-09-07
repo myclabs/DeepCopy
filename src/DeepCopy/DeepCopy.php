@@ -104,11 +104,11 @@ class DeepCopy
      */
     private function copyArray(array $array)
     {
-        $copier = function($item) {
-            return $this->recursiveCopy($item);
-        };
+        foreach ($array as $key => $value) {
+            $array[$key] = $this->recursiveCopy($value);
+        }
 
-        return array_map($copier, $array);
+        return $array;
     }
 
     /**
