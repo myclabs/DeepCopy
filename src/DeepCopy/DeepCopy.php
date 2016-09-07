@@ -140,6 +140,9 @@ class DeepCopy
 
         $newObject = clone $object;
         $this->hashMap[$objectHash] = $newObject;
+        if ($reflectedObject->hasMethod('__clone')) {
+            return $object;
+        }
 
         if ($newObject instanceof \DateTimeInterface) {
             return $newObject;
