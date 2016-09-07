@@ -6,6 +6,29 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 [![Total Downloads](https://poser.pugx.org/myclabs/deep-copy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
 
 
+## Table of Contents
+
+1. [How](#how)
+1. [Why](#why)
+    1. [Using simply `clone`](#using-simply-clone)
+    1. [Overridding `__clone()`](#overridding-__clone)
+    1. [With `DeepCopy`](#with-deepcopy)
+1. [How it works](#how-it-works)
+1. [Going further](#going-further)
+    1. [Matchers](#matchers)
+        1. [Property name](#property-name)
+        1. [Specific property](#specific-property)
+        1. [Type](#type)
+    1. [Filters](#filters)
+        1. [`SetNullFilter`](#setnullfilter)
+        1. [`KeepFilter`](#keepfilter)
+        1. [`ReplaceFilter`](#replacefilter)
+        1. [`ShallowCopyFilter`](#doctrinecollectionfilter)
+        1. [`DoctrineCollectionFilter`](#doctrinecollectionfilter)
+        1. [`DoctrineEmptyCollectionFilter`](#doctrineemptycollectionfilter)
+1. [Contributing](#contributing)
+    1. [Tests](#tests)
+
 ## How?
 
 Install with Composer:
@@ -50,7 +73,7 @@ Now you're in for a big mess :(
 
 ![Overridding __clone](doc/deep-clone.png)
 
-### With DeepCopy
+### With `DeepCopy`
 
 ![With DeepCopy](doc/deep-copy.png)
 
@@ -70,7 +93,7 @@ We provide some generic filters and matchers.
 
 ### Matchers
 
-  - `DeepCopy\Matcher` applies on a object attribute. 
+  - `DeepCopy\Matcher` applies on a object attribute.
   - `DeepCopy\TypeMatcher` applies on any element found in graph, including array elements.
 
 #### Property name
@@ -108,7 +131,7 @@ $matcher = new TypeMatcher('Doctrine\Common\Collections\Collection');
 
 ### Filters
 
-  - `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`.   
+  - `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`.
   - `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`.
 
 #### `SetNullFilter`
@@ -154,14 +177,14 @@ $myCopy = $deepCopy->copy($myObject);
   use DeepCopy\DeepCopy;
   use DeepCopy\Filter\ReplaceFilter;
   use DeepCopy\Matcher\PropertyMatcher;
-  
+
   $deepCopy = new DeepCopy();
   $callback = function ($currentValue) {
       return $currentValue . ' (copy)'
   };
   $deepCopy->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
   $myCopy = $deepCopy->copy($myObject);
-  
+
   // $myCopy->title will contain the data returned by the callback, e.g. 'The title (copy)'
   ```
 
@@ -171,14 +194,14 @@ $myCopy = $deepCopy->copy($myObject);
   use DeepCopy\DeepCopy;
   use DeepCopy\TypeFilter\ReplaceFilter;
   use DeepCopy\TypeMatcher\TypeMatcher;
-  
+
   $deepCopy = new DeepCopy();
   $callback = function (MyClass $myClass) {
       return get_class($myClass);
   };
   $deepCopy->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
   $myCopy = $deepCopy->copy(array(new MyClass, 'some string', new MyClass));
-  
+
   // $myCopy will contain ['MyClass', 'some stirng', 'MyClass']
   ```
 
@@ -187,7 +210,7 @@ The `$callback` parameter of the `ReplaceFilter` constructor accepts any PHP cal
 
 #### `ShallowCopyFilter`
 
-Stop *DeepCopy* from recursively copying element, using standard `clone` instead:  
+Stop *DeepCopy* from recursively copying element, using standard `clone` instead:
 
 ```php
 use DeepCopy\DeepCopy;
@@ -202,7 +225,7 @@ $this->deepCopy->addTypeFilter(
 );
 
 $myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDependency2::class));
-// all mocks will be just cloned, not deep-copied 
+// all mocks will be just cloned, not deep-copied
 ```
 
 #### `DoctrineCollectionFilter`
