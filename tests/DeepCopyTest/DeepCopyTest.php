@@ -145,12 +145,23 @@ class DeepCopyTest extends AbstractTestClass
         $deepCopy->copy($o);
     }
     
-    public function testCloneObjectsImplementing()
+    public function testCloneObjectsWithUserlandCloneMethod()
     {
         $f = new F();
         $f->prop = new \DateTime('2016-09-16');
 
         $deepCopy = new DeepCopy();
+        $newF = $deepCopy->copy($f);
+
+        $this->assertNotSame($newF->prop, $f->prop);
+    }
+
+    public function testCloneObjectsWithUserlandCloneMethodAndUseCloneableMethodEnabled()
+    {
+        $f = new F();
+        $f->prop = new \DateTime('2016-09-16');
+
+        $deepCopy = new DeepCopy(true);
         $newF = $deepCopy->copy($f);
 
         $this->assertSame($newF->prop, $f->prop);
