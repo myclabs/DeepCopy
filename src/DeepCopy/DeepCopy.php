@@ -5,6 +5,7 @@ namespace DeepCopy;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
+use DeepCopy\TypeFilter\Spl\SplDoublyLinkedList;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use ReflectionProperty;
@@ -46,6 +47,8 @@ class DeepCopy
     public function __construct($useCloneMethod = false)
     {
         $this->useCloneMethod = $useCloneMethod;
+
+        $this->addTypeFilter(new SplDoublyLinkedList($this), new TypeMatcher('\SplDoublyLinkedList'));
     }
 
     /**
