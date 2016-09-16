@@ -27,9 +27,8 @@ class ReflectionHelper
 
         if ($parentClass = $ref->getParentClass()) {
             $parentPropsArr = self::getProperties($parentClass);
-            foreach ($parentPropsArr as $property) {
-                $f = $property->getName();
-                $propsArr[$f] = $property;
+            if (count($parentPropsArr) > 0) {
+                $propsArr = array_merge($parentPropsArr, $propsArr);
             }
         }
         return $propsArr;
