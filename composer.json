@@ -12,7 +12,7 @@
         "psr-4": { "DeepCopyTest\\": "tests/DeepCopyTest/" }
     },
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0 <7.2"
     },
     "require-dev": {
         "doctrine/collections": "1.*",
