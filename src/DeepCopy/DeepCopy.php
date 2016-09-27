@@ -162,13 +162,13 @@ class DeepCopy
             return $newObject;
         }
         foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
-            $this->copyObjectProperty($newObject, $property);
+            $this->copyObjectProperty($object, $newObject, $property);
         }
 
         return $newObject;
     }
 
-    private function copyObjectProperty($object, ReflectionProperty $property)
+    private function copyObjectProperty($object, $newObject, ReflectionProperty $property)
     {
         // Ignore static properties
         if ($property->isStatic()) {
@@ -182,9 +182,9 @@ class DeepCopy
             /** @var Filter $filter */
             $filter = $item['filter'];
 
-            if ($matcher->matches($object, $property->getName())) {
+            if ($matcher->matches($newObject, $property->getName())) {
                 $filter->apply(
-                    $object,
+                    $newObject,
                     $property->getName(),
                     function ($object) {
                         return $this->recursiveCopy($object);
@@ -199,7 +199,7 @@ class DeepCopy
         $propertyValue = $property->getValue($object);
 
         // Copy the property
-        $property->setValue($object, $this->recursiveCopy($propertyValue));
+        $property->setValue($newObject, $this->recursiveCopy($propertyValue));
     }
 
     /**
