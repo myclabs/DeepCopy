@@ -2,8 +2,6 @@
 
 namespace DeepCopyTest;
 
-use DeepCopy\Reflection\ReflectionHelper;
-
 /**
  * Abstract test class
  */
@@ -41,6 +39,15 @@ abstract class AbstractTestClass extends \PHPUnit_Framework_TestCase
         $this->assertSame(array_keys($expectedProperties), array_keys($actualProperties));
         foreach ($expectedProperties as $name => $value) {
             $this->assertDeepCopyOf($value, $actualProperties[$name]);
+        }
+
+        if ($expected instanceof \SplDoublyLinkedList) {
+            /** @var \SplDoublyLinkedList $actual */
+            $this->assertSame($expected->count(), $actual->count());
+
+            while (!$expected->isEmpty() && !$actual->isEmpty()) {
+                $this->assertDeepCopyOf($expected->pop(), $actual->pop());
+            }
         }
     }
 }

@@ -5,6 +5,9 @@ namespace DeepCopyTest;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\PropertyMatcher;
+use DeepCopy\Matcher\PropertyTypeMatcher;
+use DeepCopy\TypeFilter\Spl\SplDoublyLinkedList;
+use DeepCopy\TypeFilter\Spl\SplStackFilter;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 
@@ -159,7 +162,7 @@ class DeepCopyTest extends AbstractTestClass
         $deepCopy = new DeepCopy();
         $deepCopy->copy($o);
     }
-    
+
     public function testCloneObjectsWithUserlandCloneMethod()
     {
         $f = new F();
@@ -271,6 +274,24 @@ class DeepCopyTest extends AbstractTestClass
 
         $this->assertNull($new[2]);
         $this->assertNull($new[3]);
+    }
+
+    public function testSplDoublyLinkedListDeepCopy()
+    {
+        $a = new A();
+        $a->property1 = 'foo';
+        $a->property2 = new \SplDoublyLinkedList();
+
+        $b = new B();
+        $b->property = 'baz';
+        $a->property2->push($b);
+
+        $stack = new \SplDoublyLinkedList();
+        $stack->push($a);
+        $stack->push($b);
+
+        $deepCopy = new DeepCopy();
+        $this->assertDeepCopyOf($stack, $deepCopy->copy($stack));
     }
 }
 
