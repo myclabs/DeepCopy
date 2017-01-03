@@ -258,6 +258,25 @@ $myCopy = $deepCopy->copy($myObject);
 // $myCopy->myProperty will return an empty collection
 ```
 
+#### `DoctrineProxyFilter`
+
+If you use Doctrine and use cloning on lazy loaded entities, you might encounter errors mentioning missing fields on a
+Doctrine proxy class (...\\\_\_CG\_\_\Proxy).
+You can use the `DoctrineProxyFilter` to load the actual entity behind the Doctrine proxy class.
+**Make sure, though, to put this as one of your very first filters in the filter chain so that the entity is loaded before other filters are applied!**
+
+```php
+use DeepCopy\DeepCopy;
+use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
+use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
+
+$deepCopy = new DeepCopy();
+$deepCopy->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
+$myCopy = $deepCopy->copy($myObject);
+
+// $myCopy should now contain a clone of all entities, including those that were not yet fully loaded.
+```
+
 ## Contributing
 
 DeepCopy is distributed under the MIT license.
