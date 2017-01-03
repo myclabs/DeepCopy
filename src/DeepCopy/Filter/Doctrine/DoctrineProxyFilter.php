@@ -5,7 +5,8 @@ namespace DeepCopy\Filter\Doctrine;
 use DeepCopy\Filter\Filter;
 
 /**
- * Keep the value of a property
+ * Trigger the magic method __load() on a Doctrine Proxy class to load the
+ * actual entity from the database.
  */
 class DoctrineProxyFilter implements Filter
 {
