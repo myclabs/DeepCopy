@@ -202,7 +202,7 @@ $myCopy = $deepCopy->copy($myObject);
   $deepCopy->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
   $myCopy = $deepCopy->copy(array(new MyClass, 'some string', new MyClass));
 
-  // $myCopy will contain ['MyClass', 'some stirng', 'MyClass']
+  // $myCopy will contain ['MyClass', 'some string', 'MyClass']
   ```
 
 
