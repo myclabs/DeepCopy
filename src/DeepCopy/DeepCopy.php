@@ -160,8 +160,7 @@ class DeepCopy
         if ($this->useCloneMethod && $reflectedObject->hasMethod('__clone')) {
             return $object;
         }
-
-        if ($newObject instanceof \DateTimeInterface) {
+        if ($newObject instanceof \DateTimeZone || $newObject instanceof \DateTimeInterface) {
             return $newObject;
         }
         foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
