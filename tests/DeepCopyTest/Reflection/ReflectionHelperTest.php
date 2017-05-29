@@ -39,7 +39,7 @@ class ReflectionHelperTest extends \PHPUnit_Framework_TestCase
     {
         $object = new ReflectionHelperTestChild();
         $property = ReflectionHelper::getProperty($object, $name);
-        $this->assertInstanceOf(\ReflectionProperty::class, $property);
+        $this->assertInstanceOf('\ReflectionProperty', $property);
         $this->assertSame($name, $property->getName());
     }
 
