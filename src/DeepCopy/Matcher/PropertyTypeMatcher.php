@@ -2,7 +2,7 @@
 
 namespace DeepCopy\Matcher;
 
-use ReflectionProperty;
+use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * Match a property by its type
@@ -30,7 +30,7 @@ class PropertyTypeMatcher implements Matcher
      */
     public function matches($object, $property)
     {
-        $reflectionProperty = new ReflectionProperty($object, $property);
+        $reflectionProperty = ReflectionHelper::getProperty($object, $property);
         $reflectionProperty->setAccessible(true);
 
         return $reflectionProperty->getValue($object) instanceof $this->propertyType;

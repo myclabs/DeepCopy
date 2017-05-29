@@ -3,7 +3,7 @@
 namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\Filter;
-use ReflectionProperty;
+use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * Set a null value for a property
@@ -15,7 +15,7 @@ class DoctrineCollectionFilter implements Filter
      */
     public function apply($object, $property, $objectCopier)
     {
-        $reflectionProperty = new ReflectionProperty($object, $property);
+        $reflectionProperty = ReflectionHelper::getProperty($object, $property);
 
         $reflectionProperty->setAccessible(true);
         $oldCollection = $reflectionProperty->getValue($object);
