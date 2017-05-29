@@ -54,6 +54,15 @@ class ReflectionHelperTest extends \PHPUnit_Framework_TestCase
             'private property of ancestor' => ['a3']
         ];
     }
+
+    /**
+     * @expectedException \DeepCopy\Exception\PropertyException
+     */
+    public function testGetPropertyWhenNotExist()
+    {
+        $object = new ReflectionHelperTestChild();
+        ReflectionHelper::getProperty($object, 'notExistingProperty');
+    }
 }
 
 class ReflectionHelperTestParent {
