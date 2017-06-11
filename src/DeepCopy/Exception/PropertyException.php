@@ -2,6 +2,6 @@
 
 namespace DeepCopy\Exception;
 
-class PropertyException extends \InvalidArgumentException implements DeepCopyExceptionInterface
+class PropertyException extends \InvalidArgumentException
 {
 }
