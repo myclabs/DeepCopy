@@ -161,7 +161,7 @@ class DeepCopy
             return $object;
         }
 
-        if ($newObject instanceof \DateTimeInterface) {
+        if ($newObject instanceof \DateTimeInterface || $newObject instanceof \DateInterval) {
             return $newObject;
         }
         foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
