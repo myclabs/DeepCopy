@@ -6,7 +6,10 @@
     "homepage": "https://github.com/myclabs/DeepCopy",
     "license": "MIT",
     "autoload": {
-        "psr-4": { "DeepCopy\\": "src/DeepCopy/" }
+        "psr-4": { "DeepCopy\\": "src/DeepCopy/" },
+        "files": [
+            "src/DeepCopy/deep_copy.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": { "DeepCopyTest\\": "tests/DeepCopyTest/" }
