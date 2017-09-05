@@ -4,6 +4,7 @@ namespace DeepCopyTest;
 
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Filter;
+use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\Spl\SplDoublyLinkedList;
@@ -71,6 +72,15 @@ class DeepCopyTest extends AbstractTestClass
         $deepCopy = new DeepCopy();
 
         $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+    }
+
+    public function testPrivatePropertyOfParentFilter()
+    {
+        $e = (new E)->setProperty1(new B);
+
+        $deepCopy = new DeepCopy;
+        $deepCopy->addFilter(new KeepFilter, new PropertyTypeMatcher('stdClass'));
+        $deepCopy->copy($e); // Property DeepCopyTest\E::$property1 does not exist.
     }
 
     public function testPropertyArrayCopy()

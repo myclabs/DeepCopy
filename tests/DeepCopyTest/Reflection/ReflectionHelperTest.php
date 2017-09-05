@@ -29,6 +29,40 @@ class ReflectionHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($expectedProps, array_keys($actualProps));
     }
+
+    /**
+     * @dataProvider propertyDataProvider
+     *
+     * @param string $name
+     */
+    public function testGetProperty($name)
+    {
+        $object = new ReflectionHelperTestChild();
+        $property = ReflectionHelper::getProperty($object, $name);
+        $this->assertInstanceOf('\ReflectionProperty', $property);
+        $this->assertSame($name, $property->getName());
+    }
+
+    /**
+     * @return array
+     */
+    public function propertyDataProvider()
+    {
+        return [
+            'public property' => ['a4'],
+            'private property' => ['a9'],
+            'private property of ancestor' => ['a3']
+        ];
+    }
+
+    /**
+     * @expectedException \DeepCopy\Exception\PropertyException
+     */
+    public function testGetPropertyWhenNotExist()
+    {
+        $object = new ReflectionHelperTestChild();
+        ReflectionHelper::getProperty($object, 'notExistingProperty');
+    }
 }
 
 class ReflectionHelperTestParent {
