@@ -7,6 +7,8 @@ use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * Set a null value for a property
+ *
+ * @final
  */
 class DoctrineCollectionFilter implements Filter
 {

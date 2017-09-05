@@ -7,6 +7,8 @@ use Doctrine\Common\Persistence\Proxy;
 
 /**
  * Match a Doctrine Proxy class.
+ *
+ * @final
  */
 class DoctrineProxyMatcher implements Matcher
 {

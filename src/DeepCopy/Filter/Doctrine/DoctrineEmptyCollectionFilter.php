@@ -6,6 +6,9 @@ use DeepCopy\Filter\Filter;
 use DeepCopy\Reflection\ReflectionHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * @final
+ */
 class DoctrineEmptyCollectionFilter implements Filter
 {
     /**

@@ -9,6 +9,8 @@ use DeepCopy\Reflection\ReflectionHelper;
  *
  * It is recommended to use {@see DeepCopy\TypeFilter\TypeFilter} instead, as it applies on all occurrences
  * of given type in copied context (eg. array elements), not just on object properties.
+ *
+ * @final
  */
 class PropertyTypeMatcher implements Matcher
 {
