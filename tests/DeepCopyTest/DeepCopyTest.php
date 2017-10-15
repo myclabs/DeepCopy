@@ -184,6 +184,17 @@ class DeepCopyTest extends AbstractTestClass
         $this->assertNotSame($newF->prop, $f->prop);
     }
 
+    public function testCloneObjectsWithUserlandCloneMethodManipulateExistingPropertyValue()
+    {
+        $i = new I();
+        $i->property = 'my_value';
+
+        $deepCopy = new DeepCopy(false);
+        $newI = $deepCopy->copy($i);
+
+        $this->assertSame('my_value', $newI->property);
+    }
+
     public function testCloneObjectsWithUserlandCloneMethodAndUseCloneableMethodEnabled()
     {
         $f = new F();
@@ -371,4 +382,10 @@ class G
 class H extends G
 {
     private $prop = 'bar';
+}
+
+class I extends B {
+    public function __clone() {
+        $this->property = 'value_manipulated_by__clone()_method';
+    }
 }
