@@ -5,6 +5,9 @@ namespace DeepCopy\Filter\Doctrine;
 use DeepCopy\Filter\Filter;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * @final
+ */
 class DoctrineEmptyCollectionFilter implements Filter
 {
     /**
