@@ -23,7 +23,7 @@
         "php": ">=5.4.0"
     },
     "require-dev": {
-        "doctrine/collections": "1.*",
+        "doctrine/collections": "^1.0",
         "phpunit/phpunit": "~4.1"
     },
 

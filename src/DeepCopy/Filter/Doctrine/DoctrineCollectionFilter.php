@@ -6,7 +6,7 @@ use DeepCopy\Filter\Filter;
 use ReflectionProperty;
 
 /**
- * Set a null value for a property
+ * Sets a null value for a property.
  *
  * @final
  */
