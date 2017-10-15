@@ -171,7 +171,7 @@ class DeepCopy
 
             throw new CloneException(
                 sprintf(
-                    'Class "%s" is not cloneable.',
+                    'The class "%s" is not cloneable.',
                     $reflectedObject->getName()
                 )
             );
@@ -181,7 +181,7 @@ class DeepCopy
         $this->hashMap[$objectHash] = $newObject;
 
         if ($this->useCloneMethod && $reflectedObject->hasMethod('__clone')) {
-            return $object;
+            return $newObject;
         }
 
         if ($newObject instanceof DateTimeInterface) {
