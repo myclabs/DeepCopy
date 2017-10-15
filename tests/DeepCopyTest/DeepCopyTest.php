@@ -17,6 +17,7 @@ use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
 use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
+use PHPUnit_Framework_TestCase;
 use SplDoublyLinkedList;
 use stdClass;
 use function DeepCopy\deep_copy;
@@ -24,7 +25,7 @@ use function DeepCopy\deep_copy;
 /**
  * @covers \DeepCopy\DeepCopy
  */
-class DeepCopyTest extends AbstractTestClass
+class DeepCopyTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider provideScalarValues

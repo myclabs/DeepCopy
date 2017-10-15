@@ -28,8 +28,8 @@ class TypeMatcherTest extends PHPUnit_Framework_TestCase
         return [
             '[class] same class as type' => ['stdClass', new stdClass(), true],
             '[class] different class as type' => ['stdClass', new Foo(), false],
-            '[class] child class as type' => ['DeepCopyTest\TypeMatcher\Foo', new Bar(), true],
-            '[class] interface implementation as type' => ['DeepCopyTest\TypeMatcher\IA', new A(), true],
+            '[class] child class as type' => [Foo::class, new Bar(), true],
+            '[class] interface implementation as type' => [IA::class, new A(), true],
 
             '[scalar] array match' => ['array', [], true],
             '[scalar] array no match' => ['array', true, false],

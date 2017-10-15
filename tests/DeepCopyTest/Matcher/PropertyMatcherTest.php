@@ -15,7 +15,7 @@ class PropertyMatcherTest extends PHPUnit_Framework_TestCase
      */
     public function test_it_matches_the_given_objects($object, $prop, $expected)
     {
-        $matcher = new PropertyMatcher('DeepCopyTest\Matcher\X', 'foo');
+        $matcher = new PropertyMatcher(X::class, 'foo');
 
         $actual = $matcher->matches($object, $prop);
 
