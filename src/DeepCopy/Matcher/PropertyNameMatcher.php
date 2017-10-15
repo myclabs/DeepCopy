@@ -3,7 +3,7 @@
 namespace DeepCopy\Matcher;
 
 /**
- * Match a property by its name
+ * Matches a property by its name.
  *
  * @final
  */

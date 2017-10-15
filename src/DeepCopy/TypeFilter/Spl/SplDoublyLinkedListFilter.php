@@ -4,11 +4,12 @@ namespace DeepCopy\TypeFilter\Spl;
 
 use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\TypeFilter;
+use SplDoublyLinkedList;
 
 /**
  * @final
  */
-class SplDoublyLinkedList implements TypeFilter
+class SplDoublyLinkedListFilter implements TypeFilter
 {
     /**
      * @var DeepCopy
@@ -27,7 +28,7 @@ class SplDoublyLinkedList implements TypeFilter
     {
         $newElement = clone $element;
 
-        if ($element instanceof \SplDoublyLinkedList) {
+        if ($element instanceof SplDoublyLinkedList) {
             // Replace each element in the list with a deep copy of itself
             for ($i = 1; $i <= $newElement->count(); $i++) {
                 $newElement->push($this->deepCopy->copy($newElement->shift()));
@@ -35,6 +36,5 @@ class SplDoublyLinkedList implements TypeFilter
         }
 
         return $newElement;
-
     }
 }

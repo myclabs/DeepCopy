@@ -2,6 +2,9 @@
 
 namespace DeepCopy\Reflection;
 
+use ReflectionClass;
+use ReflectionProperty;
+
 class ReflectionHelper
 {
     /**
@@ -12,10 +15,11 @@ class ReflectionHelper
      * @author muratyaman@gmail.com
      * @see http://php.net/manual/en/reflectionclass.getproperties.php
      *
-     * @param \ReflectionClass $ref
-     * @return \ReflectionProperty[]
+     * @param ReflectionClass $ref
+     *
+     * @return ReflectionProperty[]
      */
-    public static function getProperties(\ReflectionClass $ref)
+    public static function getProperties(ReflectionClass $ref)
     {
         $props = $ref->getProperties();
         $propsArr = array();

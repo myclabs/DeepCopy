@@ -3,7 +3,7 @@
 namespace DeepCopy;
 
 /**
- * Deep copy the given value.
+ * Deep copies the given value.
  *
  * @param mixed $value
  * @param bool  $useCloneMethod
