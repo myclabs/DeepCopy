@@ -6,6 +6,8 @@ use ReflectionProperty;
 
 /**
  * Set a null value for a property
+ *
+ * @final
  */
 class SetNullFilter implements Filter
 {

@@ -4,6 +4,8 @@ namespace DeepCopy\Matcher;
 
 /**
  * Match a property by its name
+ *
+ * @final
  */
 class PropertyNameMatcher implements Matcher
 {

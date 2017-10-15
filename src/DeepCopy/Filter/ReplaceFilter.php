@@ -4,6 +4,8 @@ namespace DeepCopy\Filter;
 
 /**
  * Replace the value of a property
+ *
+ * @final
  */
 class ReplaceFilter implements Filter
 {
