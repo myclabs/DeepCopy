@@ -13,7 +13,7 @@ use stdClass;
  */
 class SplDoublyLinkedListFilterTest extends PHPUnit_Framework_TestCase
 {
-    public function test_it_deeps_copy_a_doubly_linked_spl_list()
+    public function test_it_deep_copies_a_doubly_linked_spl_list()
     {
         $foo = new stdClass();
 

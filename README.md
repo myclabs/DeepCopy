@@ -29,6 +29,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
         1. [`DoctrineProxyFilter`](#doctrineproxyfilter-filter)
         1. [`ReplaceFilter`](#replacefilter-type-filter)
         1. [`ShallowCopyFilter`](#doctrinecollectionfilter-type-filter)
+1. [Edge cases](#edge-cases)
 1. [Contributing](#contributing)
     1. [Tests](#tests)
 
@@ -346,6 +347,15 @@ $this->deepCopy->addTypeFilter(
 $myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDependency2::class));
 // All mocks will be just cloned, not deep copied
 ```
+
+
+## Edge cases
+
+The following structures cannot be deep-copied with PHP Reflection. As a result they are shallow cloned and filters are
+not applied. There is two ways for you to handle them:
+
+- Implement your own `__clone()` method
+- Use a filter with a type matcher
 
 
 ## Contributing

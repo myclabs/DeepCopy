@@ -12,9 +12,6 @@ use SplDoublyLinkedList;
  */
 class SplDoublyLinkedListFilter implements TypeFilter
 {
-    /**
-     * @var DeepCopy
-     */
     private $copier;
 
     public function __construct(DeepCopy $copier)
