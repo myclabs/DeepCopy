@@ -8,7 +8,10 @@
     "autoload": {
         "psr-4": {
             "DeepCopy\\": "src/DeepCopy/"
-        }
+        },
+        "files": [
+            "src/DeepCopy/deep_copy.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
