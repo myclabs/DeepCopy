@@ -2,363 +2,364 @@
 
 namespace DeepCopyTest;
 
+use DateTime;
+use DateTimeImmutable;
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\Filter;
-use DeepCopy\Matcher\PropertyMatcher;
-use DeepCopy\Matcher\PropertyTypeMatcher;
-use DeepCopy\TypeFilter\Spl\SplDoublyLinkedList;
-use DeepCopy\TypeFilter\Spl\SplStackFilter;
-use DeepCopy\TypeFilter\TypeFilter;
+use DeepCopy\Exception\CloneException;
+use DeepCopy\f001;
+use DeepCopy\f002;
+use DeepCopy\f003;
+use DeepCopy\f004;
+use DeepCopy\f005;
+use DeepCopy\f006;
+use DeepCopy\Filter\KeepFilter;
+use DeepCopy\Filter\SetNullFilter;
+use DeepCopy\Matcher\PropertyNameMatcher;
+use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
+use PHPUnit_Framework_TestCase;
+use SplDoublyLinkedList;
+use stdClass;
+use function DeepCopy\deep_copy;
 
 /**
- * DeepCopyTest
+ * @covers \DeepCopy\DeepCopy
  */
-class DeepCopyTest extends AbstractTestClass
+class DeepCopyTest extends PHPUnit_Framework_TestCase
 {
-    public function testSimpleObjectCopy()
+    /**
+     * @dataProvider provideScalarValues
+     */
+    public function test_it_can_copy_scalar_values($value)
     {
-        $o = new A();
+        $copy = deep_copy($value);
 
-        $deepCopy = new DeepCopy();
-
-        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+        $this->assertSame($value, $copy);
     }
 
-    public function testPropertyScalarCopy()
+    public function provideScalarValues()
     {
-        $o = new A();
-        $o->property1 = 'foo';
-
-        $deepCopy = new DeepCopy();
-
-        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+        return [
+            [true],
+            ['string'],
+            [null],
+            [10],
+            [-1],
+            [.5],
+        ];
     }
 
-    public function testPropertyObjectCopy()
+    public function test_it_can_copy_an_array_of_scalar_values()
     {
-        $o = new A();
-        $o->property1 = new B();
+        $copy = deep_copy([10, 20]);
 
-        $deepCopy = new DeepCopy();
-
-        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+        $this->assertSame([10, 20], $copy);
     }
 
-    public function testPropertyObjectCopyWithDateTimes()
+    public function test_it_can_copy_an_object()
     {
-        $o = new A();
-        $o->date1 = new \DateTime();
-        if (class_exists('DateTimeImmutable')) {
-            $o->date2 = new \DateTimeImmutable();
+        $object = new stdClass();
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+    }
+
+    public function test_it_can_copy_an_array_of_objects()
+    {
+        $object = [new stdClass()];
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+        $this->assertEqualButNotSame($object[0], $copy[0]);
+    }
+
+    /**
+     * @dataProvider provideObjectWithScalarValues
+     */
+    public function test_it_can_copy_an_object_with_scalar_properties($object, $expectedVal)
+    {
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+        $this->assertSame($expectedVal, $copy->prop);
+    }
+
+    public function provideObjectWithScalarValues()
+    {
+        $createObject = function ($val) {
+            $object = new stdClass();
+
+            $object->prop = $val;
+
+            return $object;
+        };
+
+        return array_map(
+            function (array $vals) use ($createObject) {
+                return [$createObject($vals[0]), $vals[0]];
+            },
+            $this->provideScalarValues()
+        );
+    }
+
+    public function test_it_can_copy_an_object_with_an_object_property()
+    {
+        $foo = new stdClass();
+        $bar = new stdClass();
+
+        $foo->bar = $bar;
+
+        $copy = deep_copy($foo);
+
+        $this->assertEqualButNotSame($foo, $copy);
+        $this->assertEqualButNotSame($foo->bar, $copy->bar);
+    }
+
+    public function test_dynamic_properties_are_copied()
+    {
+        $foo = new stdClass();
+        $bar = new stdClass();
+
+        $foo->bar = $bar;
+
+        $copy = deep_copy($foo);
+
+        $this->assertEqualButNotSame($foo, $copy);
+        $this->assertEqualButNotSame($foo->bar, $copy->bar);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/38
+     */
+    public function test_it_can_copy_an_object_with_a_date_object_property()
+    {
+        $object = new stdClass();
+
+        $object->d1 = new DateTime();
+        $object->d2 = new DateTimeImmutable();
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object->d1, $copy->d1);
+        $this->assertEqualButNotSame($object->d2, $copy->d2);
+    }
+
+    public function test_it_copies_the_private_properties_of_the_parent_class()
+    {
+        $object = new f001\B();
+
+        $object->setAProp($aStdClass = new stdClass());
+        $object->setBProp($bStdClass = new stdClass());
+
+        /** @var f001\B $copy */
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($aStdClass, $copy->getAProp());
+        $this->assertEqualButNotSame($bStdClass, $copy->getBProp());
+    }
+
+    public function test_it_keeps_reference_of_the_copied_objects_when_copying_the_graph()
+    {
+        $a = new f002\A();
+
+        $b = new stdClass();
+        $c = new stdClass();
+
+        $a->setProp1($b);
+        $a->setProp2($c);
+
+        $b->c = $c;
+
+        /** @var f002\A $copy */
+        $copy = deep_copy($a);
+
+        $this->assertEqualButNotSame($a, $copy);
+        $this->assertEqualButNotSame($b, $copy->getProp1());
+        $this->assertEqualButNotSame($c, $copy->getProp2());
+
+        $this->assertSame($copy->getProp1()->c, $copy->getProp2());
+    }
+
+    public function test_it_can_copy_graphs_with_circular_references()
+    {
+        $a = new stdClass();
+        $b = new stdClass();
+
+        $a->prop = $b;
+        $b->prop = $a;
+
+        $copy = deep_copy($a);
+
+        $this->assertEqualButNotSame($a, $copy);
+        $this->assertEqualButNotSame($b, $copy->prop);
+
+        $this->assertSame($copy, $copy->prop->prop);
+    }
+
+    public function test_it_can_copy_graphs_with_circular_references_with_userland_class()
+    {
+        $a = new f003\Foo('a');
+        $b = new f003\Foo('b');
+
+        $a->setProp($b);
+        $b->setProp($a);
+
+        /** @var f003\Foo $copy */
+        $copy = deep_copy($a);
+
+        $this->assertEqualButNotSame($a, $copy);
+        $this->assertEqualButNotSame($b, $copy->getProp());
+
+        $this->assertSame($copy, $copy->getProp()->getProp());
+    }
+
+    public function test_it_cannot_copy_unclonable_items()
+    {
+        $object = new f004\UnclonableItem();
+
+        try {
+            deep_copy($object);
+
+            $this->fail('Expected exception to be thrown.');
+        } catch (CloneException $exception) {
+            $this->assertSame(
+                sprintf(
+                    'The class "%s" is not cloneable.',
+                    f004\UnclonableItem::class
+                ),
+                $exception->getMessage()
+            );
+            $this->assertSame(0, $exception->getCode());
+            $this->assertNull($exception->getPrevious());
         }
-
-        $deepCopy = new DeepCopy();
-        $c = $deepCopy->copy($o);
-
-        $this->assertDeepCopyOf($o, $c);
-
-        $c->date1->setDate(2015, 01, 04);
-        $this->assertNotEquals($c->date1, $o->date1);
     }
 
-    public function testPrivatePropertyOfParentObjectCopy()
+    public function test_it_can_skip_uncloneable_objects()
     {
-        $o = new E();
-        $o->setProperty1(new B);
-        $o->setProperty2(new B);
+        $object = new f004\UnclonableItem();
 
         $deepCopy = new DeepCopy();
+        $deepCopy->skipUncloneable(true);
 
-        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+        $copy = $deepCopy->copy($object);
+
+        $this->assertSame($object, $copy);
     }
 
-    public function testPropertyArrayCopy()
+    public function test_it_uses_the_userland_defined_cloned_method()
     {
-        $o = new A();
-        $o->property1 = [new B()];
+        $object = new f005\Foo();
 
-        $deepCopy = new DeepCopy();
+        $copy = deep_copy($object);
 
-        $this->assertDeepCopyOf($o, $deepCopy->copy($o));
+        $this->assertTrue($copy->cloned);
     }
 
-    public function testCycleCopy1()
+    public function test_it_only_uses_the_userland_defined_cloned_method_when_configured_to_do_so()
     {
-        $a = new A();
-        $b = new B();
-        $c = new B();
-        $a->property1 = $b;
-        $a->property2 = $c;
-        $b->property = $c;
+        $object = new f005\Foo();
+        $object->foo = new stdClass();
 
-        $deepCopy = new DeepCopy();
-        /** @var A $a2 */
-        $a2 = $deepCopy->copy($a);
+        $copy = deep_copy($object, true);
 
-        $this->assertDeepCopyOf($a, $a2);
-
-        $this->assertSame($a2->property1->property, $a2->property2);
+        $this->assertTrue($copy->cloned);
+        $this->assertSame($object->foo, $copy->foo);
     }
 
-    public function testCycleCopy2()
+    public function test_it_uses_type_filter_to_copy_objects_if_matcher_matches()
     {
-        $a = new B();
-        $b = new B();
-        $a->property = $b;
-        $b->property = $a;
-
         $deepCopy = new DeepCopy();
-        /** @var B $a2 */
-        $a2 = $deepCopy->copy($a);
+        $deepCopy->addTypeFilter(
+            new ShallowCopyFilter(),
+            new TypeMatcher(f006\A::class)
+        );
 
-        $this->assertSame($a2, $a2->property->property);
+        $a = new f006\A;
+        $b = new f006\B;
+
+        $a->setAProp($b);
+
+        /** @var f006\A $copy */
+        $copy = $deepCopy->copy($a);
+
+        $this->assertTrue($copy->cloned);
+        $this->assertFalse($copy->getAProp()->cloned);
+        $this->assertSame($b, $copy->getAProp());
+    }
+
+    public function test_it_uses_filters_to_copy_object_properties_if_matcher_matches()
+    {
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(
+            new SetNullFilter(),
+            new PropertyNameMatcher('cloned')
+        );
+
+        $a = new f006\A;
+        $b = new f006\B;
+
+        $a->setAProp($b);
+
+        /** @var f006\A $copy */
+        $copy = $deepCopy->copy($a);
+
+        $this->assertNull($copy->cloned);
+        $this->assertNull($copy->getAProp()->cloned);
+    }
+
+    public function test_it_uses_the_first_filter_matching_for_copying_object_properties()
+    {
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(
+            new SetNullFilter(),
+            new PropertyNameMatcher('cloned')
+        );
+        $deepCopy->addFilter(
+            new KeepFilter(),
+            new PropertyNameMatcher('cloned')
+        );
+
+        $a = new f006\A;
+        $b = new f006\B;
+
+        $a->setAProp($b);
+
+        /** @var f006\A $copy */
+        $copy = $deepCopy->copy($a);
+
+        $this->assertNull($copy->cloned);
+        $this->assertNull($copy->getAProp()->cloned);
     }
 
     /**
-     * Dynamic properties should be cloned
+     * @ticket https://github.com/myclabs/DeepCopy/pull/49
      */
-    public function testDynamicProperties()
+    public function test_it_can_copy_a_SplDoublyLinkedList()
     {
-        $a = new \stdClass();
-        $a->b = new \stdClass();
+        $object = new SplDoublyLinkedList();
 
-        $deepCopy = new DeepCopy();
-        $a2 = $deepCopy->copy($a);
-        $this->assertNotSame($a->b, $a2->b);
-        $this->assertDeepCopyOf($a, $a2);
+        $a = new stdClass();
+        $b = new stdClass();
+
+        $a->b = $b;
+
+        $object->push($a);
+
+        /** @var SplDoublyLinkedList $copy */
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+
+        $aCopy = $copy->pop();
+
+        $this->assertEqualButNotSame($b, $aCopy->b);
     }
 
-    public function testCloneChild()
+    private function assertEqualButNotSame($expected, $val)
     {
-        $h = new H();
-
-        $deepCopy = new DeepCopy();
-        $newH = $deepCopy->copy($h);
-
-        $propRefl = (new \ReflectionObject($newH))->getProperty('prop');
-        $propRefl->setAccessible(true);
-
-        $this->assertNotSame($newH, $h);
-        $this->assertEquals($newH, $h);
-        $this->assertEquals('bar', $propRefl->getValue($newH));
+        $this->assertEquals($expected, $val);
+        $this->assertNotSame($expected, $val);
     }
-
-    public function testNonClonableItems()
-    {
-        $a = new \ReflectionClass('DeepCopyTest\A');
-        $deepCopy = new DeepCopy();
-        $a2 = $deepCopy->skipUncloneable()->copy($a);
-        $this->assertSame($a, $a2);
-    }
-
-    /**
-     * @expectedException \DeepCopy\Exception\CloneException
-     * @expectedExceptionMessage Class "DeepCopyTest\C" is not cloneable.
-     */
-    public function testCloneException()
-    {
-        $o = new C;
-        $deepCopy = new DeepCopy();
-        $deepCopy->copy($o);
-    }
-
-    public function testCloneObjectsWithUserlandCloneMethod()
-    {
-        $f = new F();
-        $f->prop = new \DateTime('2016-09-16');
-
-        $deepCopy = new DeepCopy();
-        $newF = $deepCopy->copy($f);
-
-        $this->assertNotSame($newF->prop, $f->prop);
-    }
-
-    public function testCloneObjectsWithUserlandCloneMethodAndUseCloneableMethodEnabled()
-    {
-        $f = new F();
-        $f->prop = new \DateTime('2016-09-16');
-
-        $deepCopy = new DeepCopy(true);
-        $newF = $deepCopy->copy($f);
-
-        $this->assertSame($newF->prop, $f->prop);
-    }
-
-    /**
-     * @test
-     */
-    public function filtersShouldBeApplied()
-    {
-        $o = new A();
-        $o->property1 = 'foo';
-
-        $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
-        $filter->expects($this->once())
-            ->method('apply')
-            ->will($this->returnCallback(function($object, $property) {
-                        $object->$property = null;
-                    }));
-
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter($filter, new PropertyMatcher(get_class($o), 'property1'));
-        /** @var A $new */
-        $new = $deepCopy->copy($o);
-
-        $this->assertNull($new->property1);
-    }
-
-    /**
-     * If a filter applies to a property, the property shouldn't be copied
-     * @test
-     */
-    public function filtersShouldBeAppliedAndBreakPropertyCopying()
-    {
-        $o = new A();
-        $o->property1 = new B();
-
-        /* @var Filter|\PHPUnit_Framework_MockObject_MockObject $filter */
-        $filter = $this->getMockForAbstractClass('DeepCopy\Filter\Filter');
-        $filter->expects($this->once())
-            ->method('apply')
-            ->will($this->returnCallback(function($object, $property, $objectCopier) {
-                    }));
-
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter($filter, new PropertyMatcher(get_class($o), 'property1'));
-        /** @var A $new */
-        $new = $deepCopy->copy($o);
-
-        $this->assertSame($o->property1, $new->property1);
-    }
-
-    /**
-     * If a filter applies to an object, it should not be copied
-     */
-    public function testTypeFilterShouldBeAppliedOnObject()
-    {
-        $o = new A();
-        $o->property1 = new B();
-
-        /* @var TypeFilter|\PHPUnit_Framework_MockObject_MockObject $filter */
-        $filter = $this->getMockForAbstractClass('DeepCopy\TypeFilter\TypeFilter');
-        $filter->expects($this->once())
-            ->method('apply')
-            ->will($this->returnValue(null));
-
-        $deepCopy = new DeepCopy();
-        $deepCopy->addTypeFilter($filter, new TypeMatcher('DeepCopyTest\B'));
-        /** @var A $new */
-        $new = $deepCopy->copy($o);
-
-        $this->assertNull($new->property1);
-    }
-
-    /**
-     * If a filter applies to an array member, it should not be copied
-     */
-    public function testTypeFilterShouldBeAppliedOnArrayMember()
-    {
-        $arr = [new A, new A, new B, new B, new A];
-
-        /* @var TypeFilter|\PHPUnit_Framework_MockObject_MockObject $filter */
-        $filter = $this->getMockForAbstractClass('DeepCopy\TypeFilter\TypeFilter');
-        $filter->expects($this->exactly(2))
-            ->method('apply')
-            ->will($this->returnValue(null));
-
-        $deepCopy = new DeepCopy();
-        $deepCopy->addTypeFilter($filter, new TypeMatcher('DeepCopyTest\B'));
-        /** @var A $new */
-        $new = $deepCopy->copy($arr);
-
-        $this->assertNull($new[2]);
-        $this->assertNull($new[3]);
-    }
-
-    public function testSplDoublyLinkedListDeepCopy()
-    {
-        $a = new A();
-        $a->property1 = 'foo';
-        $a->property2 = new \SplDoublyLinkedList();
-
-        $b = new B();
-        $b->property = 'baz';
-        $a->property2->push($b);
-
-        $stack = new \SplDoublyLinkedList();
-        $stack->push($a);
-        $stack->push($b);
-
-        $deepCopy = new DeepCopy();
-        $this->assertDeepCopyOf($stack, $deepCopy->copy($stack));
-    }
-}
-
-class A
-{
-    public $property1;
-    public $property2;
-}
-
-class B
-{
-    public $property;
-}
-
-class C
-{
-    private function __clone(){}
-}
-
-class D
-{
-    private $property1;
-
-    public function getProperty1()
-    {
-        return $this->property1;
-    }
-
-    public function setProperty1($property1)
-    {
-        $this->property1 = $property1;
-        return $this;
-    }
-}
-
-class E extends D
-{
-    private $property2;
-
-    public function getProperty2()
-    {
-        return $this->property2;
-    }
-
-    public function setProperty2($property2)
-    {
-        $this->property2 = $property2;
-        return $this;
-    }
-}
-
-class F
-{
-    public $prop;
-
-    public function __clone()
-    {
-        $this->foo = 'bar';
-    }
-}
-
-class G
-{
-    private $prop = 'foo';
-}
-
-class H extends G
-{
-    private $prop = 'bar';
 }

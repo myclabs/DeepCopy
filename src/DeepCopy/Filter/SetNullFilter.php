@@ -5,13 +5,13 @@ namespace DeepCopy\Filter;
 use ReflectionProperty;
 
 /**
- * Sets a null value for a property.
- *
  * @final
  */
 class SetNullFilter implements Filter
 {
     /**
+     * Sets the object property to null.
+     *
      * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)

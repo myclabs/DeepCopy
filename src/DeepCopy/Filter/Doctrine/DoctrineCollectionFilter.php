@@ -6,13 +6,13 @@ use DeepCopy\Filter\Filter;
 use ReflectionProperty;
 
 /**
- * Sets a null value for a property.
- *
  * @final
  */
 class DoctrineCollectionFilter implements Filter
 {
     /**
+     * Copies the object property doctrine collection.
+     *
      * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)

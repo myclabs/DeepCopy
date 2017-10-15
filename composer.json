@@ -15,16 +15,18 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "DeepCopy\\": "fixtures/",
             "DeepCopyTest\\": "tests/DeepCopyTest/"
         }
     },
 
     "require": {
-        "php": ">=5.4.0"
+        "php": "^5.6 || ^7.0"
     },
     "require-dev": {
         "doctrine/collections": "^1.0",
-        "phpunit/phpunit": "~4.1"
+        "doctrine/common": "^2.6",
+        "phpunit/phpunit": "^4.1"
     },
 
     "config": {
