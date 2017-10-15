@@ -24,7 +24,8 @@
     },
     "require-dev": {
         "doctrine/collections": "^1.0",
-        "phpunit/phpunit": "~4.1"
+        "doctrine/common": "^2.8",
+        "phpunit/phpunit": "^4.1"
     },
 
     "config": {

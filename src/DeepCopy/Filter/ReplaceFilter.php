@@ -5,8 +5,6 @@ namespace DeepCopy\Filter;
 use ReflectionProperty;
 
 /**
- * Replaces the value of a property
- *
  * @final
  */
 class ReplaceFilter implements Filter
@@ -25,6 +23,8 @@ class ReplaceFilter implements Filter
     }
 
     /**
+     * Replaces the object property by the result of the callback called with the object property.
+     *
      * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)

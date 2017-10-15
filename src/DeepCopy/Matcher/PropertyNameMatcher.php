@@ -3,8 +3,6 @@
 namespace DeepCopy\Matcher;
 
 /**
- * Matches a property by its name.
- *
  * @final
  */
 class PropertyNameMatcher implements Matcher
@@ -23,6 +21,8 @@ class PropertyNameMatcher implements Matcher
     }
 
     /**
+     * Matches a property by its name.
+     *
      * {@inheritdoc}
      */
     public function matches($object, $property)

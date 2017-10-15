@@ -12,7 +12,7 @@ use ReflectionProperty;
 class DoctrineEmptyCollectionFilter implements Filter
 {
     /**
-     * Applies the filter to the object.
+     * Sets the object property to an empty doctrine collection.
      *
      * @param object   $object
      * @param string   $property
