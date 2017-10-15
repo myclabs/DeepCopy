@@ -4,6 +4,7 @@ namespace DeepCopyTest;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeZone;
 use DeepCopy\DeepCopy;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\f001;
@@ -132,6 +133,7 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @ticket https://github.com/myclabs/DeepCopy/issues/38
+     * @ticket https://github.com/myclabs/DeepCopy/pull/70
      */
     public function test_it_can_copy_an_object_with_a_date_object_property()
     {
@@ -139,11 +141,27 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
 
         $object->d1 = new DateTime();
         $object->d2 = new DateTimeImmutable();
+        $object->dtz = new DateTimeZone('UTC');
 
         $copy = deep_copy($object);
 
         $this->assertEqualButNotSame($object->d1, $copy->d1);
         $this->assertEqualButNotSame($object->d2, $copy->d2);
+        $this->assertEqualButNotSame($object->dtz, $copy->dtz);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/pull/70g
+     */
+    public function test_it_does_not_skip_the_copy_for_userland_datetimezone()
+    {
+        $object = new stdClass();
+
+        $object->dtz = new DateTimeZone('UTC');
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object->dtz, $copy->dtz);
     }
 
     public function test_it_copies_the_private_properties_of_the_parent_class()

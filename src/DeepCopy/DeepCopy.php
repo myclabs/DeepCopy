@@ -3,15 +3,17 @@
 namespace DeepCopy;
 
 use DateTimeInterface;
+use DateTimeZone;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
-use DeepCopy\TypeFilter\Spl\SplDoublyLinkedList;
+use DeepCopy\TypeFilter\Spl\SplDoublyLinkedListFilter;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use ReflectionObject;
 use ReflectionProperty;
 use DeepCopy\Reflection\ReflectionHelper;
+use SplDoublyLinkedList;
 
 /**
  * @final
@@ -55,7 +57,7 @@ class DeepCopy
     {
         $this->useCloneMethod = $useCloneMethod;
 
-        $this->addTypeFilter(new SplDoublyLinkedList($this), new TypeMatcher('SplDoublyLinkedList'));
+        $this->addTypeFilter(new SplDoublyLinkedListFilter($this), new TypeMatcher(SplDoublyLinkedList::class));
     }
 
     /**
@@ -184,7 +186,7 @@ class DeepCopy
             return $newObject;
         }
 
-        if ($newObject instanceof DateTimeInterface) {
+        if ($newObject instanceof DateTimeInterface || get_class($newObject) === DateTimeZone::class) {
             return $newObject;
         }
 
