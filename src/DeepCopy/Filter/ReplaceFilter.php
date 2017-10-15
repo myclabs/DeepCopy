@@ -6,6 +6,8 @@ use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * Replace the value of a property
+ *
+ * @final
  */
 class ReplaceFilter implements Filter
 {

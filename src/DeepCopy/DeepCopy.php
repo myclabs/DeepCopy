@@ -13,6 +13,8 @@ use DeepCopy\Reflection\ReflectionHelper;
 
 /**
  * DeepCopy
+ *
+ * @final
  */
 class DeepCopy
 {

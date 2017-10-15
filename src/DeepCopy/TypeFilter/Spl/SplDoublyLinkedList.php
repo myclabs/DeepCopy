@@ -5,6 +5,9 @@ namespace DeepCopy\TypeFilter\Spl;
 use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\TypeFilter;
 
+/**
+ * @final
+ */
 class SplDoublyLinkedList implements TypeFilter
 {
     /**
