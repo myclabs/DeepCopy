@@ -150,8 +150,8 @@ The `PropertyNameMatcher` will match a property by its name:
 ```php
 use DeepCopy\Matcher\PropertyNameMatcher;
 
+// Will apply a filter to any property of any objects named "id"
 $matcher = new PropertyNameMatcher('id');
-// will apply a filter to any property of any objects named "id"
 ```
 
 
@@ -162,8 +162,8 @@ The `PropertyMatcher` will match a specific property of a specific class:
 ```php
 use DeepCopy\Matcher\PropertyMatcher;
 
+// Will apply a filter to the property "id" of any objects of the class "MyClass"
 $matcher = new PropertyMatcher('MyClass', 'id');
-// will apply a filter to the property "id" of any objects of the class "MyClass"
 ```
 
 
@@ -175,15 +175,15 @@ The `TypeMatcher` will match any element by its type (instance of a class or any
 ```php
 use DeepCopy\TypeMatcher\TypeMatcher;
 
+// Will apply a filter to any object that is an instance of Doctrine\Common\Collections\Collection
 $matcher = new TypeMatcher('Doctrine\Common\Collections\Collection');
-// will apply a filter to any object that is an instance of Doctrine\Common\Collections\Collection
 ```
 
 
 ### Filters
 
-  - `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`.
-  - `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`.
+- `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`
+- `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`
 
 
 #### `SetNullFilter` (filter)
@@ -196,14 +196,15 @@ use DeepCopy\DeepCopy;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
 
-$myObject = MyClass::load(123);
-echo $myObject->id; // 123
+$object = MyClass::load(123);
+echo $object->id; // 123
 
 $copier = new DeepCopy();
 $copier->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
-$myCopy = $copier->copy($myObject);
 
-echo $myCopy->id; // null
+$copy = $copier->copy($object);
+
+echo $copy->id; // null
 ```
 
 
@@ -218,9 +219,9 @@ use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
 $copier->addFilter(new KeepFilter(), new PropertyMatcher('MyClass', 'category'));
-$myCopy = $copier->copy($myObject);
 
-// $myCopy->category has not been touched
+$copy = $copier->copy($object);
+// $copy->category has not been touched
 ```
 
 
@@ -235,7 +236,8 @@ use DeepCopy\Matcher\PropertyTypeMatcher;
 
 $copier = new DeepCopy();
 $copier->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
-$myCopy = $copier->copy($myObject);
+
+$copy = $copier->copy($object);
 ```
 
 
@@ -251,9 +253,10 @@ use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
 $copier->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('MyClass', 'myProperty'));
-$myCopy = $copier->copy($myObject);
 
-// $myCopy->myProperty will return an empty collection
+$copy = $copier->copy($object);
+
+// $copy->myProperty will return an empty collection
 ```
 
 
@@ -272,9 +275,10 @@ use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 
 $copier = new DeepCopy();
 $copier->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
-$myCopy = $copier->copy($myObject);
 
-// $myCopy should now contain a clone of all entities, including those that were not yet fully loaded.
+$copy = $copier->copy($object);
+
+// $copy should now contain a clone of all entities, including those that were not yet fully loaded.
 ```
 
 
@@ -292,9 +296,10 @@ $callback = function ($currentValue) {
   return $currentValue . ' (copy)'
 };
 $copier->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
-$myCopy = $copier->copy($myObject);
 
-// $myCopy->title will contain the data returned by the callback, e.g. 'The title (copy)'
+$copy = $copier->copy($object);
+
+// $copy->title will contain the data returned by the callback, e.g. 'The title (copy)'
 ```
 
 2. If you want to replace whole element:
@@ -309,9 +314,10 @@ $callback = function (MyClass $myClass) {
   return get_class($myClass);
 };
 $copier->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
-$myCopy = $copier->copy(array(new MyClass, 'some string', new MyClass));
 
-// $myCopy will contain ['MyClass', 'some string', 'MyClass']
+$copy = $copier->copy([new MyClass, 'some string', new MyClass]);
+
+// $copy will contain ['MyClass', 'some string', 'MyClass']
 ```
 
 
@@ -335,7 +341,7 @@ $this->deepCopy->addTypeFilter(
 );
 
 $myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDependency2::class));
-// all mocks will be just cloned, not deep-copied
+// All mocks will be just cloned, not deep copied
 ```
 
 
@@ -349,5 +355,5 @@ DeepCopy is distributed under the MIT license.
 Running the tests is simple:
 
 ```php
-phpunit
+vendor/bin/phpunit
 ```
