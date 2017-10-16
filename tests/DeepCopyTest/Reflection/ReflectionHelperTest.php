@@ -5,6 +5,7 @@ namespace DeepCopyTest\Reflection;
 use DeepCopy\Reflection\ReflectionHelper;
 use PHPUnit_Framework_TestCase;
 use ReflectionClass;
+use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Reflection\ReflectionHelper
@@ -34,6 +35,39 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase
         $actualProps = ReflectionHelper::getProperties($childReflectionClass);
 
         $this->assertSame($expectedProps, array_keys($actualProps));
+    }
+
+    /**
+     * @dataProvider provideProperties
+     */
+    public function test_it_can_retrieve_an_object_property($name)
+    {
+        $object = new ReflectionHelperTestChild();
+
+        $property = ReflectionHelper::getProperty($object, $name);
+
+        $this->assertInstanceOf(ReflectionProperty::class, $property);
+
+        $this->assertSame($name, $property->getName());
+    }
+
+    public function provideProperties()
+    {
+        return [
+            'public property' => ['a10'],
+            'private property' => ['a102'],
+            'private property of ancestor' => ['a3']
+        ];
+    }
+
+    /**
+     * @expectedException \DeepCopy\Exception\PropertyException
+     */
+    public function test_it_cannot_retrieve_a_non_existent_prperty()
+    {
+        $object = new ReflectionHelperTestChild();
+
+        ReflectionHelper::getProperty($object, 'non existent property');
     }
 }
 

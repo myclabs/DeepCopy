@@ -13,9 +13,11 @@ use DeepCopy\f003;
 use DeepCopy\f004;
 use DeepCopy\f005;
 use DeepCopy\f006;
+use DeepCopy\f008;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
+use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use PHPUnit_Framework_TestCase;
@@ -118,7 +120,7 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
         $this->assertEqualButNotSame($foo->bar, $copy->bar);
     }
 
-    public function test_dynamic_properties_are_copied()
+    public function test_it_copies_dynamic_properties()
     {
         $foo = new stdClass();
         $bar = new stdClass();
@@ -373,6 +375,22 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
         $aCopy = $copy->pop();
 
         $this->assertEqualButNotSame($b, $aCopy->b);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/62
+     */
+    public function test_matchers_can_access_to_parent_private_properties()
+    {
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new SetNullFilter(), new PropertyTypeMatcher(stdClass::class));
+
+        $object = new f008\B(new stdClass());
+
+        /** @var f008\B $copy */
+        $copy = $deepCopy->copy($object);
+
+        $this->assertNull($copy->getFoo());
     }
 
     private function assertEqualButNotSame($expected, $val)
