@@ -2,8 +2,8 @@
 
 namespace DeepCopy\Matcher;
 
+use DeepCopy\Reflection\ReflectionHelper;
 use ReflectionException;
-use ReflectionProperty;
 
 /**
  * Matches a property by its type.
@@ -34,7 +34,7 @@ class PropertyTypeMatcher implements Matcher
     public function matches($object, $property)
     {
         try {
-            $reflectionProperty = new ReflectionProperty($object, $property);
+            $reflectionProperty = ReflectionHelper::getProperty($object, $property);
         } catch (ReflectionException $exception) {
             return false;
         }
