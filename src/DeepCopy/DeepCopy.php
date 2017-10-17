@@ -189,10 +189,7 @@ class DeepCopy
             return $newObject;
         }
 
-        if ($newObject instanceof DateTimeInterface
-            || $newObject instanceof DateTimeZone
-            || $newObject instanceof DateInterval
-        ) {
+        if ($newObject instanceof DateTimeInterface || $newObject instanceof DateTimeZone) {
             return $newObject;
         }
 
