@@ -109,8 +109,7 @@ $copier = new DeepCopy(true);
 $copy = $copier->copy($var);
 ```
 
-It is however recommended to use a difference instance of `DeepCopy` between each object copy as it relies on
-`spl_object_hash` internally. As such you may want to roll your own deep copy function:
+You may want to roll your own deep copy function:
 
 ```php
 namespace Acme;
@@ -119,7 +118,11 @@ use DeepCopy\DeepCopy;
 
 function deep_copy($var)
 {
-    $copier = new DeepCopy(true);
+    static $copier = null;
+    
+    if (null === $copier) {
+        $copier = new DeepCopy(true);
+    }
     
     return $copier->copy($var);
 }
