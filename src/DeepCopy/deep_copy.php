@@ -12,11 +12,7 @@ namespace DeepCopy;
  */
 function deep_copy($value, $useCloneMethod = false)
 {
-    static $copier = null;
-
-    if (null === $copier) {
-        $copier = new DeepCopy($useCloneMethod);
-    }
+    $copier = new DeepCopy($useCloneMethod);
 
     return $copier->copy($value);
 }
