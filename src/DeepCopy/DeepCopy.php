@@ -2,11 +2,13 @@
 
 namespace DeepCopy;
 
+use DateInterval;
 use DateTimeInterface;
 use DateTimeZone;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
+use DeepCopy\TypeFilter\Date\DateIntervalFilter;
 use DeepCopy\TypeFilter\Spl\SplDoublyLinkedListFilter;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
@@ -57,6 +59,7 @@ class DeepCopy
     {
         $this->useCloneMethod = $useCloneMethod;
 
+        $this->addTypeFilter(new DateIntervalFilter(), new TypeMatcher(DateInterval::class));
         $this->addTypeFilter(new SplDoublyLinkedListFilter($this), new TypeMatcher(SplDoublyLinkedList::class));
     }
 
@@ -186,7 +189,7 @@ class DeepCopy
             return $newObject;
         }
 
-        if ($newObject instanceof DateTimeInterface || get_class($newObject) === DateTimeZone::class) {
+        if ($newObject instanceof DateTimeInterface || $newObject instanceof DateTimeZone) {
             return $newObject;
         }
 
@@ -225,7 +228,6 @@ class DeepCopy
             }
         }
 
-        // No filter has been applied: simply copy the value
         $property->setAccessible(true);
         $propertyValue = $property->getValue($object);
 

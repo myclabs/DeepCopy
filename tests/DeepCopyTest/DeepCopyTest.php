@@ -2,6 +2,7 @@
 
 namespace DeepCopyTest;
 
+use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -13,6 +14,7 @@ use DeepCopy\f003;
 use DeepCopy\f004;
 use DeepCopy\f005;
 use DeepCopy\f006;
+use DeepCopy\f007;
 use DeepCopy\f008;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
@@ -136,6 +138,7 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
     /**
      * @ticket https://github.com/myclabs/DeepCopy/issues/38
      * @ticket https://github.com/myclabs/DeepCopy/pull/70
+     * @ticket https://github.com/myclabs/DeepCopy/pull/76
      */
     public function test_it_can_copy_an_object_with_a_date_object_property()
     {
@@ -144,26 +147,54 @@ class DeepCopyTest extends PHPUnit_Framework_TestCase
         $object->d1 = new DateTime();
         $object->d2 = new DateTimeImmutable();
         $object->dtz = new DateTimeZone('UTC');
+        $object->di = new DateInterval('P2D');
 
         $copy = deep_copy($object);
 
         $this->assertEqualButNotSame($object->d1, $copy->d1);
         $this->assertEqualButNotSame($object->d2, $copy->d2);
         $this->assertEqualButNotSame($object->dtz, $copy->dtz);
+        $this->assertEqualButNotSame($object->di, $copy->di);
     }
 
     /**
-     * @ticket https://github.com/myclabs/DeepCopy/pull/70g
+     * @ticket https://github.com/myclabs/DeepCopy/pull/70
      */
-    public function test_it_does_not_skip_the_copy_for_userland_datetimezone()
+    public function test_it_skips_the_copy_for_userland_datetimezone()
     {
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(
+            new SetNullFilter(),
+            new PropertyNameMatcher('cloned')
+        );
+
         $object = new stdClass();
 
-        $object->dtz = new DateTimeZone('UTC');
+        $object->dtz = new f007\FooDateTimeZone('UTC');
 
-        $copy = deep_copy($object);
+        $copy = $deepCopy->copy($object);
 
-        $this->assertEqualButNotSame($object->dtz, $copy->dtz);
+        $this->assertTrue($copy->dtz->cloned);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/pull/76
+     */
+    public function test_it_skips_the_copy_for_userland_dateinterval()
+    {
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(
+            new SetNullFilter(),
+            new PropertyNameMatcher('cloned')
+        );
+
+        $object = new stdClass();
+
+        $object->di = new f007\FooDateInterval('P2D');
+
+        $copy = $deepCopy->copy($object);
+
+        $this->assertFalse($copy->di->cloned);
     }
 
     public function test_it_copies_the_private_properties_of_the_parent_class()
