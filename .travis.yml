@@ -38,3 +38,6 @@ script:
 
 after_script:
   - php coveralls.phar -v
+
+notifications:
+    email: false
