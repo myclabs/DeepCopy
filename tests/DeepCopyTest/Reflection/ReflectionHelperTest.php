@@ -3,14 +3,14 @@
 namespace DeepCopyTest\Reflection;
 
 use DeepCopy\Reflection\ReflectionHelper;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Reflection\ReflectionHelper
  */
-class ReflectionHelperTest extends PHPUnit_Framework_TestCase
+class ReflectionHelperTest extends TestCase
 {
     public function test_it_retrieves_the_object_properties()
     {

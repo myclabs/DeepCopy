@@ -5,13 +5,13 @@ namespace DeepCopyTest\Matcher;
 use BadMethodCallException;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 use Doctrine\Common\Persistence\Proxy;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
  * @covers \DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher
  */
-class DoctrineProxyMatcherTest extends PHPUnit_Framework_TestCase
+class DoctrineProxyMatcherTest extends TestCase
 {
     /**
      * @dataProvider providePairs

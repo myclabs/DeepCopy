@@ -5,13 +5,13 @@ namespace DeepCopyTest\Filter\Doctrine;
 use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
  * @covers \DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter
  */
-class DoctrineEmptyCollectionFilterTest extends PHPUnit_Framework_TestCase
+class DoctrineEmptyCollectionFilterTest extends TestCase
 {
     public function test_it_sets_the_object_property_to_an_empty_doctrine_collection()
     {

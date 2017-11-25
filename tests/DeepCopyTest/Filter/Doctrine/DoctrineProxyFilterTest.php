@@ -4,12 +4,12 @@ namespace DeepCopyTest\Filter\Doctrine;
 
 use BadMethodCallException;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \DeepCopy\Filter\Doctrine\DoctrineProxyFilter
  */
-class DoctrineProxyFilterTest extends PHPUnit_Framework_TestCase
+class DoctrineProxyFilterTest extends TestCase
 {
     public function test_it_loads_the_doctrine_proxy()
     {

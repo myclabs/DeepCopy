@@ -3,13 +3,13 @@
 namespace DeepCopyTest\TypeFilter;
 
 use DeepCopy\TypeFilter\ReplaceFilter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
  * @covers \DeepCopy\TypeFilter\ReplaceFilter
  */
-class ReplaceFilterTest extends PHPUnit_Framework_TestCase
+class ReplaceFilterTest extends TestCase
 {
     public function test_it_returns_the_callback_called_with_the_given_object()
     {
