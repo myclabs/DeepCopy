@@ -4,14 +4,14 @@ namespace DeepCopyTest\TypeFilter\Spl;
 
 use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\Spl\SplDoublyLinkedListFilter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SplDoublyLinkedList;
 use stdClass;
 
 /**
  * @covers \DeepCopy\TypeFilter\Spl\SplDoublyLinkedListFilter
  */
-class SplDoublyLinkedListFilterTest extends PHPUnit_Framework_TestCase
+class SplDoublyLinkedListFilterTest extends TestCase
 {
     public function test_it_deep_copies_a_doubly_linked_spl_list()
     {

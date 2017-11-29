@@ -3,12 +3,12 @@
 namespace DeepCopyTest\Matcher;
 
 use DeepCopy\Matcher\PropertyMatcher;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \DeepCopy\Matcher\PropertyMatcher
  */
-class PropertyMatcherTest extends PHPUnit_Framework_TestCase
+class PropertyMatcherTest extends TestCase
 {
     /**
      * @dataProvider providePairs

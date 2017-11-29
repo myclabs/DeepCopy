@@ -3,13 +3,13 @@
 namespace DeepCopyTest\TypeMatcher;
 
 use DeepCopy\TypeMatcher\TypeMatcher;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
  * @covers \DeepCopy\TypeMatcher\TypeMatcher
  */
-class TypeMatcherTest extends PHPUnit_Framework_TestCase
+class TypeMatcherTest extends TestCase
 {
     /**
      * @dataProvider provideElements

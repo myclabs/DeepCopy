@@ -4,12 +4,12 @@ namespace DeepCopyTest\TypeFilter\Date;
 
 use DateInterval;
 use DeepCopy\TypeFilter\Date\DateIntervalFilter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \DeepCopy\TypeFilter\Date\DateIntervalFilter
  */
-class DateIntervalFilterTest extends PHPUnit_Framework_TestCase
+class DateIntervalFilterTest extends TestCase
 {
     public function test_it_deep_copies_a_DateInterval()
     {
