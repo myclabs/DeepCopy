@@ -24,7 +24,7 @@ class SplDoublyLinkedListFilterTest extends TestCase
 
         $newList = $filter->apply($list);
 
-        $this->assertSame(1, count($newList));
+        $this->assertCount(1, $newList);
         $this->assertNotSame($foo, $newList->next());
     }
 }
