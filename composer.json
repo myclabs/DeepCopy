@@ -21,18 +21,17 @@
     },
 
     "require": {
-        "php": "^5.6 || ^7.0"
+        "php": "^7.1"
     },
     "require-dev": {
         "doctrine/collections": "^1.0",
         "doctrine/common": "^2.6",
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^6.4"
     },
 
     "config": {
         "sort-packages": true
     },
-
     "extra": {
         "branch-alias": {
             "dev-1.x": "1.x-dev"
