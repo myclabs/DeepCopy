@@ -3,15 +3,14 @@ language: php
 sudo: false
 
 php:
-  - '5.6'
-  - '7.0'
   - '7.1'
+  - '7.2'
   - nightly
 
 matrix:
   fast_finish: true
   include:
-    - php: '5.6'
+    - php: '7.1'
       env: COMPOSER_FLAGS="--prefer-lowest"
   allow_failures:
     - php: nightly
