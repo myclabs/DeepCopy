@@ -3,19 +3,21 @@
 namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\Filter;
-use ReflectionProperty;
+use DeepCopy\Reflection\ReflectionHelper;
 
 /**
- * Set a null value for a property
+ * @final
  */
 class DoctrineCollectionFilter implements Filter
 {
     /**
+     * Copies the object property doctrine collection.
+     *
      * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)
     {
-        $reflectionProperty = new ReflectionProperty($object, $property);
+        $reflectionProperty = ReflectionHelper::getProperty($object, $property);
 
         $reflectionProperty->setAccessible(true);
         $oldCollection = $reflectionProperty->getValue($object);

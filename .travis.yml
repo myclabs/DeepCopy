@@ -1,30 +1,32 @@
 language: php
 
+sudo: false
+
 php:
-  - '5.5'
-  - '5.6'
-  - '7.0'
   - '7.1'
+  - '7.2'
   - nightly
-  - hhvm
 
 matrix:
   fast_finish: true
   include:
-    - php: '5.4'
+    - php: '7.1'
       env: COMPOSER_FLAGS="--prefer-lowest"
   allow_failures:
     - php: nightly
-    - php: hhvm
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
 before_install:
   - |
-    if [ "$TRAVIS_PHP_VERSION" = "nightly" ] || "$TRAVIS_PHP_VERSION" = "7.1" ]; then
+    if [ "$TRAVIS_PHP_VERSION" = "nightly" ]; then
       COMPOSER_FLAGS="$COMPOSER_FLAGS --ignore-platform-reqs"
     fi;
 
 install:
-  - composer update -n --prefer-dist $COMPOSER_FLAGS
+  - composer update --no-interaction --no-progress --no-suggest --prefer-dist $COMPOSER_FLAGS
   - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.0/coveralls.phar
 
 before_script:
@@ -35,3 +37,6 @@ script:
 
 after_script:
   - php coveralls.phar -v
+
+notifications:
+    email: false

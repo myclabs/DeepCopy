@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit colors="true"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         colors="true"
          bootstrap="vendor/autoload.php">
 
     <testsuites>
-
         <testsuite name="Test suite">
             <directory>./tests</directory>
         </testsuite>
-
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src/</directory>
+            <exclude>
+                <file>src/DeepCopy/deep_copy.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
 
 </phpunit>
