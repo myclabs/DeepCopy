@@ -30,7 +30,7 @@ class DoctrineCollectionFilterTest extends TestCase
             }
         );
 
-        $this->assertTrue($object->foo instanceof Collection);
+        $this->assertInstanceOf(Collection::class, $object->foo);
         $this->assertNotSame($oldCollection, $object->foo);
         $this->assertCount(1, $object->foo);
 

@@ -32,7 +32,7 @@ class DoctrineEmptyCollectionFilterTest extends TestCase
             }
         );
 
-        $this->assertTrue($object->foo instanceof Collection);
+        $this->assertInstanceOf(Collection::class, $object->foo);
         $this->assertNotSame($collection, $object->foo);
         $this->assertTrue($object->foo->isEmpty());
     }
