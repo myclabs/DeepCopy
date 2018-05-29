@@ -26,15 +26,13 @@
     "require-dev": {
         "doctrine/collections": "^1.0",
         "doctrine/common": "^2.6",
-        "phpunit/phpunit": "^6.4"
+        "phpunit/phpunit": "^7.1"
+    },
+    "replace": {
+        "myclabs/deep-copy": "self.version"
     },
 
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-1.x": "1.x-dev"
-        }
     }
 }
