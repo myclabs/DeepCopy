@@ -1,23 +1,45 @@
 <?php
+
 namespace DeepCopyTest\Matcher;
 
 use DeepCopy\Matcher\PropertyMatcher;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Test PropertyMatcher
+ * @covers \DeepCopy\Matcher\PropertyMatcher
  */
-class PropertyMatcherTest extends \PHPUnit_Framework_TestCase
+class PropertyMatcherTest extends TestCase
 {
-    public function testMatches()
+    /**
+     * @dataProvider providePairs
+     */
+    public function test_it_matches_the_given_objects($object, $prop, $expected)
     {
-        $matcher = new PropertyMatcher('DeepCopyTest\Matcher\PropertyMatcherTestFixture', 'property1');
+        $matcher = new PropertyMatcher(X::class, 'foo');
 
-        $this->assertTrue($matcher->matches(new PropertyMatcherTestFixture(), 'property1'));
-        $this->assertFalse($matcher->matches(new \stdClass(), 'property1'));
-        $this->assertFalse($matcher->matches(new PropertyMatcherTestFixture(), 'property2'));
+        $actual = $matcher->matches($object, $prop);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function providePairs()
+    {
+        return [
+            'matching case' => [new X(), 'foo', true],
+            'match class, non matching prop' => [new X(), 'bar', false],
+            'match class, unknown prop' => [new X(), 'unknown', false],
+            'non matching class, matching prop' => [new Y(), 'unknown', false],
+        ];
     }
 }
 
-class PropertyMatcherTestFixture {
-    public $property1;
+class X
+{
+    public $foo;
+    public $bar;
+}
+
+class Y
+{
+    public $foo;
 }

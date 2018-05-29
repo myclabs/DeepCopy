@@ -2,6 +2,9 @@
 
 namespace DeepCopy\TypeFilter;
 
+/**
+ * @final
+ */
 class ReplaceFilter implements TypeFilter
 {
     /**
