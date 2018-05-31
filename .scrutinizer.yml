@@ -1,8 +1,10 @@
+build:
+    environment:
+        variables:
+            COMPOSER_ROOT_VERSION: '1.8.0'
+
 filter:
     excluded_paths: [vendor/*, app/*, web/*]
-    
-before_commands:
-    - COMPOSER_ROOT_VERSION=1.8.0 composer install
 
 tools:
     php_cpd: true
