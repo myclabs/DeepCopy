@@ -4,6 +4,7 @@ namespace DeepCopyTest\Matcher;
 
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 
 /**
@@ -18,7 +19,7 @@ class PropertyTypeMatcherTest extends TestCase
     {
         $matcher = new PropertyTypeMatcher(PropertyTypeMatcherTestFixture2::class);
 
-        $actual = $matcher->matches($object, 'foo');
+        $actual = $matcher->matches($object, new ReflectionProperty($object, 'foo'));
 
         $this->assertEquals($expected, $actual);
     }
@@ -39,7 +40,12 @@ class PropertyTypeMatcherTest extends TestCase
             [$object1, true],
             [$object2, false],
             [$object3, false],
-            [new stdClass(), false],
+            [
+                new class {
+                    public $foo;
+                },
+                false
+            ],
         ];
     }
 }

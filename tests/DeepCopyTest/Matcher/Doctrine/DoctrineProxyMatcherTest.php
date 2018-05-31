@@ -6,7 +6,7 @@ use BadMethodCallException;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 use Doctrine\Common\Persistence\Proxy;
 use PHPUnit\Framework\TestCase;
-use stdClass;
+use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher
@@ -20,7 +20,7 @@ class DoctrineProxyMatcherTest extends TestCase
     {
         $matcher = new DoctrineProxyMatcher();
 
-        $actual = $matcher->matches($object, 'unknown');
+        $actual = $matcher->matches($object, new ReflectionProperty($object, 'foo'));
 
         $this->assertEquals($expected, $actual);
     }
@@ -29,13 +29,20 @@ class DoctrineProxyMatcherTest extends TestCase
     {
         return [
             [new FooProxy(), true],
-            [new stdClass(), false],
+            [
+                new class {
+                    public $foo;
+                },
+                false
+            ],
         ];
     }
 }
 
 class FooProxy implements Proxy
 {
+    public $foo;
+
     /**
      * @inheritdoc
      */

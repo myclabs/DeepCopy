@@ -6,6 +6,7 @@ use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 
 /**
@@ -15,7 +16,9 @@ class DoctrineCollectionFilterTest extends TestCase
 {
     public function test_it_copies_the_object_property_array_collection()
     {
-        $object = new stdClass();
+        $object = new class {
+            public $foo;
+        };
         $oldCollection = new ArrayCollection();
         $oldCollection->add($stdClass = new stdClass());
         $object->foo = $oldCollection;
@@ -24,7 +27,7 @@ class DoctrineCollectionFilterTest extends TestCase
 
         $filter->apply(
             $object,
-            'foo',
+            new ReflectionProperty($object, 'foo'),
             function($item) {
                 return null;
             }

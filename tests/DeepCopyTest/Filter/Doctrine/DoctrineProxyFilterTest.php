@@ -5,6 +5,7 @@ namespace DeepCopyTest\Filter\Doctrine;
 use BadMethodCallException;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Filter\Doctrine\DoctrineProxyFilter
@@ -19,7 +20,7 @@ class DoctrineProxyFilterTest extends TestCase
 
         $filter->apply(
             $foo,
-            'unknown',
+            new ReflectionProperty($foo, 'bar'),
             function($item) {
                 throw new BadMethodCallException('Did not expect to be called.');
             }
@@ -31,6 +32,8 @@ class DoctrineProxyFilterTest extends TestCase
 
 class Foo
 {
+    public $bar;
+
     public $isLoaded = false;
 
     public function __load()
