@@ -28,7 +28,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
         1. [`DoctrineEmptyCollectionFilter`](#doctrineemptycollectionfilter-filter)
         1. [`DoctrineProxyFilter`](#doctrineproxyfilter-filter)
         1. [`ReplaceFilter`](#replacefilter-type-filter)
-        1. [`ShallowCopyFilter`](#doctrinecollectionfilter-type-filter)
+        1. [`ShallowCopyFilter`](#shallowcopyfilter-type-filter)
 1. [Edge cases](#edge-cases)
 1. [Contributing](#contributing)
     1. [Tests](#tests)
