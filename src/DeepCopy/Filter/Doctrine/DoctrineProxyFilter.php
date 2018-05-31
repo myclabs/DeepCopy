@@ -3,6 +3,7 @@
 namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\Filter;
+use ReflectionProperty;
 
 /**
  * @final
@@ -15,7 +16,7 @@ class DoctrineProxyFilter implements Filter
      *
      * {@inheritdoc}
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
     {
         $object->__load();
     }

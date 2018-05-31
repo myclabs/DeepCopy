@@ -3,7 +3,7 @@
 namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\Filter;
-use DeepCopy\Reflection\ReflectionHelper;
+use ReflectionProperty;
 
 /**
  * @final
@@ -15,10 +15,8 @@ class DoctrineCollectionFilter implements Filter
      *
      * {@inheritdoc}
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
     {
-        $reflectionProperty = ReflectionHelper::getProperty($object, $property);
-
         $reflectionProperty->setAccessible(true);
         $oldCollection = $reflectionProperty->getValue($object);
 

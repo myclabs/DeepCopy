@@ -4,7 +4,7 @@ namespace DeepCopyTest\Filter;
 
 use DeepCopy\Filter\SetNullFilter;
 use PHPUnit\Framework\TestCase;
-use stdClass;
+use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Filter\SetNullFilter
@@ -15,11 +15,14 @@ class SetNullFilterTest extends TestCase
     {
         $filter = new SetNullFilter();
 
-        $object = new stdClass();
+        $object = new class {
+            public $foo;
+            public $bim;
+        };
         $object->foo = 'bar';
         $object->bim = 'bam';
 
-        $filter->apply($object, 'foo', null);
+        $filter->apply($object, new ReflectionProperty($object, 'foo'), null);
 
         $this->assertNull($object->foo);
         $this->assertEquals('bam', $object->bim);

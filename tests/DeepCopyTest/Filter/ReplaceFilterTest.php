@@ -4,7 +4,7 @@ namespace DeepCopyTest\Filter;
 
 use DeepCopy\Filter\ReplaceFilter;
 use PHPUnit\Framework\TestCase;
-use stdClass;
+use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Filter\ReplaceFilter
@@ -16,7 +16,9 @@ class ReplaceFilterTest extends TestCase
      */
     public function test_it_applies_the_callback_to_the_specified_property(callable $callback, array $expected)
     {
-        $object = new stdClass();
+        $object = new class {
+            public $data;
+        };
         $object->data = [
             'foo' => 'bar',
             'baz' => 'foo'
@@ -26,7 +28,7 @@ class ReplaceFilterTest extends TestCase
 
         $filter->apply(
             $object,
-            'data',
+            new ReflectionProperty($object, 'data'),
             function () {
                 return null;
             }

@@ -6,6 +6,7 @@ use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 
 /**
@@ -15,8 +16,9 @@ class DoctrineEmptyCollectionFilterTest extends TestCase
 {
     public function test_it_sets_the_object_property_to_an_empty_doctrine_collection()
     {
-        $object = new stdClass();
-
+        $object = new class {
+            public $foo;
+        };
         $collection = new ArrayCollection();
         $collection->add(new stdClass());
 
@@ -26,7 +28,7 @@ class DoctrineEmptyCollectionFilterTest extends TestCase
 
         $filter->apply(
             $object,
-            'foo',
+            new ReflectionProperty($object, 'foo'),
             function($item) {
                 return null;
             }

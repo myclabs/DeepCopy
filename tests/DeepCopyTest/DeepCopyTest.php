@@ -17,6 +17,7 @@ use DeepCopy\f006;
 use DeepCopy\f007;
 use DeepCopy\f008;
 use DeepCopy\Filter\KeepFilter;
+use DeepCopy\Filter\ReplaceFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
 use DeepCopy\Matcher\PropertyTypeMatcher;
@@ -422,6 +423,21 @@ class DeepCopyTest extends TestCase
         $copy = $deepCopy->copy($object);
 
         $this->assertNull($copy->getFoo());
+    }
+
+    public function test_private_property_of_parent_object_copy_with_filters_and_matchers()
+    {
+        $object = new f001\B();
+        $object->setAProp(new stdClass());
+        $object->setBProp(new stdClass());
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new ReplaceFilter(function() {return 'foo';}), new PropertyTypeMatcher(stdClass::class));
+
+        $new = $deepCopy->copy($object);
+
+        $this->assertSame('foo', $new->getAProp());
+        $this->assertSame('foo', $new->getBProp());
     }
 
     private function assertEqualButNotSame($expected, $val)
