@@ -189,6 +189,9 @@ $matcher = new TypeMatcher('Doctrine\Common\Collections\Collection');
 - `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`
 - `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`
 
+Except a few exceptions ([`DoctrineProxyFilter`](#doctrineproxyfilter-filter)), matching a filter will stop the chain
+of filters (i.e. the next ones will not be applied).
+
 
 #### `SetNullFilter` (filter)
 
@@ -271,14 +274,18 @@ Doctrine proxy class (...\\\_\_CG\_\_\Proxy).
 You can use the `DoctrineProxyFilter` to load the actual entity behind the Doctrine proxy class.
 **Make sure, though, to put this as one of your very first filters in the filter chain so that the entity is loaded
 before other filters are applied!**
+This filter won't stop the chain of filters (i.e. the next ones may be applied).
 
 ```php
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
+use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
+use DeepCopy\Matcher\PropertyNameMatcher;
 
 $copier = new DeepCopy();
 $copier->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
+$copier->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
 
 $copy = $copier->copy($object);
 

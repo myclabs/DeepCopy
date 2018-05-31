@@ -2,13 +2,13 @@
 
 namespace DeepCopy\Filter\Doctrine;
 
-use DeepCopy\Filter\Filter;
+use DeepCopy\Filter\ChainableFilter;
 use ReflectionProperty;
 
 /**
  * @final
  */
-class DoctrineProxyFilter implements Filter
+class DoctrineProxyFilter implements ChainableFilter
 {
     /**
      * Triggers the magic method __load() on a Doctrine Proxy class to load the
