@@ -2,7 +2,7 @@
 
 DeepCopy helps you create deep copies (clones) of your objects. It is designed to handle cycles in the association graph.
 
-[![Build Status](https://travis-ci.org/myclabs/DeepCopy.png?branch=2.x)](https://travis-ci.org/myclabs/DeepCopy)
+[![Build Status](https://travis-ci.org/myclabs/DeepCopy.svg?branch=2.x)](https://travis-ci.org/myclabs/DeepCopy)
 [![Coverage Status](https://coveralls.io/repos/myclabs/DeepCopy/badge.png?branch=2.x)](https://coveralls.io/r/myclabs/DeepCopy?branch=2.x)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/myclabs/DeepCopy/badges/quality-score.png?s=2747100c19b275f93a777e3297c6c12d1b68b934)](https://scrutinizer-ci.com/g/myclabs/DeepCopy/)
 [![Total Downloads](https://poser.pugx.org/myclabs/deep-copy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
@@ -169,7 +169,7 @@ $matcher = new PropertyMatcher('MyClass', 'id');
 #### Type
 
 The [`TypeMatcher`][type matcher] will match any element by its type (instance of a class or any value that could be
-parameter of [gettype()][gettype] function):
+parameter of [`gettype()`][gettype] function):
 
 ```php
 use DeepCopy\TypeMatcher\TypeMatcher;
