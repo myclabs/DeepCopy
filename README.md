@@ -29,7 +29,6 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
         1. [`DoctrineProxyFilter`](#doctrineproxyfilter-filter)
         1. [`ReplaceFilter`](#replacefilter-type-filter)
         1. [`ShallowCopyFilter`](#shallowcopyfilter-type-filter)
-1. [Edge cases](#edge-cases)
 1. [Contributing](#contributing)
     1. [Tests](#tests)
 
@@ -100,7 +99,7 @@ $copier = new DeepCopy(true);
 $copy = $copier->copy($var);
 ```
 
-You may want to roll your own deep copy function:
+Or you may want to roll your own deep copy function:
 
 ```php
 namespace Acme;
@@ -122,24 +121,30 @@ function deep_copy($var)
 
 ## Going further
 
-You can add filters to customize the copy process.
+You can add filters to customize the copy process by adding filters:
 
-The method to add a filter is `DeepCopy\DeepCopy::addFilter($filter, $matcher)`,
-with `$filter` implementing `DeepCopy\Filter\Filter`
-and `$matcher` implementing `DeepCopy\Matcher\Matcher`.
+```php
+$copier = new DeepCopy();
+$copier->addFilter($filter, $matcher);
+```
 
-We provide some generic filters and matchers.
+During the copy process, when a property is matched by a [matcher][matcher], then the [filter][filter] associated to
+this matcher is applied. By default, when a filter is applied this stops the process, i.e. the next matcher-filter pair
+will not be checked, unless the filter is implemented as a [chainable filter][chainable filter].
+
+Some generic filters and matchers are already provided.
 
 
 ### Matchers
 
-  - `DeepCopy\Matcher` applies on a object attribute.
-  - `DeepCopy\TypeMatcher` applies on any element found in graph, including array elements.
+- [`Matcher`][matcher] applies on a object attribute
+- [`TypeMatcher`][type matcher] applies on any element found in graph, including
+  array elements
 
 
 #### Property name
 
-The `PropertyNameMatcher` will match a property by its name:
+The [`PropertyNameMatcher`][property name matcher] will match a property by its name:
 
 ```php
 use DeepCopy\Matcher\PropertyNameMatcher;
@@ -151,36 +156,38 @@ $matcher = new PropertyNameMatcher('id');
 
 #### Specific property
 
-The `PropertyMatcher` will match a specific property of a specific class:
+The [`PropertyMatcher`][property matcher] will match a specific property of a specific class:
 
 ```php
 use DeepCopy\Matcher\PropertyMatcher;
 
-// Will apply a filter to the property "id" of any objects of the class "MyClass"
+// Will apply a filter to the property "id" of any instances of the class "MyClass"
 $matcher = new PropertyMatcher('MyClass', 'id');
 ```
 
 
 #### Type
 
-The `TypeMatcher` will match any element by its type (instance of a class or any value that could be parameter of
-[gettype()][gettype] function):
+The [`TypeMatcher`][type matcher] will match any element by its type (instance of a class or any value that could be
+parameter of [gettype()][gettype] function):
 
 ```php
 use DeepCopy\TypeMatcher\TypeMatcher;
+use Doctrine\Common\Collections\Collection;
 
 // Will apply a filter to any object that is an instance of Doctrine\Common\Collections\Collection
-$matcher = new TypeMatcher('Doctrine\Common\Collections\Collection');
+$matcher = new TypeMatcher(Collection::class);
 ```
 
 
 ### Filters
 
-- `DeepCopy\Filter` applies a transformation to the object attribute matched by `DeepCopy\Matcher`
-- `DeepCopy\TypeFilter` applies a transformation to any element matched by `DeepCopy\TypeMatcher`
+- [`Filter`][filter] applies a transformation to the object attribute matched by [`Matcher`][matcher]
+- [`TypeFilter`][type filter] applies a transformation to any element matched by [`TypeMatcher`][type matcher]
 
-Except a few exceptions ([`DoctrineProxyFilter`](#doctrineproxyfilter-filter)), matching a filter will stop the chain
-of filters (i.e. the next ones will not be applied).
+Except a few exceptions (when the filter is a [chainable filter][chainable filter] like
+[`DoctrineProxyFilter`](#doctrineproxyfilter-filter)), matching a filter will stop the chain of filters (i.e. the next
+ones will not be applied).
 
 
 #### `SetNullFilter` (filter)
@@ -190,8 +197,8 @@ any ID:
 
 ```php
 use DeepCopy\DeepCopy;
-use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
+use DeepCopy\Filter\SetNullFilter;
 
 $object = MyClass::load(123);
 echo $object->id; // 123
@@ -215,24 +222,31 @@ use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
-$copier->addFilter(new KeepFilter(), new PropertyMatcher('MyClass', 'category'));
+$copier->addFilter(
+    new KeepFilter(),
+    new PropertyMatcher(MyClass::class, 'category')
+);
 
-$copy = $copier->copy($object);
+$copy = $copier->copy($object); // $object is an instance of MyClass
 // $copy->category has not been touched
 ```
 
 
 #### `DoctrineCollectionFilter` (filter)
 
-If you use Doctrine and want to copy an entity, you will need to use the `DoctrineCollectionFilter`:
+This filters allows to copy a Doctrine entity:
 
 ```php
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Matcher\PropertyTypeMatcher;
+use Doctrine\Common\Collections\Collection;
 
 $copier = new DeepCopy();
-$copier->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher('Doctrine\Common\Collections\Collection'));
+$copier->addFilter(
+    new DoctrineCollectionFilter(),
+    new PropertyTypeMatcher(Collection::class)
+);
 
 $copy = $copier->copy($object);
 ```
@@ -240,8 +254,8 @@ $copy = $copier->copy($object);
 
 #### `DoctrineEmptyCollectionFilter` (filter)
 
-If you use Doctrine and want to copy an entity who contains a `Collection` that you want to be reset, you can use the
-`DoctrineEmptyCollectionFilter`
+If you use Doctrine and want to copy an entity who contains a `Collection` that you want to be reset, you can use this
+filter:
 
 ```php
 use DeepCopy\DeepCopy;
@@ -249,7 +263,10 @@ use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
-$copier->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('MyClass', 'myProperty'));
+$copier->addFilter(
+    new DoctrineEmptyCollectionFilter(),
+    new PropertyMatcher(MyClass::class, 'myProperty')
+);
 
 $copy = $copier->copy($object);
 
@@ -261,9 +278,11 @@ $copy = $copier->copy($object);
 
 If you use Doctrine and use cloning on lazy loaded entities, you might encounter errors mentioning missing fields on a
 Doctrine proxy class (...\\\_\_CG\_\_\Proxy).
-You can use the `DoctrineProxyFilter` to load the actual entity behind the Doctrine proxy class.
+You can use this filter to load the actual entity behind the Doctrine proxy class.
+
 **Make sure, though, to put this as one of your very first filters in the filter chain so that the entity is loaded
 before other filters are applied!**
+
 This filter won't stop the chain of filters (i.e. the next ones may be applied).
 
 ```php
@@ -293,12 +312,16 @@ use DeepCopy\Filter\ReplaceFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
-$callback = function ($currentValue) {
-  return $currentValue . ' (copy)'
-};
-$copier->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
+$copier->addFilter(
+    new ReplaceFilter(
+        function ($currentValue): string {
+            return $currentValue . ' (copy)'
+        }
+    ),
+    new PropertyMatcher(MyClass::class, 'title')
+);
 
-$copy = $copier->copy($object);
+$copy = $copier->copy($object); // $object is an instance of MyClass
 
 // $copy->title will contain the data returned by the callback, e.g. 'The title (copy)'
 ```
@@ -311,10 +334,14 @@ use DeepCopy\TypeFilter\ReplaceFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 
 $copier = new DeepCopy();
-$callback = function (MyClass $myClass) {
-  return get_class($myClass);
-};
-$copier->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
+$copier->addFilter(
+    new ReplaceFilter(
+        function (MyClass $myClass): string {
+            return get_class($myClass)
+        }
+    ),
+    new TypeMatcher(MyClass::class)
+);
 
 $copy = $copier->copy([new MyClass, 'some string', new MyClass]);
 
@@ -322,12 +349,9 @@ $copy = $copier->copy([new MyClass, 'some string', new MyClass]);
 ```
 
 
-The `$callback` parameter of the `ReplaceFilter` constructor accepts any PHP callable.
-
-
 #### `ShallowCopyFilter` (type filter)
 
-Stop *DeepCopy* from recursively copying element, using standard `clone` instead:
+Stop *DeepCopy* from recursively copying element, using standard [`clone`][clone] instead:
 
 ```php
 use DeepCopy\DeepCopy;
@@ -335,29 +359,25 @@ use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use Mockery as m;
 
-$this->deepCopy = new DeepCopy();
-$this->deepCopy->addTypeFilter(
+$copier = new DeepCopy();
+$copier->addTypeFilter(
 	new ShallowCopyFilter,
 	new TypeMatcher(m\MockInterface::class)
 );
 
-$myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDependency2::class));
+$myServiceWithMocks = new MyService(
+    m::mock(MyDependency1::class),
+    m::mock(MyDependency2::class)
+);
+
+$copy = $copier->copy($myServiceWithMocks)
 // All mocks will be just cloned, not deep copied
 ```
 
 
-## Edge cases
-
-The following structures cannot be deep-copied with PHP Reflection. As a result they are shallow cloned and filters are
-not applied. There is two ways for you to handle them:
-
-- Implement your own `__clone()` method
-- Use a filter with a type matcher
-
-
 ## Contributing
 
-DeepCopy is distributed under the MIT license.
+This package is distributed under the MIT license.
 
 
 ### Tests
@@ -369,6 +389,13 @@ vendor/bin/phpunit
 ```
 
 
-[composer]: https://getcomposer.org/
+[chainable filter]: src/DeepCopy/Filter/ChainableFilter.php
 [clone]: http://www.php.net/manual/en/language.oop5.cloning.php#object.clone
+[composer]: https://getcomposer.org/
 [gettype]: http://php.net/manual/en/function.gettype.php
+[filter]: src/DeepCopy/Filter/Filter.php
+[matcher]: src/DeepCopy/Matcher/Matcher.php
+[property matcher]: src/DeepCopy/Matcher/PropertyMatcher.php
+[property name matcher]: src/DeepCopy/Matcher/PropertyNameMatcher.php
+[type matcher]: src/DeepCopy/TypeMatcher/TypeMatcher.php
+[type filter]: src/DeepCopy/TypeFilter/TypeFilter.php
