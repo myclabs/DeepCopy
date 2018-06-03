@@ -11,12 +11,11 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 ## Table of Contents
 
 1. [Installation](#installation)
-1. [Usage](#usage)
 1. [Why](#why)
     1. [Using simply `clone`](#using-simply-clone)
     1. [Overridding `__clone()`](#overridding-__clone)
     1. [With `DeepCopy`](#with-deepcopy)
-1. [How it works](#how-it-works)
+1. [Usage](#usage)
 1. [Going further](#going-further)
     1. [Matchers](#matchers)
         1. [Property name](#property-name)
@@ -41,26 +40,6 @@ With [Composer][composer]:
 
 ```json
 composer require myclabs/deep-copy
-```
-
-
-### Usage
-
-Using the short function:
-
-```php
-use function DeepCopy\deep_copy;
-
-$objectCopy = deep_copy($object);
-```
-
-Using an instance:
-
-```php
-use DeepCopy\DeepCopy;
-
-$copier = new DeepCopy();
-$myCopy = $copier->copy($myObject);
 ```
 
 
@@ -98,7 +77,7 @@ Now you're in for a big mess :(
 ![With DeepCopy](doc/deep-copy.png)
 
 
-## How it works
+## Usage
 
 DeepCopy recursively traverses all the object's properties and clones them. To avoid cloning the same object twice it
 keeps a hash map of all instances and thus preserves the object graph.
