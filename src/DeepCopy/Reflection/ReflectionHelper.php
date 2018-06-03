@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\Reflection;
 
@@ -18,29 +18,31 @@ class ReflectionHelper
      * @author muratyaman@gmail.com
      * @see https://secure.php.net/manual/en/reflectionclass.getproperties.php
      *
-     * @param ReflectionClass $ref
+     * @param ReflectionClass $reflectionClass
      *
      * @return ReflectionProperty[]
      */
-    public static function getProperties(ReflectionClass $ref)
+    public static function getProperties(ReflectionClass $reflectionClass): array
     {
-        $props = $ref->getProperties();
-        $propsArr = array();
+        $reflectionProperties = $reflectionClass->getProperties();
+        $reflectionPropertiesByName = [];
 
-        foreach ($props as $prop) {
-            $propertyName = $prop->getName();
-            $propsArr[$propertyName] = $prop;
+        foreach ($reflectionProperties as $reflectionProperty) {
+            $propertyName = $reflectionProperty->getName();
+            $reflectionPropertiesByName[$propertyName] = $reflectionProperty;
         }
 
-        if ($parentClass = $ref->getParentClass()) {
-            $parentPropsArr = self::getProperties($parentClass);
-            foreach ($propsArr as $key => $property) {
-                $parentPropsArr[$key] = $property;
+        if ($parentClass = $reflectionClass->getParentClass()) {
+            $parentReflectionPropertiesByName = self::getProperties($parentClass);
+
+            foreach ($reflectionPropertiesByName as $name => $reflectionProperty) {
+                // When a property collides by name, the child one takes precedence
+                $parentReflectionPropertiesByName[$name] = $reflectionProperty;
             }
 
-            return $parentPropsArr;
+            return $parentReflectionPropertiesByName;
         }
 
-        return $propsArr;
+        return $reflectionPropertiesByName;
     }
 }

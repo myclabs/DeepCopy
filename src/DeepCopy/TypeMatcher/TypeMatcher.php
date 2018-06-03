@@ -1,29 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\TypeMatcher;
 
+use function gettype;
+use function is_a;
+use function is_object;
+
+/**
+ * Checks that the given value matches the configured type.
+ */
 class TypeMatcher
 {
-    /**
-     * @var string
-     */
     private $type;
 
-    /**
-     * @param string $type
-     */
-    public function __construct($type)
+    public function __construct(string $type)
     {
         $this->type = $type;
     }
 
-    /**
-     * @param mixed $element
-     *
-     * @return boolean
-     */
-    public function matches($element)
+    public function matches($value): bool
     {
-        return is_object($element) ? is_a($element, $this->type) : gettype($element) === $this->type;
+        return is_object($value) ? is_a($value, $this->type) : gettype($value) === $this->type;
     }
 }

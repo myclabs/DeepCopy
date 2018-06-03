@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\Filter;
 
@@ -11,7 +11,7 @@ class KeepFilter implements Filter
      *
      * {@inheritdoc}
      */
-    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier)
+    public function apply(object $object, ReflectionProperty $reflectionProperty, callable $objectCopier): void
     {
         // Nothing to do
     }

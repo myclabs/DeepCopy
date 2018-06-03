@@ -1,30 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\TypeFilter\Date;
 
 use DateInterval;
 use DeepCopy\TypeFilter\TypeFilter;
 
-/**
- * @final
- *
- * @deprecated Will be removed in 2.0. This filter will no longer be necessary in PHP 7.1+.
- */
-class DateIntervalFilter implements TypeFilter
+final class DateIntervalFilter implements TypeFilter
 {
 
     /**
      * {@inheritdoc}
      *
-     * @param DateInterval $element
+     * @param DateInterval $value
      *
-     * @see http://news.php.net/php.bugs/205076
+     * @see https://bugs.php.net/bug.php?id=50559
      */
-    public function apply($element)
+    public function apply($value)
     {
         $copy = new DateInterval('P0D');
 
-        foreach ($element as $propertyName => $propertyValue) {
+        foreach ($value as $propertyName => $propertyValue) {
             $copy->{$propertyName} = $propertyValue;
         }
 
