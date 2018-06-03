@@ -9,18 +9,18 @@ use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\ChainableFilter;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
+use DeepCopy\Reflection\ReflectionHelper;
 use DeepCopy\TypeFilter\Date\DateIntervalFilter;
 use DeepCopy\TypeFilter\Spl\SplDoublyLinkedListFilter;
 use DeepCopy\TypeFilter\TypeFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
+use ReflectionObject;
+use ReflectionProperty;
+use SplDoublyLinkedList;
 use function is_array;
 use function is_object;
 use function is_resource;
-use ReflectionObject;
-use ReflectionProperty;
-use DeepCopy\Reflection\ReflectionHelper;
 use function spl_object_id;
-use SplDoublyLinkedList;
 use function sprintf;
 
 final class DeepCopy

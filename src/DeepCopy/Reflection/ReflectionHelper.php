@@ -2,10 +2,7 @@
 
 namespace DeepCopy\Reflection;
 
-use DeepCopy\Exception\PropertyException;
 use ReflectionClass;
-use ReflectionException;
-use ReflectionObject;
 use ReflectionProperty;
 
 class ReflectionHelper
