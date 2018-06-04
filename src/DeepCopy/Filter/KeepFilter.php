@@ -4,7 +4,7 @@ namespace DeepCopy\Filter;
 
 use ReflectionProperty;
 
-class KeepFilter implements Filter
+final class KeepFilter implements Filter
 {
     /**
      * Keeps the value of the object property.

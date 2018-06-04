@@ -5,7 +5,7 @@ namespace DeepCopy\Reflection;
 use ReflectionClass;
 use ReflectionProperty;
 
-class ReflectionHelper
+final class ReflectionHelper
 {
     /**
      * Retrieves all properties (including private ones), from object and all its ancestors.

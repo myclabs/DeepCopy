@@ -7,7 +7,6 @@ use DeepCopy\TypeFilter\TypeFilter;
 
 final class DateIntervalFilter implements TypeFilter
 {
-
     /**
      * {@inheritdoc}
      *
