@@ -1,6 +1,6 @@
 <?php
 
-namespace DeepCopyTest\Matcher;
+namespace DeepCopyTest\Matcher\Doctrine;
 
 use BadMethodCallException;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;

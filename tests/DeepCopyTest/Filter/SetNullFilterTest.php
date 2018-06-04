@@ -22,7 +22,7 @@ class SetNullFilterTest extends TestCase
         $object->foo = 'bar';
         $object->bim = 'bam';
 
-        $filter->apply($object, new ReflectionProperty($object, 'foo'), null);
+        $filter->apply($object, new ReflectionProperty($object, 'foo'), function() {});
 
         $this->assertNull($object->foo);
         $this->assertEquals('bam', $object->bim);
