@@ -4,10 +4,7 @@ namespace DeepCopy\Matcher;
 
 use ReflectionProperty;
 
-/**
- * @final
- */
-class PropertyNameMatcher implements Matcher
+final class PropertyNameMatcher implements Matcher
 {
     /**
      * @var string

@@ -9,7 +9,7 @@ use function is_object;
 /**
  * Checks that the given value matches the configured type.
  */
-class TypeMatcher
+final class TypeMatcher
 {
     private $type;
 
