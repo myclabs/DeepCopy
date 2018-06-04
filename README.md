@@ -390,9 +390,9 @@ vendor/bin/phpunit
 
 
 [chainable filter]: src/DeepCopy/Filter/ChainableFilter.php
-[clone]: http://www.php.net/manual/en/language.oop5.cloning.php#object.clone
+[clone]: https://secure.php.net/manual/en/language.oop5.cloning.php#object.clone
 [composer]: https://getcomposer.org/
-[gettype]: http://php.net/manual/en/function.gettype.php
+[gettype]: https://secure.php.net/manual/en/function.gettype.php
 [filter]: src/DeepCopy/Filter/Filter.php
 [matcher]: src/DeepCopy/Matcher/Matcher.php
 [property matcher]: src/DeepCopy/Matcher/PropertyMatcher.php
