@@ -3,7 +3,7 @@
 namespace DeepCopy\Filter\Doctrine;
 
 use DeepCopy\Filter\ChainableFilter;
-use Doctrine\Common\Proxy\Proxy;
+use Doctrine\Common\Persistence\Proxy;
 use ReflectionProperty;
 
 final class DoctrineProxyFilter implements ChainableFilter

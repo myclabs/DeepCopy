@@ -20,6 +20,7 @@ class ShallowCopyFilterTest extends TestCase
 
         $filter = new ShallowCopyFilter();
 
+        /** @var stdClass $newFoo */
         $newFoo = $filter->apply($foo);
 
         $this->assertNotSame($foo, $newFoo);
