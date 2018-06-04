@@ -67,7 +67,7 @@ class DeepCopy
     /**
      * If enabled, will not throw an exception when coming across an uncloneable property.
      *
-     * @param $skipUncloneable
+     * @param bool $skipUncloneable
      *
      * @return $this
      */

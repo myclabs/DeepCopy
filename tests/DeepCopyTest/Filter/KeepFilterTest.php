@@ -22,7 +22,7 @@ class KeepFilterTest extends TestCase
 
         $filter = new KeepFilter();
 
-        $filter->apply($object, new ReflectionProperty($object, 'foo'), null);
+        $filter->apply($object, new ReflectionProperty($object, 'foo'), function() {});
 
         $this->assertSame($keepObject, $object->foo);
     }
