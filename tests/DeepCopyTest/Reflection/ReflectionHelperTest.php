@@ -1,11 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopyTest\Reflection;
 
 use DeepCopy\Reflection\ReflectionHelper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * @covers \DeepCopy\Reflection\ReflectionHelper

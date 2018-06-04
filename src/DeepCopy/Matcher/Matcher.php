@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\Matcher;
 
@@ -6,11 +6,5 @@ use ReflectionProperty;
 
 interface Matcher
 {
-    /**
-     * @param object             $object
-     * @param ReflectionProperty $reflectionProperty
-     *
-     * @return boolean
-     */
-    public function matches($object, ReflectionProperty $reflectionProperty);
+    public function matches(object $object, ReflectionProperty $reflectionProperty): bool;
 }

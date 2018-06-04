@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopyTest\Filter\Doctrine;
 
 use BadMethodCallException;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
+use Doctrine\Common\Persistence\Proxy;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
@@ -30,7 +31,7 @@ class DoctrineProxyFilterTest extends TestCase
     }
 }
 
-class Foo
+class Foo implements Proxy
 {
     public $bar;
 
@@ -39,5 +40,9 @@ class Foo
     public function __load()
     {
         $this->isLoaded = true;
+    }
+
+    public function __isInitialized()
+    {
     }
 }

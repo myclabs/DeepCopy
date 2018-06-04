@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopyTest\TypeFilter\Spl;
 
@@ -20,22 +20,11 @@ class SplDoublyLinkedListFilterTest extends TestCase
         $list = new SplDoublyLinkedList();
         $list->push($foo);
 
-        $filter = new SplDoublyLinkedListFilter(new FakeDeepCopy());
+        $filter = new SplDoublyLinkedListFilter(new DeepCopy());
 
         $newList = $filter->apply($list);
 
         $this->assertCount(1, $newList);
         $this->assertNotSame($foo, $newList->next());
-    }
-}
-
-class FakeDeepCopy extends DeepCopy
-{
-    /**
-     * @inheritdoc
-     */
-    public function copy($object)
-    {
-        return new stdClass();
     }
 }

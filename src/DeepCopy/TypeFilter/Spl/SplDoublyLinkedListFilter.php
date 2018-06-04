@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\TypeFilter\Spl;
 
@@ -7,10 +7,7 @@ use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\TypeFilter;
 use SplDoublyLinkedList;
 
-/**
- * @final
- */
-class SplDoublyLinkedListFilter implements TypeFilter
+final class SplDoublyLinkedListFilter implements TypeFilter
 {
     private $copier;
 
@@ -21,29 +18,30 @@ class SplDoublyLinkedListFilter implements TypeFilter
 
     /**
      * {@inheritdoc}
+     *
+     * @param SplDoublyLinkedList $list
      */
-    public function apply($element)
+    public function apply($list): SplDoublyLinkedList
     {
-        $newElement = clone $element;
+        $newList = clone $list;
 
         $copy = $this->createCopyClosure();
 
-        return $copy($newElement);
+        return $copy($newList);
     }
 
     private function createCopyClosure()
     {
         $copier = $this->copier;
 
-        $copy = function (SplDoublyLinkedList $list) use ($copier) {
-            // Replace each element in the list with a deep copy of itself
-            for ($i = 1; $i <= $list->count(); $i++) {
-                $copy = $copier->recursiveCopy($list->shift());
+        $copy = function (SplDoublyLinkedList $list) use ($copier): SplDoublyLinkedList {
+            $newList = new SplDoublyLinkedList();
 
-                $list->push($copy);
+            foreach ($list as $value) {
+                $newList->push($copier->recursiveCopy($value));
             }
 
-            return $list;
+            return $newList;
         };
 
         return Closure::bind($copy, null, DeepCopy::class);

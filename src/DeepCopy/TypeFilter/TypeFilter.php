@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\TypeFilter;
 
@@ -7,7 +7,9 @@ interface TypeFilter
     /**
      * Applies the filter to the object.
      *
-     * @param mixed $element
+     * @param mixed $value
+     *
+     * @return mixed
      */
-    public function apply($element);
+    public function apply($value);
 }

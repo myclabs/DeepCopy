@@ -7,14 +7,13 @@ env:
     - COMPOSER_ROOT_VERSION=1.8.0
 
 php:
-  - '7.1'
   - '7.2'
   - nightly
 
 matrix:
   fast_finish: true
   include:
-    - php: '7.1'
+    - php: '7.2'
       env: COMPOSER_FLAGS="--prefer-lowest"
   allow_failures:
     - php: nightly

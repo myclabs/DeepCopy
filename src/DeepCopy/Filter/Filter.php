@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\Filter;
 
@@ -9,12 +9,5 @@ use ReflectionProperty;
  */
 interface Filter
 {
-    /**
-     * Applies the filter to the object.
-     *
-     * @param object             $object
-     * @param ReflectionProperty $reflectionProperty
-     * @param callable           $objectCopier
-     */
-    public function apply($object, ReflectionProperty $reflectionProperty, $objectCopier);
+    public function apply(object $object, ReflectionProperty $reflectionProperty, callable $objectCopier): void;
 }

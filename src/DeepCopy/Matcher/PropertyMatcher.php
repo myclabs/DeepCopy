@@ -1,29 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace DeepCopy\Matcher;
 
 use ReflectionProperty;
 
-/**
- * @final
- */
-class PropertyMatcher implements Matcher
+final class PropertyMatcher implements Matcher
 {
-    /**
-     * @var string
-     */
     private $class;
-
-    /**
-     * @var string
-     */
     private $property;
 
-    /**
-     * @param string $class    Class name
-     * @param string $property Property name
-     */
-    public function __construct($class, $property)
+    public function __construct(string $class, string $property)
     {
         $this->class = $class;
         $this->property = $property;
@@ -34,8 +20,8 @@ class PropertyMatcher implements Matcher
      *
      * {@inheritdoc}
      */
-    public function matches($object, ReflectionProperty $reflectionProperty)
+    public function matches(object $object, ReflectionProperty $reflectionProperty): bool
     {
-        return ($object instanceof $this->class) && $reflectionProperty->getName() == $this->property;
+        return ($object instanceof $this->class) && $reflectionProperty->getName() === $this->property;
     }
 }
