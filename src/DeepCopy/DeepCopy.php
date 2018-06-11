@@ -44,31 +44,38 @@ final class DeepCopy
     private $useCloneMethod;
 
     /**
-     * @param bool $useCloneMethod If set to true, when an object implements the __clone() function, it will be used
-     *                             instead of the regular deep cloning.
+     * @param bool $useCloneMethod           If set to true, when an object implements the __clone() function, it will
+     *                                       be used instead of the regular deep cloning.
+     * @param bool $skipUncloneable          If enabled, will not throw an exception when coming across an uncloneable
+     *                                       property.
+     * @param Array<Filter, Matcher>         List of filter-matcher pairs
+     * @param Array<TypeFilter, TypeMatcher> List of type filter-matcher pairs
      */
-    public function __construct(bool $useCloneMethod = false)
-    {
+    public function __construct(
+        bool $useCloneMethod = false,
+        bool $skipUncloneable = true,
+        array $filters = [],
+        array $typeFilters = []
+    ) {
         $this->useCloneMethod = $useCloneMethod;
 
-        $this->addTypeFilter(
+        $filters[] = [
             new DateIntervalFilter(),
             new TypeMatcher(DateInterval::class)
-        );
-        $this->addTypeFilter(
+        ];
+
+        foreach ($filters as [$filter, $matcher]) {
+            $this->addFilter($filter, $matcher);
+        }
+
+        $typeFilters[] = [
             new SplDoublyLinkedListFilter($this),
             new TypeMatcher(SplDoublyLinkedList::class)
-        );
-    }
+        ];
 
-    /**
-     * If enabled, will not throw an exception when coming across an uncloneable property.
-     */
-    public function skipUncloneable(bool $skipUncloneable = true): self
-    {
-        $this->skipUncloneable = $skipUncloneable;
-
-        return $this;
+        foreach ($typeFilters as [$filter, $matcher]) {
+            $this->addTypeFilter($filter, $matcher);
+        }
     }
 
     /**
@@ -85,12 +92,12 @@ final class DeepCopy
         return $this->recursiveCopy($value);
     }
 
-    public function addFilter(Filter $filter, Matcher $matcher): void
+    private function addFilter(Filter $filter, Matcher $matcher): void
     {
         $this->filters[] = [$matcher, $filter];
     }
 
-    public function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher): void
+    private function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher): void
     {
         $this->typeFilters[] = [$matcher, $filter];
     }
@@ -146,12 +153,7 @@ final class DeepCopy
                 return $object;
             }
 
-            throw new CloneException(
-                sprintf(
-                    'The class "%s" is not cloneable.',
-                    $reflectedObject->getName()
-                )
-            );
+            throw CloneException::unclonableClass($reflectedObject->getName());
         }
 
         $newObject = clone $object;
