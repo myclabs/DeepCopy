@@ -6,10 +6,6 @@ use DeepCopy\TypeMatcher\TypeMatcher;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-interface IA
-{
-}
-
 /**
  * @covers \DeepCopy\TypeMatcher\TypeMatcher
  */
@@ -50,5 +46,9 @@ class Bar extends Foo
 }
 
 class A implements IA
+{
+}
+
+interface IA
 {
 }
