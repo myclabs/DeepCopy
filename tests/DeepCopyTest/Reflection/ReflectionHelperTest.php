@@ -39,23 +39,26 @@ class ReflectionHelperTest extends TestCase
 
 class ReflectionHelperTestParent
 {
+    public $a1;
+    protected $a2;
+    private $a3;
+
+    public $a10;
+    protected $a11;
+    private $a12;
+
     public static $a20;
     protected static $a21;
     private static $a22;
-    public $a1;
-    public $a10;
-    protected $a2;
-    protected $a11;
-    private $a3;
-    private $a12;
 }
 
 class ReflectionHelperTestChild extends ReflectionHelperTestParent
 {
     public $a1;
-    public $a100;
     protected $a2;
-    protected $a101;
     private $a3;
+
+    public $a100;
+    protected $a101;
     private $a102;
 }

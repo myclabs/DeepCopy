@@ -43,9 +43,9 @@ final class DeepCopy
     private $useCloneMethod;
 
     /**
-     * @param bool $useCloneMethod If set to true, when an object implements the __clone() function, it will
+     * @param bool $useCloneMethod           If set to true, when an object implements the __clone() function, it will
      *                                       be used instead of the regular deep cloning.
-     * @param bool $skipUncloneable If enabled, will not throw an exception when coming across an uncloneable
+     * @param bool $skipUncloneable          If enabled, will not throw an exception when coming across an uncloneable
      *                                       property.
      * @param Array<Filter, Matcher>         List of filter-matcher pairs
      * @param Array<TypeFilter, TypeMatcher> List of type filter-matcher pairs
@@ -76,16 +76,6 @@ final class DeepCopy
         }
 
         $this->skipUncloneable = $skipUncloneable;
-    }
-
-    private function addFilter(Filter $filter, Matcher $matcher): void
-    {
-        $this->filters[] = [$matcher, $filter];
-    }
-
-    private function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher): void
-    {
-        $this->typeFilters[] = [$matcher, $filter];
     }
 
     /**
@@ -125,22 +115,6 @@ final class DeepCopy
         }
 
         return $this->copyObject($value);
-    }
-
-    /**
-     * @return TypeFilter|null The first filter that matches variable or `null` if no such filter found
-     */
-    private function getFirstMatchedTypeFilter($value): ?TypeFilter
-    {
-        foreach ($this->typeFilters as [$matcher, $typeFilter]) {
-            /** @var TypeMatcher $matcher */
-            /** @var TypeFilter $typeFilter */
-            if ($matcher->matches($value)) {
-                return $typeFilter;
-            }
-        }
-
-        return null;
     }
 
     private function copyArray(array $array): array
@@ -233,5 +207,31 @@ final class DeepCopy
 
         // Copy the property
         $property->setValue($object, $this->recursiveCopy($propertyValue));
+    }
+
+    private function addFilter(Filter $filter, Matcher $matcher): void
+    {
+        $this->filters[] = [$matcher, $filter];
+    }
+
+    private function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher): void
+    {
+        $this->typeFilters[] = [$matcher, $filter];
+    }
+
+    /**
+     * @return TypeFilter|null The first filter that matches variable or `null` if no such filter found
+     */
+    private function getFirstMatchedTypeFilter($value): ?TypeFilter
+    {
+        foreach ($this->typeFilters as [$matcher, $typeFilter]) {
+            /** @var TypeMatcher $matcher */
+            /** @var TypeFilter $typeFilter */
+            if ($matcher->matches($value)) {
+                return $typeFilter;
+            }
+        }
+
+        return null;
     }
 }
