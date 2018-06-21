@@ -16,7 +16,8 @@ class PropertyNameMatcherTest extends TestCase
      */
     public function test_it_matches_the_given_property($prop, $expected)
     {
-        $object = new class {
+        $object = new class
+        {
             public $foo;
             public $bar;
         };

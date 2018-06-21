@@ -16,7 +16,8 @@ class ReplaceFilterTest extends TestCase
      */
     public function test_it_applies_the_callback_to_the_specified_property(callable $callback, array $expected)
     {
-        $object = new class {
+        $object = new class
+        {
             public $data;
         };
         $object->data = [
@@ -32,7 +33,7 @@ class ReplaceFilterTest extends TestCase
             function () {
                 return null;
             }
-            );
+        );
 
         $this->assertEquals($expected, $object->data);
     }

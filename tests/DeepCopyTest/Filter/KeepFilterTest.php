@@ -14,7 +14,8 @@ class KeepFilterTest extends TestCase
 {
     public function test_it_does_not_change_the_filtered_object_property()
     {
-        $object = new class {
+        $object = new class
+        {
             public $foo;
         };
         $keepObject = new stdClass();
@@ -22,7 +23,8 @@ class KeepFilterTest extends TestCase
 
         $filter = new KeepFilter();
 
-        $filter->apply($object, new ReflectionProperty($object, 'foo'), function () {});
+        $filter->apply($object, new ReflectionProperty($object, 'foo'), function () {
+        });
 
         $this->assertSame($keepObject, $object->foo);
     }

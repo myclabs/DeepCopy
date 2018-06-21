@@ -46,18 +46,6 @@ class DeepCopyTest extends TestCase
         $this->assertSame($value, $copy);
     }
 
-    public function provideScalarValues()
-    {
-        return [
-            [true],
-            ['string'],
-            [null],
-            [10],
-            [-1],
-            [.5],
-        ];
-    }
-
     public function test_it_can_copy_an_array_of_scalar_values()
     {
         $copy = deep_copy([10, 20]);
@@ -72,6 +60,12 @@ class DeepCopyTest extends TestCase
         $copy = deep_copy($object);
 
         $this->assertEqualButNotSame($object, $copy);
+    }
+
+    private function assertEqualButNotSame($expected, $val)
+    {
+        $this->assertEquals($expected, $val);
+        $this->assertNotSame($expected, $val);
     }
 
     public function test_it_can_copy_an_array_of_objects()
@@ -111,6 +105,18 @@ class DeepCopyTest extends TestCase
             },
             $this->provideScalarValues()
         );
+    }
+
+    public function provideScalarValues()
+    {
+        return [
+            [true],
+            ['string'],
+            [null],
+            [10],
+            [-1],
+            [.5],
+        ];
     }
 
     public function test_it_can_copy_an_object_with_an_object_property()
@@ -472,7 +478,9 @@ class DeepCopyTest extends TestCase
             false,
             [
                 [
-                    new ReplaceFilter(function() {return 'foo';}),
+                    new ReplaceFilter(function () {
+                        return 'foo';
+                    }),
                     new PropertyTypeMatcher(stdClass::class),
                 ]
             ]
@@ -509,11 +517,5 @@ class DeepCopyTest extends TestCase
         $copy = $deepCopy->copy($object);
 
         $this->assertNull($copy->foo);
-    }
-
-    private function assertEqualButNotSame($expected, $val)
-    {
-        $this->assertEquals($expected, $val);
-        $this->assertNotSame($expected, $val);
     }
 }

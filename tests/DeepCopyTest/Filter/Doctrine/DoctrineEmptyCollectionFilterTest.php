@@ -16,7 +16,8 @@ class DoctrineEmptyCollectionFilterTest extends TestCase
 {
     public function test_it_sets_the_object_property_to_an_empty_doctrine_collection()
     {
-        $object = new class {
+        $object = new class
+        {
             public $foo;
         };
         $collection = new ArrayCollection();
@@ -29,7 +30,7 @@ class DoctrineEmptyCollectionFilterTest extends TestCase
         $filter->apply(
             $object,
             new ReflectionProperty($object, 'foo'),
-            function($item) {
+            function ($item) {
                 return null;
             }
         );

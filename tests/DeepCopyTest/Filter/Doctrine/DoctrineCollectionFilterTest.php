@@ -16,7 +16,8 @@ class DoctrineCollectionFilterTest extends TestCase
 {
     public function test_it_copies_the_object_property_array_collection()
     {
-        $object = new class {
+        $object = new class
+        {
             public $foo;
         };
         $oldCollection = new ArrayCollection();
@@ -28,7 +29,7 @@ class DoctrineCollectionFilterTest extends TestCase
         $filter->apply(
             $object,
             new ReflectionProperty($object, 'foo'),
-            function($item) {
+            function ($item) {
                 return null;
             }
         );

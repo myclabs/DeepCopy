@@ -22,7 +22,7 @@ class DoctrineProxyFilterTest extends TestCase
         $filter->apply(
             $foo,
             new ReflectionProperty($foo, 'bar'),
-            function($item) {
+            function ($item) {
                 throw new BadMethodCallException('Did not expect to be called.');
             }
         );
