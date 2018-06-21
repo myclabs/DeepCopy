@@ -111,7 +111,7 @@ function deep_copy($var)
     static $copier = null;
     
     if (null === $copier) {
-        $copier = new DeepCopy(true);
+        $copier = new DeepCopy();
     }
     
     return $copier->copy($var);
@@ -124,8 +124,11 @@ function deep_copy($var)
 You can add filters to customize the copy process by adding filters:
 
 ```php
-$copier = new DeepCopy();
-$copier->addFilter($filter, $matcher);
+$copier = new DeepCopy(
+    false,
+    false,
+    [[$filter, $matcher]]
+);
 ```
 
 During the copy process, when a property is matched by a [matcher][matcher], then the [filter][filter] associated to
@@ -203,8 +206,11 @@ use DeepCopy\Filter\SetNullFilter;
 $object = MyClass::load(123);
 echo $object->id; // 123
 
-$copier = new DeepCopy();
-$copier->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
+$copier = new DeepCopy(
+    false,
+    false,
+    [[new SetNullFilter(), new PropertyNameMatcher('id')]]
+);
 
 $copy = $copier->copy($object);
 
@@ -221,10 +227,10 @@ use DeepCopy\DeepCopy;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
-$copier = new DeepCopy();
-$copier->addFilter(
-    new KeepFilter(),
-    new PropertyMatcher(MyClass::class, 'category')
+$copier = new DeepCopy(
+    false,
+    false,
+    [[new KeepFilter(), new PropertyMatcher(MyClass::class, 'category')]]
 );
 
 $copy = $copier->copy($object); // $object is an instance of MyClass
@@ -242,10 +248,10 @@ use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use Doctrine\Common\Collections\Collection;
 
-$copier = new DeepCopy();
-$copier->addFilter(
-    new DoctrineCollectionFilter(),
-    new PropertyTypeMatcher(Collection::class)
+$copier = new DeepCopy(
+    false,
+    false,
+    [[new DoctrineCollectionFilter(), new PropertyTypeMatcher(Collection::class)]]
 );
 
 $copy = $copier->copy($object);
@@ -262,10 +268,10 @@ use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
-$copier = new DeepCopy();
-$copier->addFilter(
-    new DoctrineEmptyCollectionFilter(),
-    new PropertyMatcher(MyClass::class, 'myProperty')
+$copier = new DeepCopy(
+    false,
+    false,
+    [[new DoctrineEmptyCollectionFilter(), new PropertyMatcher(MyClass::class, 'myProperty')]]
 );
 
 $copy = $copier->copy($object);
@@ -292,9 +298,14 @@ use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 use DeepCopy\Matcher\PropertyNameMatcher;
 
-$copier = new DeepCopy();
-$copier->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
-$copier->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
+$copier = new DeepCopy(
+    false,
+    false,
+    [
+        [new DoctrineProxyFilter(), new DoctrineProxyMatcher()],
+        [new SetNullFilter(), new PropertyNameMatcher('id')],
+    ]
+);
 
 $copy = $copier->copy($object);
 
@@ -311,14 +322,19 @@ use DeepCopy\DeepCopy;
 use DeepCopy\Filter\ReplaceFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
-$copier = new DeepCopy();
-$copier->addFilter(
-    new ReplaceFilter(
-        function ($currentValue): string {
-            return $currentValue . ' (copy)'
-        }
-    ),
-    new PropertyMatcher(MyClass::class, 'title')
+$copier = new DeepCopy(
+    false,
+    false,
+    [
+        [
+            new ReplaceFilter(
+                 function ($currentValue): string {
+                     return $currentValue . ' (copy)'
+                 }
+            ),
+            new PropertyMatcher(MyClass::class, 'title'),
+        ],
+    ]
 );
 
 $copy = $copier->copy($object); // $object is an instance of MyClass
@@ -333,14 +349,19 @@ use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\ReplaceFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 
-$copier = new DeepCopy();
-$copier->addFilter(
-    new ReplaceFilter(
-        function (MyClass $myClass): string {
-            return get_class($myClass)
-        }
-    ),
-    new TypeMatcher(MyClass::class)
+$copier = new DeepCopy(
+    false,
+    false,
+    [
+        [
+            new ReplaceFilter(
+                function (MyClass $myClass): string {
+                    return get_class($myClass)
+                }
+            ),
+            new TypeMatcher(MyClass::class),
+        ],
+    ]
 );
 
 $copy = $copier->copy([new MyClass, 'some string', new MyClass]);
@@ -359,10 +380,11 @@ use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use Mockery as m;
 
-$copier = new DeepCopy();
-$copier->addTypeFilter(
-	new ShallowCopyFilter,
-	new TypeMatcher(m\MockInterface::class)
+$copier = new DeepCopy(
+    false,
+    false,
+    [],
+    [[new ShallowCopyFilter, new TypeMatcher(m\MockInterface::class)]]
 );
 
 $myServiceWithMocks = new MyService(
