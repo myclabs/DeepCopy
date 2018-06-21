@@ -13,10 +13,10 @@ namespace DeepCopy;
  * @param Array<Filter, Matcher>         List of filter-matcher pairs
  * @param Array<TypeFilter, TypeMatcher> List of type filter-matcher pairs
  */
-public function deep_copy(
+function deep_copy(
     $value,
     bool $useCloneMethod = false,
-    bool $skipUncloneable = true,
+    bool $skipUncloneable = false,
     array $filters = [],
     array $typeFilters = []
 ) {

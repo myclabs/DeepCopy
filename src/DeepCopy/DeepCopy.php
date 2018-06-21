@@ -40,7 +40,7 @@ final class DeepCopy
      */
     private $typeFilters = [];
 
-    private $skipUncloneable = false;
+    private $skipUncloneable;
     private $useCloneMethod;
 
     /**
@@ -53,21 +53,20 @@ final class DeepCopy
      */
     public function __construct(
         bool $useCloneMethod = false,
-        bool $skipUncloneable = true,
+        bool $skipUncloneable = false,
         array $filters = [],
         array $typeFilters = []
     ) {
         $this->useCloneMethod = $useCloneMethod;
 
-        $filters[] = [
-            new DateIntervalFilter(),
-            new TypeMatcher(DateInterval::class)
-        ];
-
         foreach ($filters as [$filter, $matcher]) {
             $this->addFilter($filter, $matcher);
         }
 
+        $typeFilters[] = [
+            new DateIntervalFilter(),
+            new TypeMatcher(DateInterval::class)
+        ];
         $typeFilters[] = [
             new SplDoublyLinkedListFilter($this),
             new TypeMatcher(SplDoublyLinkedList::class)
@@ -76,6 +75,8 @@ final class DeepCopy
         foreach ($typeFilters as [$filter, $matcher]) {
             $this->addTypeFilter($filter, $matcher);
         }
+
+        $this->skipUncloneable = $skipUncloneable;
     }
 
     /**
