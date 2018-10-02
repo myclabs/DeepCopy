@@ -243,7 +243,7 @@ use DeepCopy\Matcher\PropertyTypeMatcher;
 use Doctrine\Common\Collections\Collection;
 
 $copier = new DeepCopy();
-$copier->addTypeFilter(
+$copier->addFilter(
     new DoctrineCollectionFilter(),
     new PropertyTypeMatcher(Collection::class)
 );
