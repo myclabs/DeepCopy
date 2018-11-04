@@ -46,18 +46,6 @@ class DeepCopyTest extends TestCase
         $this->assertSame($value, $copy);
     }
 
-    public function provideScalarValues()
-    {
-        return [
-            [true],
-            ['string'],
-            [null],
-            [10],
-            [-1],
-            [.5],
-        ];
-    }
-
     public function test_it_can_copy_an_array_of_scalar_values()
     {
         $copy = deep_copy([10, 20]);
@@ -72,6 +60,12 @@ class DeepCopyTest extends TestCase
         $copy = deep_copy($object);
 
         $this->assertEqualButNotSame($object, $copy);
+    }
+
+    private function assertEqualButNotSame($expected, $val)
+    {
+        $this->assertEquals($expected, $val);
+        $this->assertNotSame($expected, $val);
     }
 
     public function test_it_can_copy_an_array_of_objects()
@@ -111,6 +105,18 @@ class DeepCopyTest extends TestCase
             },
             $this->provideScalarValues()
         );
+    }
+
+    public function provideScalarValues()
+    {
+        return [
+            [true],
+            ['string'],
+            [null],
+            [10],
+            [-1],
+            [.5],
+        ];
     }
 
     public function test_it_can_copy_an_object_with_an_object_property()
@@ -166,10 +172,15 @@ class DeepCopyTest extends TestCase
      */
     public function test_it_skips_the_copy_for_userland_datetimezone()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(
-            new SetNullFilter(),
-            new PropertyNameMatcher('cloned')
+        $deepCopy = new DeepCopy(
+            false,
+            true,
+            [
+                [
+                    new SetNullFilter(),
+                    new PropertyNameMatcher('cloned')
+                ]
+            ]
         );
 
         $object = new stdClass();
@@ -186,10 +197,15 @@ class DeepCopyTest extends TestCase
      */
     public function test_it_skips_the_copy_for_userland_dateinterval()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(
-            new SetNullFilter(),
-            new PropertyNameMatcher('cloned')
+        $deepCopy = new DeepCopy(
+            false,
+            true,
+            [
+                [
+                    new SetNullFilter(),
+                    new PropertyNameMatcher('cloned')
+                ]
+            ]
         );
 
         $object = new stdClass();
@@ -295,8 +311,7 @@ class DeepCopyTest extends TestCase
     {
         $object = new f004\UnclonableItem();
 
-        $deepCopy = new DeepCopy();
-        $deepCopy->skipUncloneable(true);
+        $deepCopy = new DeepCopy(false, true);
 
         $copy = $deepCopy->copy($object);
 
@@ -325,10 +340,16 @@ class DeepCopyTest extends TestCase
 
     public function test_it_uses_type_filter_to_copy_objects_if_matcher_matches()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addTypeFilter(
-            new ShallowCopyFilter(),
-            new TypeMatcher(f006\A::class)
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [],
+            [
+                [
+                    new ShallowCopyFilter(),
+                    new TypeMatcher(f006\A::class),
+                ]
+            ]
         );
 
         $a = new f006\A;
@@ -346,10 +367,15 @@ class DeepCopyTest extends TestCase
 
     public function test_it_uses_filters_to_copy_object_properties_if_matcher_matches()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(
-            new SetNullFilter(),
-            new PropertyNameMatcher('cloned')
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [
+                [
+                    new SetNullFilter(),
+                    new PropertyNameMatcher('cloned')
+                ]
+            ]
         );
 
         $a = new f006\A;
@@ -366,14 +392,19 @@ class DeepCopyTest extends TestCase
 
     public function test_it_uses_the_first_filter_matching_for_copying_object_properties()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(
-            new SetNullFilter(),
-            new PropertyNameMatcher('cloned')
-        );
-        $deepCopy->addFilter(
-            new KeepFilter(),
-            new PropertyNameMatcher('cloned')
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [
+                [
+                    new SetNullFilter(),
+                    new PropertyNameMatcher('cloned')
+                ],
+                [
+                    new KeepFilter(),
+                    new PropertyNameMatcher('cloned')
+                ]
+            ]
         );
 
         $a = new f006\A;
@@ -417,8 +448,16 @@ class DeepCopyTest extends TestCase
      */
     public function test_matchers_can_access_to_parent_private_properties()
     {
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyTypeMatcher(stdClass::class));
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [
+                [
+                    new SetNullFilter(),
+                    new PropertyTypeMatcher(stdClass::class),
+                ]
+            ]
+        );
 
         $object = new f008\B(new stdClass());
 
@@ -434,8 +473,18 @@ class DeepCopyTest extends TestCase
         $object->setAProp(new stdClass());
         $object->setBProp(new stdClass());
 
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new ReplaceFilter(function() {return 'foo';}), new PropertyTypeMatcher(stdClass::class));
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [
+                [
+                    new ReplaceFilter(function () {
+                        return 'foo';
+                    }),
+                    new PropertyTypeMatcher(stdClass::class),
+                ]
+            ]
+        );
 
         $new = $deepCopy->copy($object);
 
@@ -450,18 +499,23 @@ class DeepCopyTest extends TestCase
     {
         $object = new f009\A();
 
-        $deepCopy = new DeepCopy();
-        $deepCopy->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
-        $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('foo'));
+        $deepCopy = new DeepCopy(
+            false,
+            false,
+            [
+                [
+                    new DoctrineProxyFilter(),
+                    new DoctrineProxyMatcher(),
+                ],
+                [
+                    new SetNullFilter(),
+                    new PropertyNameMatcher('foo'),
+                ]
+            ]
+        );
 
         $copy = $deepCopy->copy($object);
 
         $this->assertNull($copy->foo);
-    }
-
-    private function assertEqualButNotSame($expected, $val)
-    {
-        $this->assertEquals($expected, $val);
-        $this->assertNotSame($expected, $val);
     }
 }

@@ -45,10 +45,10 @@ class Bar extends Foo
 {
 }
 
-interface IA
+class A implements IA
 {
 }
 
-class A implements IA
+interface IA
 {
 }

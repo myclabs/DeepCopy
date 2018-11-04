@@ -31,7 +31,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - vendor/bin/phpstan analyse -l 7 src/ tests/ fixtures/
+  - vendor/bin/phpstan analyse -l7 -cphpstan.neon src/ tests/ fixtures/
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:

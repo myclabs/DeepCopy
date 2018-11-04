@@ -41,7 +41,8 @@ class PropertyTypeMatcherTest extends TestCase
             [$object2, false],
             [$object3, false],
             [
-                new class {
+                new class
+                {
                     public $foo;
                 },
                 false

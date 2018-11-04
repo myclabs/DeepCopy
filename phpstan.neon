@@ -1,0 +1,4 @@
+parameters:
+    ignoreErrors:
+        - '#PHPDoc tag \@param has invalid value \(Array\<Filter\, Matcher\>#'
+        - '#PHPDoc tag \@param has invalid value \(Array\<TypeFilter\, TypeMatcher\>#'

@@ -30,7 +30,8 @@ class DoctrineProxyMatcherTest extends TestCase
         return [
             [new FooProxy(), true],
             [
-                new class {
+                new class
+                {
                     public $foo;
                 },
                 false
