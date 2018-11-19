@@ -26,8 +26,8 @@
     "require-dev": {
         "doctrine/collections": "^1.0",
         "doctrine/common": "^2.6",
-        "phpstan/phpstan": "^0.9.2",
-        "phpstan/phpstan-phpunit": "^0.9.4",
+        "phpstan/phpstan": "^0.10.5",
+        "phpstan/phpstan-phpunit": "^0.10",
         "phpunit/phpunit": "^7.1"
     },
     "replace": {
