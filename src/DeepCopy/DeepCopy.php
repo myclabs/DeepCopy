@@ -17,6 +17,7 @@ use DeepCopy\TypeMatcher\TypeMatcher;
 use ReflectionObject;
 use ReflectionProperty;
 use SplDoublyLinkedList;
+use function array_unshift;
 use function is_array;
 use function is_object;
 use function is_resource;
@@ -85,31 +86,14 @@ final class DeepCopy
         return $this->recursiveCopy($value);
     }
 
-    /**
-     * @param Filter  $filter
-     * @param Matcher $matcher
-     *
-     * @return void
-     */
     public function addFilter(Filter $filter, Matcher $matcher): void
     {
         $this->filters[] = [$matcher, $filter];
     }
 
-    /**
-     * Add filter with high priority
-     *
-     * @param Filter  $filter
-     * @param Matcher $matcher
-     *
-     * @return void
-     */
     public function prependFilter(Filter $filter, Matcher $matcher): void
     {
-        \array_unshift($this->filters, [
-            'matcher' => $matcher,
-            'filter'  => $filter,
-        ]);
+        array_unshift($this->filters, [$matcher, $filter]);
     }
 
     public function addTypeFilter(TypeFilter $filter, TypeMatcher $matcher): void
