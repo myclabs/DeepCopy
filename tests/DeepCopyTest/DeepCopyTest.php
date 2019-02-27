@@ -424,6 +424,16 @@ class DeepCopyTest extends TestCase
         $this->assertNull($copy->getFoo());
     }
 
+    public function test_it_can_prepend_filter()
+    {
+        $object = new f008\A('bar');
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new KeepFilter(), new PropertyNameMatcher('foo'));
+        $deepCopy->prependFilter(new SetNullFilter(), new PropertyNameMatcher('foo'));
+        $copy = $deepCopy->copy($object);
+        $this->assertNull($copy->getFoo());
+    }
+
     private function assertEqualButNotSame($expected, $val)
     {
         $this->assertEquals($expected, $val);
