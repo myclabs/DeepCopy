@@ -197,7 +197,7 @@ final class DeepCopy
                 );
 
                 if ($filter instanceof DoctrineProxyFilter) {
-                    return;
+                    continue;
                 }
 
                 $filterWasApplied = true;
