@@ -7,6 +7,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\ChainableFilter;
+use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
 use DeepCopy\Reflection\ReflectionHelper;
@@ -194,6 +195,10 @@ final class DeepCopy
                         return $this->recursiveCopy($object);
                     }
                 );
+
+                if ($filter instanceof DoctrineProxyFilter) {
+                    return;
+                }
 
                 $filterWasApplied = true;
 
