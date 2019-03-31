@@ -17,6 +17,7 @@ use DeepCopy\f006;
 use DeepCopy\f007;
 use DeepCopy\f008;
 use DeepCopy\f009;
+use DeepCopy\f010;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\ReplaceFilter;
@@ -463,5 +464,19 @@ class DeepCopyTest extends TestCase
     {
         $this->assertEquals($expected, $val);
         $this->assertNotSame($expected, $val);
+    }
+
+    public function test_it_can_copy_property_after_applying_doctrine_proxy_filter()
+    {
+        $object = new f010\A();
+        $object->setFoo(new f010\B());
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new DoctrineProxyFilter(), new DoctrineProxyMatcher());
+
+        /** @var f010\A $copy */
+        $copy = $deepCopy->copy($object);
+
+        $this->assertNotEquals($copy->getFoo(), $object->getFoo());
     }
 }
