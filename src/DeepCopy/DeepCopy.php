@@ -180,8 +180,6 @@ final class DeepCopy
             return;
         }
 
-        $filterWasApplied = false;
-
         // Apply the filters
         foreach ($this->filters as [$matcher, $filter]) {
             /** @var Matcher $matcher */
@@ -196,12 +194,6 @@ final class DeepCopy
                     }
                 );
 
-                if ($filter instanceof DoctrineProxyFilter) {
-                    continue;
-                }
-
-                $filterWasApplied = true;
-
                 if ($filter instanceof ChainableFilter) {
                     continue;
                 }
@@ -209,10 +201,6 @@ final class DeepCopy
                 // If a filter matches, we stop processing this property
                 return;
             }
-        }
-
-        if ($filterWasApplied) {
-            return;
         }
 
         $property->setAccessible(true);
