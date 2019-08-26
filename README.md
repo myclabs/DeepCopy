@@ -7,11 +7,6 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/myclabs/DeepCopy/badges/quality-score.png?s=2747100c19b275f93a777e3297c6c12d1b68b934)](https://scrutinizer-ci.com/g/myclabs/DeepCopy/)
 [![Total Downloads](https://poser.pugx.org/myclabs/deep-copy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
 
-
-**You are browsing the 1.x version, this version is in maintenance mode only. Please check the new
-[2.x](https://github.com/myclabs/DeepCopy/tree/2.x) version.**
-
-
 ## Table of Contents
 
 1. [How](#how)
