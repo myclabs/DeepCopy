@@ -57,7 +57,7 @@ class ReflectionHelper
      */
     public static function getProperty($object, $name)
     {
-        $reflection = is_object($object) ? new ReflectionObject($object) : new ReflectionClass($object);
+        $reflection = \is_object($object) ? new ReflectionObject($object) : new ReflectionClass($object);
 
         if ($reflection->hasProperty($name)) {
             return $reflection->getProperty($name);
@@ -68,9 +68,9 @@ class ReflectionHelper
         }
 
         throw new PropertyException(
-            sprintf(
+            \sprintf(
                 'The class "%s" doesn\'t have a property with the given name: "%s".',
-                is_object($object) ? get_class($object) : $object,
+                \is_object($object) ? \get_class($object) : $object,
                 $name
             )
         );

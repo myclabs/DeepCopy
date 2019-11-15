@@ -34,7 +34,7 @@ class ReflectionHelperTest extends TestCase
 
         $actualProps = ReflectionHelper::getProperties($childReflectionClass);
 
-        $this->assertSame($expectedProps, array_keys($actualProps));
+        $this->assertSame($expectedProps, \array_keys($actualProps));
     }
 
     /**

@@ -101,7 +101,7 @@ class DeepCopyTest extends TestCase
             return $object;
         };
 
-        return array_map(
+        return \array_map(
             function (array $vals) use ($createObject) {
                 return [$createObject($vals[0]), $vals[0]];
             },
@@ -276,7 +276,7 @@ class DeepCopyTest extends TestCase
             $this->fail('Expected exception to be thrown.');
         } catch (CloneException $exception) {
             $this->assertSame(
-                sprintf(
+                \sprintf(
                     'The class "%s" is not cloneable.',
                     f004\UnclonableItem::class
                 ),

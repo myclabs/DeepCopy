@@ -25,6 +25,6 @@ class ReplaceFilter implements TypeFilter
      */
     public function apply($element)
     {
-        return call_user_func($this->callback, $element);
+        return \call_user_func($this->callback, $element);
     }
 }

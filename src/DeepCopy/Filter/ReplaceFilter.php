@@ -32,7 +32,7 @@ class ReplaceFilter implements Filter
         $reflectionProperty = ReflectionHelper::getProperty($object, $property);
         $reflectionProperty->setAccessible(true);
 
-        $value = call_user_func($this->callback, $reflectionProperty->getValue($object));
+        $value = \call_user_func($this->callback, $reflectionProperty->getValue($object));
 
         $reflectionProperty->setValue($object, $value);
     }

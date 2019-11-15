@@ -101,7 +101,7 @@ class DeepCopy
 
     public function prependFilter(Filter $filter, Matcher $matcher)
     {
-        array_unshift($this->filters, [
+        \array_unshift($this->filters, [
             'matcher' => $matcher,
             'filter'  => $filter,
         ]);
@@ -123,17 +123,17 @@ class DeepCopy
         }
 
         // Resource
-        if (is_resource($var)) {
+        if (\is_resource($var)) {
             return $var;
         }
 
         // Array
-        if (is_array($var)) {
+        if (\is_array($var)) {
             return $this->copyArray($var);
         }
 
         // Scalar
-        if (! is_object($var)) {
+        if (! \is_object($var)) {
             return $var;
         }
 
@@ -166,7 +166,7 @@ class DeepCopy
      */
     private function copyObject($object)
     {
-        $objectHash = spl_object_hash($object);
+        $objectHash = \spl_object_hash($object);
 
         if (isset($this->hashMap[$objectHash])) {
             return $this->hashMap[$objectHash];
@@ -183,7 +183,7 @@ class DeepCopy
             }
 
             throw new CloneException(
-                sprintf(
+                \sprintf(
                     'The class "%s" is not cloneable.',
                     $reflectedObject->getName()
                 )
@@ -279,7 +279,7 @@ class DeepCopy
     private function first(array $elements, callable $predicate)
     {
         foreach ($elements as $element) {
-            if (call_user_func($predicate, $element)) {
+            if (\call_user_func($predicate, $element)) {
                 return $element;
             }
         }

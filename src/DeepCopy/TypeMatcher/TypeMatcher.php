@@ -24,6 +24,6 @@ class TypeMatcher
      */
     public function matches($element)
     {
-        return is_object($element) ? is_a($element, $this->type) : gettype($element) === $this->type;
+        return \is_object($element) ? \is_a($element, $this->type) : \gettype($element) === $this->type;
     }
 }
