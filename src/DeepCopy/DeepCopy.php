@@ -215,6 +215,11 @@ class DeepCopy
             return;
         }
 
+        // Ignore unitialized properties (for PHP >7.4)
+        if (method_exists($property, 'isInitialized') && !$property->isInitialized($object)) {
+            return;
+        }
+
         // Apply the filters
         foreach ($this->filters as $item) {
             /** @var Matcher $matcher */
