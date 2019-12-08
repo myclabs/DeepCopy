@@ -16,6 +16,7 @@ use DeepCopy\f005;
 use DeepCopy\f006;
 use DeepCopy\f007;
 use DeepCopy\f008;
+use DeepCopy\f009;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
@@ -432,6 +433,35 @@ class DeepCopyTest extends TestCase
         $deepCopy->prependFilter(new SetNullFilter(), new PropertyNameMatcher('foo'));
         $copy = $deepCopy->copy($object);
         $this->assertNull($copy->getFoo());
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/143
+     * @require PHP 7.4
+     */
+    public function test_it_clones_typed_properties()
+    {
+        $object = new f009\TypedProperty();
+        $object->foo = 123;
+
+        $deepCopy = new DeepCopy();
+        $copy = $deepCopy->copy($object);
+
+        $this->assertSame(123, $copy->foo);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/143
+     * @require PHP 7.4
+     */
+    public function test_it_ignores_uninitialized_typed_properties()
+    {
+        $object = new f009\TypedProperty();
+
+        $deepCopy = new DeepCopy();
+        $copy = $deepCopy->copy($object);
+
+        $this->assertFalse(isset($copy->foo));
     }
 
     private function assertEqualButNotSame($expected, $val)
