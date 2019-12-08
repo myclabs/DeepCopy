@@ -437,7 +437,7 @@ class DeepCopyTest extends TestCase
 
     /**
      * @ticket https://github.com/myclabs/DeepCopy/issues/143
-     * @require PHP 7.4
+     * @requires PHP 7.4
      */
     public function test_it_clones_typed_properties()
     {
@@ -452,7 +452,7 @@ class DeepCopyTest extends TestCase
 
     /**
      * @ticket https://github.com/myclabs/DeepCopy/issues/143
-     * @require PHP 7.4
+     * @requires PHP 7.4
      */
     public function test_it_ignores_uninitialized_typed_properties()
     {
