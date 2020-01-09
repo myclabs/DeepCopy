@@ -7,6 +7,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use DeepCopy\Exception\CloneException;
 use DeepCopy\Filter\ChainableFilter;
+use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
 use DeepCopy\Filter\Filter;
 use DeepCopy\Matcher\Matcher;
 use DeepCopy\Reflection\ReflectionHelper;
@@ -185,8 +186,6 @@ final class DeepCopy
             return;
         }
 
-        $filterWasApplied = false;
-
         // Apply the filters
         foreach ($this->filters as [$matcher, $filter]) {
             /** @var Matcher $matcher */
@@ -201,8 +200,6 @@ final class DeepCopy
                     }
                 );
 
-                $filterWasApplied = true;
-
                 if ($filter instanceof ChainableFilter) {
                     continue;
                 }
@@ -210,10 +207,6 @@ final class DeepCopy
                 // If a filter matches, we stop processing this property
                 return;
             }
-        }
-
-        if ($filterWasApplied) {
-            return;
         }
 
         $property->setAccessible(true);
