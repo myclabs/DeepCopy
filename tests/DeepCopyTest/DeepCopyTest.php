@@ -2,6 +2,7 @@
 
 namespace DeepCopyTest;
 
+use ArrayObject;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -24,6 +25,7 @@ use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\ShallowCopyFilter;
 use DeepCopy\TypeMatcher\TypeMatcher;
 use PHPUnit\Framework\TestCase;
+use RecursiveArrayIterator;
 use SplDoublyLinkedList;
 use stdClass;
 use function DeepCopy\deep_copy;
@@ -383,6 +385,18 @@ class DeepCopyTest extends TestCase
 
         $this->assertNull($copy->cloned);
         $this->assertNull($copy->getAProp()->cloned);
+    }
+
+    public function test_it_can_deep_copy_an_array_object()
+    {
+        $foo = new f003\Foo('foo');
+        $foo->setProp('bar');
+        $object = new ArrayObject(['foo' => $foo, \ArrayObject::ARRAY_AS_PROPS, \RecursiveArrayIterator::class]);
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+        $this->assertEqualButNotSame($foo, $copy['foo']);
     }
 
     /**
