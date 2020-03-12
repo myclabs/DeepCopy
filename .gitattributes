@@ -3,6 +3,7 @@
 
 *.png    binary
 
+doc/ export-ignore
 fixtures/ export-ignore
 tests/ export-ignore
 .gitattributes export-ignore
