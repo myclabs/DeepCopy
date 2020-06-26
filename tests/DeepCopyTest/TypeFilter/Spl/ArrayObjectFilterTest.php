@@ -37,11 +37,11 @@ final class ArrayObjectFilterTest extends TestCase
     public function test_it_deep_copies_an_array_object(): void
     {
         $arrayObject = new ArrayObject(['foo' => 'bar'], ArrayObject::ARRAY_AS_PROPS, RecursiveArrayIterator::class);
-        $this->copierProphecy->copy(['foo' => 'bar'])->willReturn(['copy' => 'bar']);
+        $this->copierProphecy->copy('bar')->willReturn('baz');
 
         /** @var \ArrayObject $newArrayObject */
         $newArrayObject = $this->arrayObjectFilter->apply($arrayObject);
-        $this->assertSame(['copy' => 'bar'], $newArrayObject->getArrayCopy());
+        $this->assertSame(['foo' => 'baz'], $newArrayObject->getArrayCopy());
         $this->assertSame(ArrayObject::ARRAY_AS_PROPS, $newArrayObject->getFlags());
         $this->assertSame(RecursiveArrayIterator::class, $newArrayObject->getIteratorClass());
     }

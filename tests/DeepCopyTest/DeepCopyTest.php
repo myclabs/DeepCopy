@@ -18,6 +18,7 @@ use DeepCopy\f006;
 use DeepCopy\f007;
 use DeepCopy\f008;
 use DeepCopy\f009;
+use DeepCopy\f011;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
@@ -391,12 +392,28 @@ class DeepCopyTest extends TestCase
     {
         $foo = new f003\Foo('foo');
         $foo->setProp('bar');
-        $object = new ArrayObject(['foo' => $foo, \ArrayObject::ARRAY_AS_PROPS, \RecursiveArrayIterator::class]);
+        $object = new ArrayObject(['foo' => $foo, ArrayObject::ARRAY_AS_PROPS, \RecursiveArrayIterator::class]);
 
         $copy = deep_copy($object);
 
         $this->assertEqualButNotSame($object, $copy);
         $this->assertEqualButNotSame($foo, $copy['foo']);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/152
+     */
+    public function test_it_clones_objects_extending_array_object()
+    {
+        $object = new f011\ArrayObjectExtended('foo');
+        $object->setFlags(ArrayObject::ARRAY_AS_PROPS);
+        $object->setIteratorClass(\RecursiveArrayIterator::class);
+        $object['a'] = new f011\ArrayObjectExtended('bar');
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($object, $copy);
+        $this->assertEqualButNotSame($object['a'], $copy['a']);
     }
 
     /**
