@@ -9,13 +9,15 @@ env:
 php:
   - '7.2'
   - '7.3'
-  - nightly
+  - '7.4'
 
 matrix:
   fast_finish: true
   include:
     - php: '7.2'
       env: COMPOSER_FLAGS="--prefer-lowest"
+    - php: nightly
+      env: COMPOSER_FLAGS="--ignore-platform-reqs"
   allow_failures:
     - php: nightly
 
