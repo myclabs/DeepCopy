@@ -22,6 +22,6 @@ class SetNullFilterTest extends TestCase
         $filter->apply($object, 'foo', null);
 
         $this->assertNull($object->foo);
-        $this->assertEquals('bam', $object->bim);
+        $this->assertSame('bam', $object->bim);
     }
 }
