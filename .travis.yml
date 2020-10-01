@@ -1,7 +1,5 @@
 language: php
 
-sudo: false
-
 env:
   global:
     - COMPOSER_ROOT_VERSION=1.8.0
