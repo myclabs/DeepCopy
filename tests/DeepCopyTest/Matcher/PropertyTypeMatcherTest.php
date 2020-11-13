@@ -2,6 +2,7 @@
 
 namespace DeepCopyTest\Matcher;
 
+use DeepCopy\f009;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -21,6 +22,31 @@ class PropertyTypeMatcherTest extends TestCase
         $actual = $matcher->matches($object, 'foo');
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @requires PHP 7.4
+     */
+    public function test_it_ignores_uninitialized_typed_properties()
+    {
+        $object = new f009\TypedObjectProperty();
+
+        $matcher = new PropertyTypeMatcher(\DateTime::class);
+
+        $this->assertFalse($matcher->matches($object, 'date'));
+    }
+
+    /**
+     * @requires PHP 7.4
+     */
+    public function test_it_matches_initialized_typed_properties()
+    {
+        $object = new f009\TypedObjectProperty();
+        $object->date = new \DateTime();
+
+        $matcher = new PropertyTypeMatcher(\DateTime::class);
+
+        $this->assertTrue($matcher->matches($object, 'date'));
     }
 
     public function providePairs()
