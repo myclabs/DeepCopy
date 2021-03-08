@@ -194,6 +194,7 @@ class DeepCopy
         }
 
         $newObject = clone $object;
+        $objectHash = spl_object_hash($newObject);
         $this->hashMap[$objectHash] = $newObject;
 
         if ($this->useCloneMethod && $reflectedObject->hasMethod('__clone')) {
