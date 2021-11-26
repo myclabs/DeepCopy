@@ -65,6 +65,8 @@ class ReflectionHelperTest extends TestCase
      */
     public function test_it_cannot_retrieve_a_non_existent_prperty()
     {
+        $this->expectException(\DeepCopy\Exception\PropertyException::class);
+
         $object = new ReflectionHelperTestChild();
 
         ReflectionHelper::getProperty($object, 'non existent property');

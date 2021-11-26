@@ -3,7 +3,6 @@
 namespace DeepCopy\Matcher\Doctrine;
 
 use DeepCopy\Matcher\Matcher;
-use Doctrine\Common\Persistence\Proxy;
 
 /**
  * @final
@@ -17,6 +16,11 @@ class DoctrineProxyMatcher implements Matcher
      */
     public function matches($object, $property)
     {
-        return $object instanceof Proxy;
+        if (class_exists('\Doctrine\Persistence\Proxy')) {
+            return $object instanceof \Doctrine\Persistence\Proxy;
+        }
+
+        return $object instanceof \Doctrine\Common\Persistence\Proxy;
     }
+
 }
