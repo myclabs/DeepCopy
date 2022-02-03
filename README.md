@@ -12,7 +12,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 1. [How](#how)
 1. [Why](#why)
     1. [Using simply `clone`](#using-simply-clone)
-    1. [Overridding `__clone()`](#overridding-__clone)
+    1. [Overriding `__clone()`](#overriding-__clone)
     1. [With `DeepCopy`](#with-deepcopy)
 1. [How it works](#how-it-works)
 1. [Going further](#going-further)
@@ -76,9 +76,9 @@ Now you're in for a big mess :(
 ![Using clone](doc/clone.png)
 
 
-### Overridding `__clone()`
+### Overriding `__clone()`
 
-![Overridding __clone](doc/deep-clone.png)
+![Overriding __clone](doc/deep-clone.png)
 
 
 ### With `DeepCopy`
