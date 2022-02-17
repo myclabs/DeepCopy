@@ -37,7 +37,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 
 Install with Composer:
 
-```json
+```
 composer require myclabs/deep-copy
 ```
 
