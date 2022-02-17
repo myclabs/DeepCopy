@@ -18,9 +18,6 @@
         "doctrine/common": "^2.6",
         "phpunit/phpunit": "^7.1"
     },
-    "replace": {
-        "myclabs/deep-copy": "self.version"
-    },
     "autoload": {
         "psr-4": {
             "DeepCopy\\": "src/DeepCopy/"
