@@ -2,9 +2,6 @@
 
 DeepCopy helps you create deep copies (clones) of your objects. It is designed to handle cycles in the association graph.
 
-[![Build Status](https://travis-ci.org/myclabs/DeepCopy.png?branch=1.x)](https://travis-ci.org/myclabs/DeepCopy)
-[![Coverage Status](https://coveralls.io/repos/myclabs/DeepCopy/badge.png?branch=1.x)](https://coveralls.io/r/myclabs/DeepCopy?branch=1.x)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/myclabs/DeepCopy/badges/quality-score.png?s=2747100c19b275f93a777e3297c6c12d1b68b934)](https://scrutinizer-ci.com/g/myclabs/DeepCopy/)
 [![Total Downloads](https://poser.pugx.org/myclabs/deep-copy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
 
 ## Table of Contents
@@ -41,7 +38,7 @@ Install with Composer:
 composer require myclabs/deep-copy
 ```
 
-Use simply:
+Use it:
 
 ```php
 use DeepCopy\DeepCopy;
