@@ -140,6 +140,11 @@ class DeepCopy
             return $var;
         }
 
+        // PHP 8.1 Enum
+        if (function_exists('enum_exists') && enum_exists($var::class)) {
+            return $var;
+        }
+
         // Object
         return $this->copyObject($var);
     }
