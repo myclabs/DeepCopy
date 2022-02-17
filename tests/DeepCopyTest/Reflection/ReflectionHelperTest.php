@@ -2,6 +2,7 @@
 
 namespace DeepCopyTest\Reflection;
 
+use DeepCopy\Exception\PropertyException;
 use DeepCopy\Reflection\ReflectionHelper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -60,13 +61,11 @@ class ReflectionHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \DeepCopy\Exception\PropertyException
-     */
     public function test_it_cannot_retrieve_a_non_existent_prperty()
     {
         $object = new ReflectionHelperTestChild();
 
+        $this->expectException(PropertyException::class);
         ReflectionHelper::getProperty($object, 'non existent property');
     }
 }
