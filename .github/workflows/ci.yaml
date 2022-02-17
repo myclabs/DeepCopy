@@ -71,7 +71,6 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: zend.assertions=1
 
@@ -96,10 +95,4 @@ jobs:
 
       - name: "Run tests"
         timeout-minutes: 3
-        run: "vendor/bin/phpunit --coverage-clover build/logs/clover.xml"
-
-      - name: "Coveralls"
-        if: ${{ matrix.php-version == '8.1' && matrix.dependencies == 'highest' }}
-        run: |
-          wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.2/php-coveralls.phar
-          php coveralls.phar -v
+        run: "vendor/bin/phpunit"
