@@ -15,12 +15,12 @@
     },
     "require-dev": {
         "doctrine/collections": "^1.6.8",
-        "doctrine/common": "^2.13.3",
+        "doctrine/common": "^2.13.3 || ^3.2.2",
         "phpunit/phpunit": "^7.5.20 || ^8.5.23 || ^9.5.13"
     },
     "conflict": {
         "doctrine/collections": "<1.6.8",
-        "doctrine/common": "<2.13.3"
+        "doctrine/common": "<2.13.3 || >=3,<3.2.2"
     },
     "autoload": {
         "psr-4": {
