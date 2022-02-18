@@ -14,9 +14,13 @@
         "php": "^7.1 || ^8.0"
     },
     "require-dev": {
-        "doctrine/collections": "^1.6",
-        "doctrine/common": "^2.13",
-        "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+        "doctrine/collections": "^1.6.8",
+        "doctrine/common": "^2.13.3",
+        "phpunit/phpunit": "^7.5.20 || ^8.5.23 || ^9.5.13"
+    },
+    "conflict": {
+        "doctrine/collections": "<1.6.8",
+        "doctrine/common": "<2.13.3"
     },
     "autoload": {
         "psr-4": {
