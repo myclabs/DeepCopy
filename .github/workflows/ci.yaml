@@ -4,6 +4,9 @@ on:
   - pull_request
   - push
 
+env:
+  COMPOSER_ROOT_VERSION: 1.99
+
 jobs:
   composer-json-lint:
     name: "Lint composer.json"
