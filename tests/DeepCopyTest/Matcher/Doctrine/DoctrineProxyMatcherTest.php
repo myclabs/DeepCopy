@@ -4,7 +4,7 @@ namespace DeepCopyTest\Matcher\Doctrine;
 
 use BadMethodCallException;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\Persistence\Proxy;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
