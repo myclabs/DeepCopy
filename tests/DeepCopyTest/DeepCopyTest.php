@@ -19,6 +19,7 @@ use DeepCopy\f007;
 use DeepCopy\f008;
 use DeepCopy\f009;
 use DeepCopy\f011;
+use DeepCopy\f012\Suit;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\PropertyNameMatcher;
@@ -493,6 +494,18 @@ class DeepCopyTest extends TestCase
         $copy = $deepCopy->copy($object);
 
         $this->assertFalse(isset($copy->foo));
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function test_it_keeps_enums()
+    {
+        $enum = Suit::Clubs;
+
+        $copy = (new DeepCopy())->copy($enum);
+
+        $this->assertSame($enum, $copy);
     }
 
     private function assertEqualButNotSame($expected, $val)
