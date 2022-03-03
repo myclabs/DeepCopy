@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         colors="true"
-         bootstrap="vendor/autoload.php">
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         colors="true">
 
     <testsuites>
         <testsuite name="Test suite">
-            <directory>./tests</directory>
+            <directory>./tests/DeepCopyTest</directory>
         </testsuite>
     </testsuites>
 
