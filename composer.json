@@ -16,6 +16,7 @@
     "require-dev": {
         "doctrine/collections": "^1.6.8",
         "doctrine/common": "^2.13.3 || ^3.2.2",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^7.5.20 || ^8.5.23 || ^9.5.13"
     },
     "conflict": {
