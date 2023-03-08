@@ -20,7 +20,7 @@
     },
     "conflict": {
         "doctrine/collections": "<1.6.8",
-        "doctrine/common": "<2.13.3 || >=3,<3.2.2"
+        "doctrine/common": "<2.13.3 || >=3 <3.2.2"
     },
     "autoload": {
         "psr-4": {
@@ -32,8 +32,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DeepCopy\\": "fixtures/",
-            "DeepCopyTest\\": "tests/DeepCopyTest/"
+            "DeepCopyTest\\": "tests/DeepCopyTest/",
+            "DeepCopy\\": "fixtures/"
         }
     },
     "config": {
