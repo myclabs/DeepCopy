@@ -20,8 +20,12 @@ use DeepCopy\f008;
 use DeepCopy\f009;
 use DeepCopy\f011;
 use DeepCopy\f012\Suit;
+use DeepCopy\f013;
+use DeepCopy\Filter\ChainableFilter;
+use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
+use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 use DeepCopy\Matcher\PropertyNameMatcher;
 use DeepCopy\Matcher\PropertyTypeMatcher;
 use DeepCopy\TypeFilter\ShallowCopyFilter;
@@ -506,6 +510,36 @@ class DeepCopyTest extends TestCase
         $copy = (new DeepCopy())->copy($enum);
 
         $this->assertSame($enum, $copy);
+    }
+
+    /**
+     * @ticket https://github.com/myclabs/DeepCopy/issues/98
+     */
+    public function test_it_can_apply_two_filters_with_chainable_filter()
+    {
+        $object = new f013\A();
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new ChainableFilter(new DoctrineProxyFilter()), new DoctrineProxyMatcher());
+        $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('foo'));
+
+        $copy = $deepCopy->copy($object);
+
+        $this->assertNull($copy->foo);
+    }
+
+    public function test_it_can_copy_property_after_applying_doctrine_proxy_filter_with_chainable_filter()
+    {
+        $object = new f013\B();
+        $object->setFoo(new f013\C());
+
+        $deepCopy = new DeepCopy();
+        $deepCopy->addFilter(new ChainableFilter(new DoctrineProxyFilter()), new DoctrineProxyMatcher());
+
+        /** @var f013\B $copy */
+        $copy = $deepCopy->copy($object);
+
+        $this->assertNotEquals($copy->getFoo(), $object->getFoo());
     }
 
     private function assertEqualButNotSame($expected, $val)
