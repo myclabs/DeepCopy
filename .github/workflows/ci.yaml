@@ -19,22 +19,22 @@ jobs:
           - "8.1"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          tools: composer-normalize
+          tools: "composer-normalize"
 
       - name: "Get composer cache directory"
-        id: composercache
+        id: "composercache"
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: "Cache dependencies"
-        uses: actions/cache@v2
+        uses: "actions/cache@v3"
         with:
           path: ${{ steps.composercache.outputs.dir }}
           key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.json') }}
@@ -68,21 +68,21 @@ jobs:
           - "highest"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
           php-version: "${{ matrix.php-version }}"
-          ini-values: zend.assertions=1
+          ini-values: "zend.assertions=1"
 
       - name: "Get composer cache directory"
-        id: composercache
+        id: "composercache"
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: "Cache dependencies"
-        uses: actions/cache@v2
+        uses: "actions/cache@v3"
         with:
           path: ${{ steps.composercache.outputs.dir }}
           key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ matrix.dependencies }}-composer-${{ hashFiles('**/composer.json') }}
