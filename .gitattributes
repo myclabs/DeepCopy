@@ -3,6 +3,7 @@
 
 *.png    binary
 
+.github/ export-ignore
 doc/ export-ignore
 fixtures/ export-ignore
 tests/ export-ignore
