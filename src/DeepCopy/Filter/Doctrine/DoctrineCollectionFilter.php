@@ -11,6 +11,13 @@ use DeepCopy\Reflection\ReflectionHelper;
 class DoctrineCollectionFilter implements Filter
 {
     /**
+     * @param array<class-string> $ignoreClasses List of classes that should not be copied over to the new collection
+     */
+    public function __construct(private readonly array $ignoreClasses = [])
+    {
+    }
+
+    /**
      * Copies the object property doctrine collection.
      *
      * {@inheritdoc}
@@ -20,14 +27,28 @@ class DoctrineCollectionFilter implements Filter
         $reflectionProperty = ReflectionHelper::getProperty($object, $property);
 
         $reflectionProperty->setAccessible(true);
-        $oldCollection = $reflectionProperty->getValue($object);
+        $collection = $reflectionProperty->getValue($object);
 
-        $newCollection = $oldCollection->map(
+        if (!empty($this->ignoreClasses)) {
+            $collection = $collection->filter(
+                function ($item) {
+                    foreach ($this->ignoreClasses as $ignoredClass) {
+                        if (is_a($item, $ignoredClass, true)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            );
+        }
+
+        $collection = $collection->map(
             function ($item) use ($objectCopier) {
                 return $objectCopier($item);
             }
         );
 
-        $reflectionProperty->setValue($object, $newCollection);
+        $reflectionProperty->setValue($object, $collection);
     }
 }

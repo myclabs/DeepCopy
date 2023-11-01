@@ -38,4 +38,34 @@ class DoctrineCollectionFilterTest extends TestCase
 
         $this->assertNotSame($stdClass, $objectOfNewCollection);
     }
+
+    public function test_it_ignores_objects_of_classes_when_instructed()
+    {
+        $object = new stdClass();
+        $oldCollection = new ArrayCollection();
+        $oldCollection->add($stdClass = new stdClass());
+        $oldCollection->add(new \DateTimeImmutable()); // should not be copied to the new collection
+        $oldCollection->add(new \DateTime()); // should not be copied to the new collection
+        $object->foo = $oldCollection;
+
+        $this->assertCount(3, $object->foo);
+
+        $filter = new DoctrineCollectionFilter([\DateTimeInterface::class]); // <-- here is why
+
+        $filter->apply(
+            $object,
+            'foo',
+            function($item) {
+                return null;
+            }
+        );
+
+        $this->assertInstanceOf(Collection::class, $object->foo);
+        $this->assertNotSame($oldCollection, $object->foo);
+        $this->assertCount(1, $object->foo);
+
+        $objectOfNewCollection = $object->foo->get(0);
+
+        $this->assertNotSame($stdClass, $objectOfNewCollection);
+    }
 }
