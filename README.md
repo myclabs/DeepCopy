@@ -379,6 +379,27 @@ $myServiceWithMocks = new MyService(m::mock(MyDependency1::class), m::mock(MyDep
 ```
 
 
+## Persisting cloned Doctrine entities
+
+If you're cloning Doctrine entities and are not automatically cascading the `persist` operation, you have two options:
+
+1. Manually traverse your cloned association and persist new entities manually
+2. Use the `DeepCopy::onObjectCopied` callback to process each cloned object at the end of its cloning process. 
+
+Here is an example of the `onObjectCopied` callback that would persist your entities. 
+
+```php
+$copier = new DeepCopy();
+
+/**
+ * @var EntityManagerInterface $entityManager
+ * @var DeepCopy $copier 
+ */
+$copier->onObjectCopied = function (object $object) use ($entityManager) {
+    $entityManager->persist($object);
+};
+```
+
 ## Edge cases
 
 The following structures cannot be deep-copied with PHP Reflection. As a result they are shallow cloned and filters are

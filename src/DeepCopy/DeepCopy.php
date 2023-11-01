@@ -55,6 +55,15 @@ class DeepCopy
     private $useCloneMethod;
 
     /**
+     * Custom callback executed once an object has been fully copied and all filters applied.
+     *
+     * The original purpose of this method is to be able to grab every new object and persist it if it is a Doctrine entity.
+     *
+     * @var ?\Closure(object): void
+     */
+    public ?\Closure $onObjectCopied = null;
+
+    /**
      * @param bool $useCloneMethod   If set to true, when an object implements the __clone() function, it will be used
      *                               instead of the regular deep cloning.
      */
@@ -212,6 +221,10 @@ class DeepCopy
 
         foreach (ReflectionHelper::getProperties($reflectedObject) as $property) {
             $this->copyObjectProperty($newObject, $property);
+        }
+
+        if ($this->onObjectCopied) {
+            $this->onObjectCopied->call($this, $newObject);
         }
 
         return $newObject;
