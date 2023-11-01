@@ -10,11 +10,15 @@ use DeepCopy\Reflection\ReflectionHelper;
  */
 class DoctrineCollectionFilter implements Filter
 {
+    /** @var array<class-string> */
+    private $ignoreClasses = [];
+
     /**
      * @param array<class-string> $ignoreClasses List of classes that should not be copied over to the new collection
      */
-    public function __construct(private readonly array $ignoreClasses = [])
+    public function __construct($ignoreClasses = [])
     {
+        $this->ignoreClasses = $ignoreClasses;
     }
 
     /**
