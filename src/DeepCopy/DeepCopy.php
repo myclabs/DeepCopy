@@ -61,7 +61,7 @@ class DeepCopy
      *
      * @var ?\Closure(object): void
      */
-    public ?\Closure $onObjectCopied = null;
+    public $onObjectCopied;
 
     /**
      * @param bool $useCloneMethod   If set to true, when an object implements the __clone() function, it will be used
