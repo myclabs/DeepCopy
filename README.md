@@ -2,7 +2,7 @@
 
 DeepCopy helps you create deep copies (clones) of your objects. It is designed to handle cycles in the association graph.
 
-[![Total Downloads](https://poser.pugx.org/janklan/deepcopy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
+[![Total Downloads](https://poser.pugx.org/janklan/deepcopy/downloads.svg)](https://packagist.org/packages/janklan/deepcopy)
 [![Integrate](https://github.com/janklan/deepcopy/actions/workflows/ci.yaml/badge.svg?branch=1.x)](https://github.com/janklan/deepcopy/actions/workflows/ci.yaml)
 
 ## Table of Contents
