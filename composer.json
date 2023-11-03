@@ -1,5 +1,5 @@
 {
-    "name": "myclabs/deep-copy",
+    "name": "janklan/deepcopy",
     "description": "Create deep copies (clones) of your objects",
     "license": "MIT",
     "type": "library",

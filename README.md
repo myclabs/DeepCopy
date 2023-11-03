@@ -2,8 +2,8 @@
 
 DeepCopy helps you create deep copies (clones) of your objects. It is designed to handle cycles in the association graph.
 
-[![Total Downloads](https://poser.pugx.org/myclabs/deep-copy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
-[![Integrate](https://github.com/myclabs/DeepCopy/actions/workflows/ci.yaml/badge.svg?branch=1.x)](https://github.com/myclabs/DeepCopy/actions/workflows/ci.yaml)
+[![Total Downloads](https://poser.pugx.org/janklan/deepcopy/downloads.svg)](https://packagist.org/packages/myclabs/deep-copy)
+[![Integrate](https://github.com/janklan/deepcopy/actions/workflows/ci.yaml/badge.svg?branch=1.x)](https://github.com/janklan/deepcopy/actions/workflows/ci.yaml)
 
 ## Table of Contents
 
@@ -36,7 +36,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 Install with Composer:
 
 ```
-composer require myclabs/deep-copy
+composer require janklan/deepcopy
 ```
 
 Use it:
@@ -422,6 +422,17 @@ Running the tests is simple:
 vendor/bin/phpunit
 ```
 
-### Support
+## Acknowledgement
 
-Get professional support via [the Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-myclabs-deep-copy?utm_source=packagist-myclabs-deep-copy&utm_medium=referral&utm_campaign=readme).
+This is a fork of https://github.com/myclabs/DeepCopy/ - a massively popular library with millions downloads, which implies
+inherent legacy issues: it needs to support old code. At some stage I needed this library more than it did and the [PR was
+too heavy](https://github.com/myclabs/DeepCopy/pull/192) for timely consideration. 
+
+I decided to fork the project with a few objectives:
+
+1. Drop older dependencies
+2. Bring the code up a bit, PHP 8.2 and up. If you need to clone complex objects using older software, please refer to https://github.com/myclabs/DeepCopy/. This will be the last significant commit made on 1.x branch in this `janklan/deepcopy`. 
+3. Add functions that were missing - namely, the ability to automatically persist the cloned objects when cloning linked Doctrine objects
+4. As a vague goal, tweaking how the filters work. The way they are split between `TypeFilter` and `(non-Type)Filter` + the fact one can be chained and the other can't, it simply didn't sit well with me.
+
+Thanks @mnapoli for all your work. 
