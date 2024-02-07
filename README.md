@@ -35,7 +35,7 @@ DeepCopy helps you create deep copies (clones) of your objects. It is designed t
 
 Install with Composer:
 
-```
+```bash
 composer require myclabs/deep-copy
 ```
 

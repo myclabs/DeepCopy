@@ -4,6 +4,7 @@ namespace DeepCopyTest\Matcher;
 
 use DeepCopy\f009;
 use DeepCopy\Matcher\PropertyTypeMatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -12,9 +13,7 @@ use stdClass;
  */
 class PropertyTypeMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider providePairs
-     */
+    #[DataProvider('providePairs')]
     public function test_it_matches_the_given_property($object, $expected)
     {
         $matcher = new PropertyTypeMatcher(PropertyTypeMatcherTestFixture2::class);
@@ -49,7 +48,7 @@ class PropertyTypeMatcherTest extends TestCase
         $this->assertTrue($matcher->matches($object, 'date'));
     }
 
-    public function providePairs()
+    public static function providePairs(): array
     {
         $object1 = new PropertyTypeMatcherTestFixture1();
         $object1->foo = new PropertyTypeMatcherTestFixture2();

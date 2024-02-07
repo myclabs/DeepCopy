@@ -5,6 +5,7 @@ namespace DeepCopyTest\Matcher\Doctrine;
 use BadMethodCallException;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
 use Doctrine\Persistence\Proxy;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -13,9 +14,7 @@ use stdClass;
  */
 class DoctrineProxyMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider providePairs
-     */
+    #[DataProvider('providePairs')]
     public function test_it_matches_the_given_objects($object, $expected)
     {
         $matcher = new DoctrineProxyMatcher();
@@ -25,7 +24,7 @@ class DoctrineProxyMatcherTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function providePairs()
+    public static function providePairs(): array
     {
         return [
             [new FooProxy(), true],

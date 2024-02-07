@@ -34,7 +34,7 @@ class FakeDeepCopy extends DeepCopy
     /**
      * @inheritdoc
      */
-    public function copy($object)
+    public function copy(mixed $object)
     {
         return new stdClass();
     }

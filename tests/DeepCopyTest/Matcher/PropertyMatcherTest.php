@@ -3,6 +3,7 @@
 namespace DeepCopyTest\Matcher;
 
 use DeepCopy\Matcher\PropertyMatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -10,9 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class PropertyMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider providePairs
-     */
+    #[DataProvider('providePairs')]
     public function test_it_matches_the_given_objects($object, $prop, $expected)
     {
         $matcher = new PropertyMatcher(X::class, 'foo');
@@ -22,7 +21,7 @@ class PropertyMatcherTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function providePairs()
+    public static function providePairs()
     {
         return [
             'matching case' => [new X(), 'foo', true],

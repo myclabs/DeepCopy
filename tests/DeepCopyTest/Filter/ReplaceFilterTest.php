@@ -3,6 +3,7 @@
 namespace DeepCopyTest\Filter;
 
 use DeepCopy\Filter\ReplaceFilter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -11,9 +12,7 @@ use stdClass;
  */
 class ReplaceFilterTest extends TestCase
 {
-    /**
-     * @dataProvider provideCallbacks
-     */
+    #[DataProvider('provideCallbacks')]
     public function test_it_applies_the_callback_to_the_specified_property(callable $callback, array $expected)
     {
         $object = new stdClass();
@@ -35,7 +34,7 @@ class ReplaceFilterTest extends TestCase
         $this->assertEquals($expected, $object->data);
     }
 
-    public function provideCallbacks()
+    public static function provideCallbacks(): array
     {
         return [
             [

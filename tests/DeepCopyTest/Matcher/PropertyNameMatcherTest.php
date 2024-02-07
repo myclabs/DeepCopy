@@ -3,6 +3,7 @@
 namespace DeepCopyTest\Matcher;
 
 use DeepCopy\Matcher\PropertyNameMatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -11,9 +12,7 @@ use stdClass;
  */
 class PropertyNameMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider providePairs
-     */
+    #[DataProvider('providePairs')]
     public function test_it_matches_the_given_property($object, $prop, $expected)
     {
         $matcher = new PropertyNameMatcher('foo');
@@ -23,7 +22,7 @@ class PropertyNameMatcherTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function providePairs()
+    public static function providePairs(): array
     {
         return [
             [new stdClass(), 'foo', true],

@@ -11,13 +11,14 @@
         "object graph"
     ],
     "require": {
-        "php": "^7.1 || ^8.0"
+        "php": "^8.1"
     },
     "require-dev": {
-        "doctrine/collections": "^1.6.8",
-        "doctrine/common": "^2.13.3 || ^3.2.2",
-        "phpspec/prophecy": "^1.10",
-        "phpunit/phpunit": "^7.5.20 || ^8.5.23 || ^9.5.13"
+        "doctrine/collections": "^1.8 || ^2.1.4",
+        "doctrine/common": "^2.13.3 || ^3.4.3",
+        "phpspec/prophecy": "^1.18",
+        "phpspec/prophecy-phpunit": "^2.1",
+        "phpunit/phpunit": "^10.5.10"
     },
     "conflict": {
         "doctrine/collections": "<1.6.8",

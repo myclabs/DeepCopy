@@ -4,18 +4,18 @@
          colors="true">
 
     <testsuites>
-        <testsuite name="Test suite">
-            <directory>./tests/DeepCopyTest</directory>
-        </testsuite>
-    </testsuites>
+    <testsuite name="Test suite">
+      <directory>./tests/DeepCopyTest</directory>
+    </testsuite>
+  </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src/</directory>
-            <exclude>
-                <file>src/DeepCopy/deep_copy.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
+  <source>
+    <include>
+      <directory>./src/</directory>
+    </include>
+    <exclude>
+      <file>src/DeepCopy/deep_copy.php</file>
+    </exclude>
+  </source>
 
 </phpunit>

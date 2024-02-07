@@ -4,6 +4,7 @@ namespace DeepCopyTest\Reflection;
 
 use DeepCopy\Exception\PropertyException;
 use DeepCopy\Reflection\ReflectionHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionProperty;
@@ -38,9 +39,7 @@ class ReflectionHelperTest extends TestCase
         $this->assertSame($expectedProps, array_keys($actualProps));
     }
 
-    /**
-     * @dataProvider provideProperties
-     */
+    #[DataProvider('provideProperties')]
     public function test_it_can_retrieve_an_object_property($name)
     {
         $object = new ReflectionHelperTestChild();
@@ -52,7 +51,7 @@ class ReflectionHelperTest extends TestCase
         $this->assertSame($name, $property->getName());
     }
 
-    public function provideProperties()
+    public static function provideProperties(): array
     {
         return [
             'public property' => ['a10'],
