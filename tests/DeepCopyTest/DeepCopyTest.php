@@ -25,6 +25,7 @@ use DeepCopy\f013;
 use DeepCopy\f014;
 use DeepCopy\Filter\ChainableFilter;
 use DeepCopy\Filter\Doctrine\DoctrineProxyFilter;
+use DeepCopy\Filter\Filter;
 use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Filter\SetNullFilter;
 use DeepCopy\Matcher\Doctrine\DoctrineProxyMatcher;
@@ -245,6 +246,43 @@ class DeepCopyTest extends TestCase
         $this->assertEqualButNotSame($c, $copy->getProp2());
 
         $this->assertSame($copy->getProp1()->c, $copy->getProp2());
+    }
+
+    public function test_it_preserves_the_object_map_during_nested_copies()
+    {
+        $shared = new stdClass();
+        $object = new class ($shared) {
+            public $before;
+            public $trigger;
+            public $after;
+
+            public function __construct($shared)
+            {
+                $this->before = $shared;
+                $this->trigger = null;
+                $this->after = $shared;
+            }
+        };
+
+        $deepCopy = new DeepCopy();
+        $filter = new class ($deepCopy) implements Filter {
+            private $deepCopy;
+
+            public function __construct(DeepCopy $deepCopy)
+            {
+                $this->deepCopy = $deepCopy;
+            }
+
+            public function apply($object, $property, $objectCopier)
+            {
+                $this->deepCopy->copy(new stdClass());
+            }
+        };
+        $deepCopy->addFilter($filter, new PropertyNameMatcher('trigger'));
+
+        $copy = $deepCopy->copy($object);
+
+        $this->assertSame($copy->before, $copy->after);
     }
 
     public function test_it_can_copy_graphs_with_circular_references()

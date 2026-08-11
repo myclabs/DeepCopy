@@ -87,7 +87,7 @@ Now you're in for a big mess :(
 ## How it works
 
 DeepCopy recursively traverses all the object's properties and clones them. To avoid cloning the same object twice it
-keeps a hash map of all instances and thus preserves the object graph.
+keeps a map of source objects to their copies and thus preserves the object graph.
 
 To use it:
 
