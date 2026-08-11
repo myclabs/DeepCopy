@@ -188,10 +188,10 @@ class DeepCopy
      */
     private function copyObject($object)
     {
-        $objectHash = spl_object_hash($object);
+        $objectId = spl_object_id($object);
 
-        if (isset($this->hashMap[$objectHash])) {
-            return $this->hashMap[$objectHash];
+        if (isset($this->hashMap[$objectId])) {
+            return $this->hashMap[$objectId];
         }
 
         $reflectedObject = new ReflectionObject($object);
@@ -199,7 +199,7 @@ class DeepCopy
 
         if (false === $isCloneable) {
             if ($this->skipUncloneable) {
-                $this->hashMap[$objectHash] = $object;
+                $this->hashMap[$objectId] = $object;
 
                 return $object;
             }
@@ -213,7 +213,7 @@ class DeepCopy
         }
 
         $newObject = clone $object;
-        $this->hashMap[$objectHash] = $newObject;
+        $this->hashMap[$objectId] = $newObject;
 
         if ($this->useCloneMethod && $reflectedObject->hasMethod('__clone')) {
             return $newObject;

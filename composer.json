@@ -11,7 +11,7 @@
         "object graph"
     ],
     "require": {
-        "php": "^7.1 || ^8.0"
+        "php": "^8.0"
     },
     "require-dev": {
         "doctrine/collections": "^1.6.8",
