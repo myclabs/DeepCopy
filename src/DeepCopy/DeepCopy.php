@@ -21,6 +21,7 @@ use DeepCopy\TypeMatcher\TypeMatcher;
 use ReflectionObject;
 use ReflectionProperty;
 use SplDoublyLinkedList;
+use WeakMap;
 
 /**
  * @final
@@ -28,9 +29,9 @@ use SplDoublyLinkedList;
 class DeepCopy
 {
     /**
-     * @var object[] List of objects copied.
+     * @var WeakMap<object, object> Map of source objects to their copies.
      */
-    private $hashMap = [];
+    private $objectMap;
 
     /**
      * Filters to apply.
@@ -63,6 +64,7 @@ class DeepCopy
     public function __construct($useCloneMethod = false)
     {
         $this->useCloneMethod = $useCloneMethod;
+        $this->objectMap = new WeakMap();
 
         $this->addTypeFilter(new ArrayObjectFilter($this), new TypeMatcher(ArrayObject::class));
         $this->addTypeFilter(new DateIntervalFilter(), new TypeMatcher(DateInterval::class));
@@ -95,7 +97,7 @@ class DeepCopy
      */
     public function copy($object)
     {
-        $this->hashMap = [];
+        $this->objectMap = new WeakMap();
 
         return $this->recursiveCopy($object);
     }
@@ -188,10 +190,8 @@ class DeepCopy
      */
     private function copyObject($object)
     {
-        $objectId = spl_object_id($object);
-
-        if (isset($this->hashMap[$objectId])) {
-            return $this->hashMap[$objectId];
+        if (isset($this->objectMap[$object])) {
+            return $this->objectMap[$object];
         }
 
         $reflectedObject = new ReflectionObject($object);
@@ -199,7 +199,7 @@ class DeepCopy
 
         if (false === $isCloneable) {
             if ($this->skipUncloneable) {
-                $this->hashMap[$objectId] = $object;
+                $this->objectMap[$object] = $object;
 
                 return $object;
             }
@@ -213,7 +213,7 @@ class DeepCopy
         }
 
         $newObject = clone $object;
-        $this->hashMap[$objectId] = $newObject;
+        $this->objectMap[$object] = $newObject;
 
         if ($this->useCloneMethod && $reflectedObject->hasMethod('__clone')) {
             return $newObject;
