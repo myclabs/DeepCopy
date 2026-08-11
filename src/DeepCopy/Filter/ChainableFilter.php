@@ -17,7 +17,7 @@ class ChainableFilter implements Filter
         $this->filter = $filter;
     }
 
-    public function apply($object, $property, $objectCopier)
+    public function apply(object $object, string $property, ?callable $objectCopier)
     {
         $this->filter->apply($object, $property, $objectCopier);
     }

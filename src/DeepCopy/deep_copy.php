@@ -13,7 +13,7 @@ if (false === function_exists('DeepCopy\deep_copy')) {
      *
      * @return mixed
      */
-    function deep_copy($value, $useCloneMethod = false)
+    function deep_copy(mixed $value, bool $useCloneMethod = false): mixed
     {
         return (new DeepCopy($useCloneMethod))->copy($value);
     }

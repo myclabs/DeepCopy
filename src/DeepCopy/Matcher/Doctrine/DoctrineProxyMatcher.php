@@ -15,7 +15,7 @@ class DoctrineProxyMatcher implements Matcher
      *
      * {@inheritdoc}
      */
-    public function matches($object, $property)
+    public function matches(object $object, string $property)
     {
         return $object instanceof Proxy;
     }

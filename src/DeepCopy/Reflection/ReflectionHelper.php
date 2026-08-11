@@ -55,7 +55,7 @@ class ReflectionHelper
      *
      * @return ReflectionProperty
      */
-    public static function getProperty($object, $name)
+    public static function getProperty(object|string $object, string $name)
     {
         $reflection = is_object($object) ? new ReflectionObject($object) : new ReflectionClass($object);
 
