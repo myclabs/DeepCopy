@@ -97,15 +97,9 @@ class DeepCopy
      */
     public function copy($object)
     {
-        // Preserve the active map when copy() is called recursively.
-        $previousObjectMap = $this->objectMap;
         $this->objectMap = new WeakMap();
 
-        try {
-            return $this->recursiveCopy($object);
-        } finally {
-            $this->objectMap = $previousObjectMap;
-        }
+        return $this->recursiveCopy($object);
     }
 
     public function addFilter(Filter $filter, Matcher $matcher)
