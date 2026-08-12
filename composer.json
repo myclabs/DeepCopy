@@ -30,10 +30,6 @@
         "phpstan/phpstan-phpunit": "^0.9.4",
         "phpunit/phpunit": "^7.1"
     },
-    "replace": {
-        "myclabs/deep-copy": "self.version"
-    },
-
     "config": {
         "sort-packages": true
     }
