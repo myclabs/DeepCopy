@@ -6,7 +6,6 @@ use ArrayObject;
 use DeepCopy\DeepCopy;
 use DeepCopy\TypeFilter\Spl\ArrayObjectFilter;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use RecursiveArrayIterator;
 
 /**
@@ -21,23 +20,19 @@ final class ArrayObjectFilterTest extends TestCase
      */
     private $arrayObjectFilter;
 
-    /**
-     * @var DeepCopy|ObjectProphecy
-     */
-    private $copierProphecy;
+    /** @var DeepCopy */
+    private $copier;
 
     protected function setUp(): void
     {
-        $this->copierProphecy = $this->prophesize(DeepCopy::class);
-        $this->arrayObjectFilter = new ArrayObjectFilter(
-            $this->copierProphecy->reveal()
-        );
+        $this->copier = $this->createMock(DeepCopy::class);
+        $this->arrayObjectFilter = new ArrayObjectFilter($this->copier);
     }
 
     public function test_it_deep_copies_an_array_object(): void
     {
         $arrayObject = new ArrayObject(['foo' => 'bar'], ArrayObject::ARRAY_AS_PROPS, RecursiveArrayIterator::class);
-        $this->copierProphecy->copy('bar')->willReturn('baz');
+        $this->copier->expects($this->once())->method('copy')->with('bar')->willReturn('baz');
 
         /** @var \ArrayObject $newArrayObject */
         $newArrayObject = $this->arrayObjectFilter->apply($arrayObject);

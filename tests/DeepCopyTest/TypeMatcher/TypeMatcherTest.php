@@ -3,6 +3,7 @@
 namespace DeepCopyTest\TypeMatcher;
 
 use DeepCopy\TypeMatcher\TypeMatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -14,6 +15,7 @@ class TypeMatcherTest extends TestCase
     /**
      * @dataProvider provideElements
      */
+    #[DataProvider('provideElements')]
     public function test_it_retrieves_the_object_properties($type, $element, $expected)
     {
         $matcher = new TypeMatcher($type);
@@ -23,7 +25,7 @@ class TypeMatcherTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideElements()
+    public static function provideElements()
     {
         return [
             '[class] same class as type' => ['stdClass', new stdClass(), true],
