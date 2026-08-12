@@ -9,5 +9,5 @@ interface TypeFilter
      *
      * @param mixed $element
      */
-    public function apply($element);
+    public function apply(mixed $element);
 }

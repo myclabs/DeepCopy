@@ -9,7 +9,7 @@ class KeepFilter implements Filter
      *
      * {@inheritdoc}
      */
-    public function apply($object, $property, $objectCopier)
+    public function apply(object $object, string $property, ?callable $objectCopier)
     {
         // Nothing to do
     }

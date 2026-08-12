@@ -17,7 +17,7 @@ class DatePeriodFilter implements TypeFilter
      *
      * @see http://news.php.net/php.bugs/205076
      */
-    public function apply($element)
+    public function apply(mixed $element)
     {
         $options = 0;
         if (PHP_VERSION_ID >= 80200 && $element->include_end_date) {

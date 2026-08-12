@@ -12,7 +12,7 @@ use SplDoublyLinkedList;
  */
 class SplDoublyLinkedListFilter implements TypeFilter
 {
-    private $copier;
+    private DeepCopy $copier;
 
     public function __construct(DeepCopy $copier)
     {
@@ -22,7 +22,7 @@ class SplDoublyLinkedListFilter implements TypeFilter
     /**
      * {@inheritdoc}
      */
-    public function apply($element)
+    public function apply(mixed $element)
     {
         $newElement = clone $element;
 
@@ -31,11 +31,11 @@ class SplDoublyLinkedListFilter implements TypeFilter
         return $copy($newElement);
     }
 
-    private function createCopyClosure()
+    private function createCopyClosure(): Closure
     {
         $copier = $this->copier;
 
-        $copy = function (SplDoublyLinkedList $list) use ($copier) {
+        $copy = function (SplDoublyLinkedList $list) use ($copier): SplDoublyLinkedList {
             // Replace each element in the list with a deep copy of itself
             for ($i = 1; $i <= $list->count(); $i++) {
                 $copy = $copier->recursiveCopy($list->shift());

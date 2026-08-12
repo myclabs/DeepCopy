@@ -23,7 +23,7 @@ class ReplaceFilter implements TypeFilter
     /**
      * {@inheritdoc}
      */
-    public function apply($element)
+    public function apply(mixed $element)
     {
         return call_user_func($this->callback, $element);
     }

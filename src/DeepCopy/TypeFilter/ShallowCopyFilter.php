@@ -10,7 +10,7 @@ class ShallowCopyFilter implements TypeFilter
     /**
      * {@inheritdoc}
      */
-    public function apply($element)
+    public function apply(mixed $element)
     {
         return clone $element;
     }
