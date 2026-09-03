@@ -22,9 +22,18 @@ class DateIntervalFilter implements TypeFilter
      */
     public function apply(mixed $element)
     {
+        $properties = get_object_vars($element);
+
+        // Since PHP 8.2 an interval from createFromDateString() exposes
+        // "from_string"/"date_string" instead of y/m/d/h/i/s, and "from_string" is
+        // ignored on assignment, so copying property by property would zero it.
+        if (!empty($properties['from_string'])) {
+            return DateInterval::createFromDateString($properties['date_string']);
+        }
+
         $copy = new DateInterval('P0D');
 
-        foreach ($element as $propertyName => $propertyValue) {
+        foreach ($properties as $propertyName => $propertyValue) {
             $copy->{$propertyName} = $propertyValue;
         }
 
