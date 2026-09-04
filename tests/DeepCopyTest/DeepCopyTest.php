@@ -247,6 +247,35 @@ class DeepCopyTest extends TestCase
         $this->assertSame($copy->getProp1()->c, $copy->getProp2());
     }
 
+    public function test_it_keeps_reference_of_objects_shared_through_an_array_object()
+    {
+        $shared = new stdClass();
+
+        $object = new stdClass();
+        $object->collection = new ArrayObject(['a' => $shared, 'b' => $shared]);
+        $object->direct = $shared;
+
+        $copy = deep_copy($object);
+
+        $this->assertEqualButNotSame($shared, $copy->collection['a']);
+        $this->assertSame($copy->collection['a'], $copy->collection['b']);
+        $this->assertSame($copy->collection['a'], $copy->direct);
+    }
+
+    public function test_it_can_copy_graphs_whose_circular_reference_runs_through_an_array_object()
+    {
+        $parent = new stdClass();
+        $child = new stdClass();
+
+        $child->parent = $parent;
+        $parent->children = new ArrayObject([$child]);
+
+        $copy = deep_copy($parent);
+
+        $this->assertEqualButNotSame($child, $copy->children[0]);
+        $this->assertSame($copy, $copy->children[0]->parent);
+    }
+
     public function test_it_can_copy_graphs_with_circular_references()
     {
         $a = new stdClass();
